@@ -1,0 +1,117 @@
+@startuml EuroCRM Architecture
+!define ICONURL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+
+title Knight Frank EuroCRM — Solution Architecture
+
+'skinparam backgroundColor #FEFEFE
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 12
+
+' ─── External Systems (L0) ───
+package "L0 — External Systems" as L0 #E8F5E9 {
+  component "D365 Customer Insights\nJourneys" as CIJ
+  component "D365 Finance\n(Future)" as FIN
+  component "Outlook / Teams" as OUTLOOK
+  component "SharePoint" as SP
+  component "Power BI" as PBI
+  component "Copilot for Sales" as COPILOT
+  component "Loqate\nAddress Verification" as LOQATE
+}
+
+' ─── Dataverse Platform (L1) ───
+package "L1 — Dataverse Platform (Microsoft-Managed)" as L1 #E3F2FD {
+  rectangle "System Tables\nSecurity Framework\nAudit Log" as DVPLATFORM
+}
+
+' ─── KF Core (L2) ───
+package "L2 — KF_Core (Global Core)" as L2 #FFF3E0 {
+  rectangle "40+ Table Shells\nOption Sets\nBU Hierarchy" as CORETABLES
+  rectangle "Base Security\nRBAC" as SECURITY
+  rectangle "Outlook Sync\nSharePoint\nBI Integration" as INTEGRATIONS
+}
+
+' ─── Region (L3) ───
+package "L3 — Region" as L3 #FCE4EC {
+  rectangle "KF_Europe\nEUR Default\nGDPR Baseline\nRegional PBI Dashboard" as EUR
+}
+
+' ─── Country (L4) ───
+package "L4 — Country" as L4 #F3E5F5 {
+  rectangle "KF_France\nkf_fr_*" as FR
+  rectangle "KF_Germany" as DE
+  rectangle "KF_Poland" as PL
+  rectangle "KF_Spain\nkf_es_*" as ES
+}
+
+' ─── Service Line Core (L5) ───
+package "L5 — Service Line Core" as L5 #E0F7FA {
+  rectangle "KF_CapitalMarkets_Core\n8-Stage BPF" as CM
+  rectangle "KF_OSS_Core\n(Future)" as OSS
+  rectangle "KF_Valuations_Core\n(Future)" as VAL
+  rectangle "KF_Residential_Core\n(Future)" as RES
+  rectangle "KF_Finance_Integration" as FININT
+}
+
+' ─── Service Line + Country (L6) ───
+package "L6 — Service Line + Country" as L6 #FFF9C4 {
+  rectangle "KF_CM_France" as CMFR
+  rectangle "KF_CM_Spain" as CMES
+  rectangle "KF_OSS_France\n(Future)" as OSSFR
+}
+
+' ─── Cross-Border (L7) ───
+package "L7 — Cross-Border Overlays" as L7 #FFCCBC {
+  rectangle "KF_EIT\nEuropean Investment Team" as EIT
+  rectangle "KF_Private_Office\n(Future)" as PO
+}
+
+' ─── Core Data Domains ───
+package "Core Data Domains" as DATA #F5F5F5 {
+  rectangle "Client\nAccount, Contact" as DCLIENT
+  rectangle "Property\nSite, Property,\nResProperty" as DPROPERTY
+  rectangle "Deal\nDeal, DealProperty,\nBid, NDA" as DDEAL
+  rectangle "WIP\nWIP, FeeSchedule" as DWIP
+  rectangle "Compliance\nKYC, GDPR" as DCOMPLY
+}
+
+' ─── Integrations ───
+package "Integration Layer" as INT #ECEFF1 {
+  rectangle "Power Automate\nFlows" as FLOW
+  rectangle "OData API\nCustom API" as API
+  rectangle "Finance Bridge\n9 Integration Flows" as FINBRIDGE
+}
+
+' ─── Connections ───
+L0 -down-> L1 : "Managed Platform"
+L1 -down-> L2 : "Extends"
+L2 -down-> L3 : "Regional Config"
+L3 -down-> L4 : "Country Extensions"
+L4 -down-> L5 : "Service Line BPFs"
+L5 -down-> L6 : "Country Variants"
+L6 -down-> L7 : "Cross-Border"
+
+L2 -right-> DATA : "Defines Schema"
+L5 -right-> DDEAL : "CM BPF"
+L5 -right-> DWIP : "Finance"
+
+L2 -left-> INTEGRATIONS
+INTEGRATIONS -up-> OUTLOOK
+INTEGRATIONS -up-> SP
+INTEGRATIONS -up-> PBI
+
+FININT -right-> FINBRIDGE
+FINBRIDGE -up-> FIN
+
+CM -right-> FLOW
+FLOW -up-> CIJ
+
+COPILOT -down-> CM
+LOQATE -down-> DPROPERTY
+
+CMFR -down-> DDEAL
+CMES -down-> DDEAL
+EIT -down-> DDEAL
+
+@enduml
