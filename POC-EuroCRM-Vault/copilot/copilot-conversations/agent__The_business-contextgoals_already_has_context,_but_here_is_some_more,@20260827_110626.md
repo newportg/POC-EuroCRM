@@ -3,7 +3,7 @@ epoch: 1787825186672
 mode: agent
 backendId: opencode
 sessionId: "ses_fbdb0fa83ffeb48rJhTKQohw6q"
-usage: '{"usedTokens":0,"contextWindow":200000,"updatedAt":1787842100667}'
+usage: '{"usedTokens":137726,"contextWindow":200000,"updatedAt":1787844340470}'
 tags:
   - copilot-conversation
 ---
@@ -1351,5 +1351,408 @@ Let me pick this up directly rather than via a cancelled sub-task. I'll build th
 
 First, let me confirm the rendered diagrams are still in place, then write the conversion script.
 
+The 8 diagrams are still there. Let me set up the todo list and build the conversion script myself. Let me update my todos to reflect that I'm now doing the build directly.
 
+Let me read the remaining notes I need to understand for the mapping, so my converter handles all content correctly. Let me read the ones I haven't yet seen that map to major sections, in batches. Let me start with the architecture notes and solution-scope-in-scope, kpis, dependencies, functional requirements, roadmap phases, expected benefits, governance, compliance, glossary.
+
+Given the volume, let me read them efficiently in a couple of parallel batches.
+
+I have a good grasp of the content patterns. Let me read the remaining section-mapped notes I haven't seen: architecture-key-components, architecture-business, architecture-application, architecture-data, architecture-principles-compliance, architecture-target-state, dependencies-and-constraints, functional-requirements, functional-non-functional-requirements, roadmap-phases, roadmap-timelines, expected-benefits, governance-approval, governance-oversight, compliance, glossary.
+
+Let me read these in parallel batches.
+
+I have a strong grasp of the content patterns now. Let me read the remaining notes for the sections I still need: architecture-principles-compliance, architecture-target-state, dependencies-and-constraints, functional-requirements, functional-non-functional-requirements, roadmap-phases, roadmap-timelines, expected-benefits, governance-approval, governance-oversight, compliance, glossary. Let me read them in a batch.
+
+Let me read the remaining notes for the last set of sections. Let me batch-read them.
+
+I have enough understanding of the content. Rather than reading all remaining notes individually (which could flood context), the converter script will read each file directly. I've verified the markdown patterns are consistent across notes (headings, tables, bullets, checklists, bold, wikilinks, code blocks). Let me now write the converter script.
+
+Let me create the script in the temp directory. I'll write a comprehensive markdown→docx converter that:
+1. Opens the template
+2. Populates cover placeholders + version table
+3. Inserts content after each template heading
+
+To insert content after a heading paragraph in python-docx, I'll use the `insert_paragraph_before` approach in reverse, or append XML elements. The cleanest way: build a list of `(anchor_heading_text, content_blocks)` and for each, insert the content immediately after the anchor heading by inserting elements.
+
+Actually, a simpler and very reliable approach given the template already contains all the headings: I'll iterate the template body and, for each heading I want to populate, insert new elements after it. But for complex content (tables, images), inserting XML after a specific paragraph is fiddly.
+
+Alternative robust approach: Build the entire document content fresh in the exact template order using python-docx on a copy of the template, and insert content by locating heading paragraphs and using `paragraph._p.addnext(element)` for the last element of each block. This is doable but tables/images add complexity.
+
+Given the complexity, let me use a well-tested insertion helper. I'll collect content blocks per section, and for each section, insert its blocks after the anchor heading using a helper that adds elements in order after a reference element.
+
+Let me write the script carefully. I'll implement `insert_after(paragraph, new_paragraph_or_table)`.
+
+Given the size, let me write the script to a file and run it. Let me create the outputs folder and write the script.
+
+Let me write the full script now.
+
+Now let me write the converter script. This is a large script — I'll build it carefully. Let me write it to the temp directory.
+
+There are a couple of issues with my script I need to fix before running:
+
+1. The `insert_after_ref`, `end_block`, and `content_blocks` functions are unused/dead or broken. Let me clean those.
+2. The `add_section` with `base_level` mapping: the note's `## ` maps to `base_level`, `### ` maps to `base_level+1`, etc. My render_blocks maps `min(base_level + (level-2), 4)`. So for a note with `## ` (level 2) under base_level=2, that gives `2 + 0 = 2` → Heading 2. For base_level=3 (e.g. In-Scope is H2 in template but I passed base_level=3 — that's wrong).
+
+Wait, let me reconsider the heading levels. In the template:
+- "In-Scope" and "Out-of-scope" are **Heading 2** (under Solution Scope H1)
+- "Key Components", "Business Architecture" (H3), "Application Architecture" (H3), "Data Architecture" (H3), "Technology Architecture" (H3)
+- "Phases", "Timelines", "Key Dependencies" are **Heading 2**
+- "Estimated Costs", "Expected Benefits" are **Heading 2**
+- "Approval", "Governance Oversight", "Compliance" are **Heading 2**
+- "Functional Requirements", "Non-Functional Requirements" are **Heading 2**
+- "Principles Compliance", "Target State Alignment", "Dependencies and Constraints" are **Heading 2**
+
+So most of the template's sub-headings are Heading 2, not Heading 3. I mislabeled several in my base_level calls. Let me reconsider.
+
+Actually the template structure (from the inspection):
+- H1 Business Context
+  - H2 Business Goals and Objectives
+  - H2 Key Stakeholders
+  - H2 Business Capabilities
+  - H2 KPIs and Success
+- H1 Solution Scope
+  - H2 In-Scope
+  - H2 Out-of-scope
+- H1 Solution Architecture
+  - H2 Overview Diagrams
+  - H2 Key Components
+  - H3 Business Architecture
+  - H3 Application Architecture
+  - H3 Data Architecture
+  - H3 Technology Architecture
+- H1 Alignment
+  - H2 Principles Compliance
+  - H2 Target State Alignment
+  - H2 Dependencies and Constraints
+- H1 Key Functional...
+  - H2 Functional Requirements
+  - H2 Non-Functional Requirements
+- H1 Implementation Roadmap
+  - H2 Phases
+  - H2 Timelines
+  - H2 Key Dependencies
+- H1 Cost
+  - H2 Estimated Costs
+  - H2 Expected Benefits
+- H1 Governance
+  - H2 Approval
+  - H2 Governance Oversight
+  - H2 Compliance
+
+So I need the base_level for the content within each template section to start at the appropriate level. The template heading for each section is at a certain level, and the note content's `## ` headings should map to the template section's heading level. E.g., under "Business Goals and Objectives" (H2), the note's `## ` headings (like "Primary Goals") should become Heading 3 (deeper than the H2). Under "In-Scope" (H2), the note's `## In-Scope Items` etc become Heading 3.
+
+Actually, let me simplify: the note's `## ` level should map to (template section heading level + 1), `### ` → +2. So base_level = template_section_level + 1.
+
+For sections where the note has no `## ` sub-headings (just flat content), base_level doesn't matter much.
+
+Let me recompute base_level for each:
+- Business Goals and Objectives (H2) → base_level 3
+- Key Stakeholders (H2) → base_level 3
+- Business Capabilities (H2) → base_level 3
+- KPIs and Success (H2) → base_level 3
+- In-Scope (H2) → base_level 3
+- Out-of-scope (H2) → base_level 3
+- Key Components (H2) → base_level 3
+- Business Architecture (H3) → base_level 4
+- Application Architecture (H3) → base_level 4
+- Technology Architecture (H3) → base_level 4
+- Principles Compliance (H2) → 3
+- Target State Alignment (H2) → 3
+- Dependencies and Constraints (H2) → 3
+- Functional Requirements (H2) → 3
+- Non-Functional (H2) → 3
+- Risks and Issues (H1) → 2
+- Solution Options (H1) → 2
+- Phases (H2) → 3
+- Timelines (H2) → 3
+- Key Dependencies (H2) → 3
+- Estimated Costs (H2) → 3
+- Expected Benefits (H2) → 3
+- Approval (H2) → 3
+- Governance Oversight (H2) → 3
+- Compliance (H2) → 3
+- Business Context (H1) → 2
+- Executive Summary (H1) → 2
+- Data Architecture (H3) → 4
+- Overview Diagrams (H2) → 3
+
+My render_blocks maps level with `min(base_level + (level - 2), 4)`. Since notes use `## `=level2, `### `=level3, this gives base_level + 0 for `## `, base_level+1 for `### `. That's correct mapping (note ## → base_level).
+
+But I capped at 4. For Data Architecture with base_level=4, note `## ` → 4 (Heading 4), `### ` → 5 → capped to 4. OK.
+
+I had many wrong base_level values (I used 2 and 3 inconsistently). Let me rewrite those calls with the correct values.
+
+Also, I have issues:
+- `insert_after_ref` unused.
+- The "Glossary" heading in the template is a Normal paragraph (not a heading). My `find_heading` with level would look for style "Heading X" — for Glossary I'd need to handle a Normal paragraph. Let me handle it specially.
+- The "References" section: I created `add_section("References", "references.md", ...)` but there's no `references.md` file! I need to build References from solution-overview.md instead. Let me handle that.
+- The `content_blocks` dict and old `end_block` are unused.
+
+Let me also reconsider the Executive Summary: solution-overview.md Executive Summary is a section; my parse_markdown_note on the whole solution-overview.md would include ALL its headings (Version History, Executive Summary, Business Context, etc.) — that's wrong. I need to extract only the Executive Summary portion. 
+
+Similarly for References from solution-overview.md, I need just the References section.
+
+Let me redesign: instead of `add_section` reading a whole note generically, I'll:
+- For notes that are dedicated to a section (most), read whole note (skipping title/frontmatter). Good.
+- For Executive Summary and References, extract specific sections from solution-overview.md.
+
+Also the "Related Documents" sections at the bottom of each note will be included — that's fine/acceptable, or I could strip them. The notes end with "## Related Documents" listing wikilinks. Including them is acceptable but slightly noisy for a formal SOD. I'll strip trailing "## Related Documents" and "## Related" sections, plus any "## Status" section (architecture-overview-diagrams has a Status section). Let me strip "Related Documents", "Related", "Status" sections in the parser/post-processing.
+
+Actually, to keep the document clean, let me strip sections whose heading is exactly "Related Documents", "Related", "Status", "Diagram Sources". 
+
+This is getting complex. Let me rewrite the script more carefully with these considerations. Let me redo the whole thing cleanly.
+
+Let me rewrite the script with:
+1. Correct heading-level mapping.
+2. Section extraction for Executive Summary and References from solution-overview.
+3. Stripping of "Related Documents"/"Status"/"Diagram Sources" sections.
+4. Handling the Glossary Normal paragraph.
+5. Removing unused code.
+
+Let me look at what sections each note has so I can strip appropriately. Most notes end with "## Related Documents". Some have "## Status", "## Diagram Sources". Let me strip any H2 heading named "Related Documents", "Related Documents"/"Related", "Status", "Diagram Sources", and their content.
+
+Let me rewrite.My first script draft has several bugs (wrong heading levels, unused functions, missing references handling, Executive Summary extraction). Let me rewrite it cleanly and correctly.
+
+Before running, let me quickly verify the remaining notes I haven't read exist and have expected content: glossary, governance-approval, governance-oversight, compliance, expected-benefits, roadmap-phases, roadmap-timelines, architecture-principles-compliance, architecture-target-state, architecture-business, architecture-application, functional-non-functional-requirements, references (doesn't exist as a note - I handle References from solution-overview).
+
+Let me check that all notes referenced in my script exist.
+
+All notes exist. Let me run the script now.
+
+The bug is that I passed `text` to `insert_paragraph_after` for the Executive Summary path, and it's failing because... actually the error is in `add_runs` at `p.add_run(s)` where `p` is a Paragraph but the error shows `self._p` is None. This happens because the paragraph `np` was created via `addnext` but the Paragraph object's `_p`... wait, the error is `'NoneType' object has no attribute 'add_r'` at `paragraph.py line 38` `r = self._p.add_r()` — meaning `self._p` is None for the paragraph. 
+
+The issue: I'm reusing variable `h` as the anchor and reassigning it to the newly inserted paragraph each iteration, then calling `insert_paragraph_after(h, ...)`. That should be fine. But the first call `insert_paragraph_after(h, text=l)` where `h` is the "Executive Summary" heading found by `find_heading`. 
+
+Wait — `find_heading` searches `doc.paragraphs`. The Executive Summary heading paragraph — when I insert after it, the new Paragraph wraps a `w:p` element. But the error says `self._p` is None. That's odd for a newly created paragraph.
+
+Actually the problem might be that `addnext` inserted the paragraph, but `Paragraph(new_p, parent)` — the parent is `paragraph._parent`. When `add_runs` calls `np.add_run()`, it uses `self._p.add_r()`. If `self._p` is None... 
+
+Hmm, let me reconsider. Actually the real issue could be simpler: in `insert_paragraph_after` I create the element and wrap it. But I passed `text=l` where `l` might itself contain characters... no.
+
+Wait, the traceback shows the Executive Summary loop. The `h = insert_paragraph_after(h, text=l)` — after first iteration h is the new paragraph. Second iteration calls insert on the non-None paragraph. So `self._p` shouldn't be None.
+
+Let me look more carefully: the error is `self._p.add_r()` with `self._p` being None. This is a known issue when a `Paragraph` object is constructed but its underlying `w:p` was removed from the tree, OR when `addnext` created the element but the `Paragraph` wrapper's `_p` got set wrong.
+
+Actually — I bet the issue is that `OxmlElement("w:p")` creates the element, and `addnext` inserts it, but maybe there's an issue with how the paragraph is wrapped. Let me check: `Paragraph(new_p, paragraph._parent)`. `new_p` is the lxml element. `paragraph._parent` is the Document's body. This should work.
+
+Hold on — let me reconsider. The first `insert_paragraph_after(h, text=l)` where h is "Executive Summary" heading. Its `paragraph._p` is fine. `addnext` works. `Paragraph(new_p, parent)` creates wrapper. `add_runs(np, l)` → `np.add_run(...)` → `self._p.add_r()`. If `self._p` is None, means the Paragraph wrapper wasn't constructed properly.
+
+Wait, maybe the problem is that `h` from `find_heading` for "Executive Summary" — actually the Executive Summary block runs BEFORE the cover fill? No, cover fill is first.
+
+Let me actually just simplify the approach for inserting paragraphs. A more robust method is to use the Document's `add_paragraph` and then move the element. But moving is the same complexity.
+
+Actually, I think the real bug: I destructured `h` from `find_heading` which returns a Paragraph, but then in the loop I do `h = insert_paragraph_after(...)`. The FIRST iteration: `insert_paragraph_after(h, text=l)` creates np, inserts after h's _p. Returns np. Fine. But wait — the FIRST `l` in exec_lines might be... let me check: `exec_lines` could be empty, in which case the loop body never runs and no error. But there IS an error, so exec_lines has content.
+
+Let me look again at the add_runs for the exec path vs others. Other sections use `render_blocks` → `insert_paragraph_after(last_p, text=txt)` → same function. So why does exec fail but render_blocks presumably worked until now?
+
+Oh wait — the traceback shows it failed during the Executive Summary loop (line 404). The Business Context etc. haven't run yet (they come after). So the FIRST insert_paragraph_after call (Executive Summary) failed. That means there's something specific about the exec path. 
+
+The difference: in exec path I call `insert_paragraph_after(h, text=l)` where `h` is the heading found by `find_heading`. In render_blocks I call `insert_paragraph_after(last_p, text=txt)`. Both use the same function.
+
+Hmm, unless `find_heading(doc, "Executive Summary")` returns a paragraph whose `_p` is fine, but... 
+
+Let me just test this in isolation to understand. Actually, let me reconsider: maybe the issue is that `addnext` on the `_p` element works, but then when constructing `Paragraph(new_p, paragraph._parent)`, the parent passed is the heading's `_parent`. For a document-level paragraph, `_parent` is the `Document`/body. `Paragraph.__init__` sets `self._parent = parent` and `self._p = element`... 
+
+Wait, actually looking at python-docx source: `Paragraph.__init__(self, p, parent)`. It should set `self._p = p`. So `self._p` wouldn't be None unless... Let me just debug directly.
+
+Let me run a quick isolated test of insert_paragraph_after.
+
+
+
+Now I can reproduce it. `Paragraph(new_p, parent)` doesn't set `_p` because it expects the first argument to be the `w:p` element already wrapped, but in my isolated test I passed a raw OxmlElement. The issue is that `Paragraph.__init__` may have a different signature, OR the element types need to be CT_P.
+
+The problem: `OxmlElement('w:p')` creates a generic `CT_OxmlElement`, but `Paragraph.__init__` likely checks `isinstance(p, CT_P)` and if not, sets `_p = None`. Let me check the actual python-docx Paragraph signature in this version.
+
+Actually, the standard, reliable way to insert a paragraph after another in python-docx is to use the element's `addnext()` with an `OxmlElement`, but then wrap it correctly. Let me instead use a cleaner approach: build the new paragraph as a string of XML and use `parse_xml`.
+
+The most robust approach: create a new `w:p` element via `docx.oxml.parse_xml` using the `nested_el` helper, or use the `paragraph.insert_paragraph_before()` method (which is built-in and handles all the wrapping correctly) and be clever about ordering.
+
+Actually, `insert_paragraph_before` is built into python-docx's Paragraph and returns a proper Paragraph object. The trick: if I want to insert AFTER a paragraph, I can insert BEFORE the NEXT paragraph. But for content spanning multiple elements/tables/images, that's harder.
+
+Better robust approach: use `copy.deepcopy` of an existing paragraph element (e.g., a body paragraph style) to get a properly-typed CT_P, then insert. Or use the document's shared `oxml`.
+
+Let me check how `insert_paragraph_before` is implemented and reuse that pattern. In python-docx, `insert_paragraph_before` does:
+```
+def insert_paragraph_before(self, text=None, style=None):
+    p = self._p
+    new_p = OxmlElement('w:p')
+    p.addprevious(new_p)
+    return Paragraph(new_p, self._parent).add_run(text)... 
+```
+
+Wait, but that creates `OxmlElement('w:p')` too. So how does insert_paragraph_before work? Let me check — it must set `_p` properly. The difference: `insert_paragraph_before` calls `p.addprevious(new_p)` where `p` is the `CT_P`. Then `Paragraph(new_p, self._parent)`. If `Paragraph` sets `_p` only when isinstance CT_P...
+
+Actually my isolated test showed `np._p` is None after construction. But `insert_paragraph_before` works in python-docx normally. Let me check the actual `Paragraph.__init__` signature in this version — maybe it's not what I assumed.
+
+Let me inspect the installed python-docx Paragraph.__init__ and insert_paragraph_before.Found it — the raw `OxmlElement('w:p')` doesn't produce a CT_P that `Paragraph` accepts. Let me inspect how python-docx's built-in `insert_paragraph_before` works so I can replicate it correctly for inserting after.
+
+`Paragraph.__init__` takes `p: CT_P`. When I pass a raw `OxmlElement`, `self._p` becomes None because `super().__init__(parent)` calls `BaseOxmlElement.__init__` which may reset `_element`, and without proper CT_P typing the attribute isn't preserved the way I expected.
+
+The key insight: `insert_paragraph_before` uses `self._insert_paragraph_before()` which creates a proper CT_P. Let me look at `_insert_paragraph_before`. The cleanest fix is to leverage python-docx's internal methods.
+
+Let me check `_insert_paragraph_before`:
+
+There's no `_ParagraphBase`. The `_insert_paragraph_before` uses `OxmlElement('w:p')` too, but then `Paragraph(...)` — and yet it works. The difference must be that python-docx registers `w:p` as `CT_P` so `OxmlElement('w:p')` actually creates a `CT_P`, not a generic element, when the proper namespace registration exists.
+
+In my isolated test, `p.addnext(OxmlElement('w:p'))` — the `OxmlElement` should return a `CT_P` since python-docx registers `w:p` as CT_P. But `np._p` became None...
+
+Wait, in my test I did `p.addnext(OxmlElement('w:p'))` then `Paragraph(new_p, p._parent)`. And `np._p` was None. But `insert_paragraph_before` does the same and works. Let me re-examine — maybe in my test the issue was `super().__init__(parent)` in `Paragraph.__init__` combined with me passing a CT_P that had already been assigned... no.
+
+Actually, let me look at `_insert_paragraph_before`:
+
+Actually, let me just look at the real implementation by reading the source directly.
+
+`_insert_paragraph_before` uses `self._p.add_p_before()`, which is a CT_P method that creates a proper `w:p` element (returning CT_P). The key is `add_p_before()` on the CT_P instance returns a properly-typed CT_P. 
+
+So for inserting AFTER, I should use a similar approach: call `addnext()` with a proper CT_P. Let me create a proper CT_P by `parse_xml` or by using a CT_P method. The cleanest way: get a template CT_P and clone it, or use `self._p.makeelement` / build with `docx.oxml`.
+
+The simplest robust fix: use `OxmlElement('w:p')` BUT feed it through so it becomes CT_P. Actually `OxmlElement('w:p')` DOES return CT_P when registered. The problem in my test was that `addnext()` returned... no. Let me re-test: in my isolated test, `np._p` was None. That means `Paragraph(new_p, parent)` set `_p=None`. But `__init__` does `self._p = self._element = p` — so `_p` should be `new_p`. Unless `new_p` (from addnext) is None?
+
+`p.addnext(OxmlElement('w:p'))` returns the added element in lxml! `addnext` returns the element added. So `new_p` = the w:p element. But then `Paragraph(new_p, parent)` → `_p = new_p` (non-None). But my test printed `np._p: None`.
+
+Wait — the difference: `super().__init__(parent)` in `Paragraph.__init__` calls `BaseOxmlElement.__init__`? No, Paragraph's super is StoryChild → BaseStoryChild → ... Let me look: `super(Paragraph, self).__init__(parent)`. This is the ObjectProxy/Parented chain. It shouldn't touch `_p`.
+
+Hmm, but the test clearly showed `np._p: None`. Let me re-examine: maybe `OxmlElement('w:p')` in this context returns generic CT_OxmlElement (not CT_P), and when `Paragraph.__init__` runs `self._p = self._element = p`, `_p` = p (non-None). So why None?
+
+Unless... the `__init_subclass__` or type annotation causes something. Actually wait — maybe `docx.oxml.shared.OxmlElement` is not what creates it. Let me check what `OxmlElement('w:p')` returns and whether it's a CT_P, and re-test more carefully.
+
+Let me just use the working pattern directly: create the new paragraph via `add_p_before` equivalent. The robust approach: 
+```
+new_p = p._p.makeelement(qn('w:p'), {})  # or use OxmlElement
+p._p.addnext(new_p)
+np = Paragraph(new_p, p._parent)
+```
+But the earlier test failed with `np._p: None`. Let me re-run the test checking the type and value of new_p.
+
+Actually, I suspect the real issue: in my test I wrote `new_p = p._p.addnext(OxmlElement('w:p'))`. `addnext` returns the element — but it returns the SAME element object passed in. So `new_p` is the w:p. Then `Paragraph(new_p, p._parent)`. Then `np._p` printed None. 
+
+This is genuinely strange. Let me test again with explicit type checks to understand, because the fix depends on it.Let me debug the exact behavior to find the correct fix.
+
+Key finding: `addnext()` returns **`None`** in this lxml version! That's why `new_p` was `None` and `np._p` became None. I should NOT use the return value of `addnext` — lxml's `addnext` returns None, not the element.
+
+The fix: create the element first, then call `addnext` on the ref element, then wrap the ORIGINAL element object (which is now in the tree).
+
+Let me fix `insert_paragraph_after` accordingly:
+
+```python
+def insert_paragraph_after(paragraph, style=None, text=None):
+    new_p = OxmlElement('w:p')
+    paragraph._p.addnext(new_p)   # addnext returns None; new_p is now in tree
+    np = Paragraph(new_p, paragraph._parent)
+    ...
+```
+
+Same for `insert_table_after` — I used `paragraph._p.addnext(table._tbl)` correctly (I didn't use the return value there), so that's fine.
+
+Let me also check `add_image_after` — it returns `pic_p` which is a real Paragraph, fine. And `add_code_block_after` reassigns `paragraph = p` (the Paragraph), fine.
+
+Let me fix the `insert_paragraph_after` function in the script.
+
+Found it: lxml's `addnext()` returns `None` (not the element), so I was wrapping `None`. The fix is to create the element first, then `addnext`, then wrap the original element. Let me fix `insert_paragraph_after`.
+
+Now let me also check `insert_table_after` — it uses `paragraph._p.addnext(table._tbl)` without capturing return, which is correct. But there's a subtle issue: when I insert a table after the paragraph but then continue inserting paragraphs "after" the last_p which was the table's anchor paragraph, the ordering could get jumbled because the table is inserted after the anchor paragraph but subsequent paragraphs are also inserted after the anchor. Since I keep track of `last_p` as the most recently inserted paragraph and insert after THAT, ordering should be preserved.
+
+Wait — but for tables, `insert_table_after(last_p, data)` inserts the table after last_p but does NOT update last_p to the table. So the next block would insert after last_p (the paragraph before the table), pushing content BEFORE the table. That's a bug.
+
+Let me fix `insert_table_after` to return something I can use. Actually, tables aren't Paragraphs, so I can't easily continue inserting "after a table" with my paragraph-based insert. Let me reconsider.
+
+The cleanest fix: make a unified "insert after element" that works for both paragraphs and tables. Let me refactor `insert_table_after` to return the last cell paragraph or the table, and change `render_blocks` so `last_p` tracks the last element that content can be inserted after.
+
+Simpler approach: track the last XML element (paragraph._p or table._tbl) and insert after that element. Let me refactor to use raw lxml elements for the "anchor" but still need Paragraph wrappers for styling.
+
+Let me redesign the insertion machinery to operate on raw elements:
+- `last_el` = last element (w:p or w:tbl) inserted.
+- To insert a paragraph: create w:p element, `last_el.addnext(new_el)`, update last_el = new_el.
+- To insert a table: create table at doc level, move its _tbl after last_el, update last_el = tbl.
+- To insert an image: it's a paragraph with a run containing the picture.
+
+Let me refactor to a cleaner design. Given the current structure uses Paragraph objects, let me instead insert tables and then continue from the table by wrapping it, OR simpler: for tables and code, insert them and set last_el to the underlying tbl element, then when inserting the next paragraph, use a Paragraph wrapper around... hmm.
+
+Let me rewrite the insertion core to work with raw lxml elements and wrap only when needed. Let me rewrite the relevant functions.
+
+Let me rewrite `insert_table_after` and `render_blocks` to track raw elements.
+
+I'll change the approach: maintain `last_el` as an lxml element. For each block:
+- heading/para/list: create w:p (new_el), ensure it has appr style... but styling needs python-docx. Let me create the Paragraph wrapper, set style, add runs, then use wrapper._p as the element to link. Insert wrapper._p after last_el, set last_el = wrapper._p.
+- table: create table via doc, get _tbl, insert._tbl after last_el, last_el = table._tbl.
+- code: multiple paragraphs, each inserted after last_el, update last_el.
+
+But the anchor for inserting is an element, and `addnext` works on elements. And to set style on a created element, wrap it in Paragraph then set style.
+
+Let me refactor cleanly. Let me create a unified `insert_after_element(last_el, ...)` pattern. Let me rewrite.
+
+Found the root cause; now I'll also fix the table-ordering bug where `last_p` wasn't advanced past inserted tables. Let me refactor the insertion machinery to track raw lxml elements so ordering is preserved across paragraphs, tables, and images.
+
+Now I need to update the callers in `main()` that use `render_blocks` and `add_image_after`. `render_blocks` now takes `doc` as first arg. And `add_image_after` returns a Paragraph (I still use it after render_blocks which returns `last_el` now, not a paragraph).
+
+Let me update `add_note_section` and the Data/Overview diagram embedding to use raw element tracking. Let me look at the current main() calls and fix them.
+
+The issue: `render_blocks` now returns a raw lxml element, but the image embedding uses `add_image_after(last_p, ...)` which expects a Paragraph. And `add_note_section` uses the returned `last_p`.
+
+Let me redesign this: after `render_blocks`, I have `last_el` (raw element). To add images after it, I need to insert image paragraphs after that raw element. Let me create an `add_image_after_el(doc, last_el, ...)` that returns the new element, and update the flow to track raw elements throughout.
+
+Let me refactor main() to track raw elements for the image insertion. Let me update `add_note_section` and the diagram-embedding code.
+
+Let me revert `render_blocks` calls to return raw elements and use an element-based image insertor. I'll add `add_image_after_el`.
+
+Let me update the relevant parts of main.
+
+Now let me update `main()`'s `add_note_section` and the image embedding calls. Let me view the current main() section to edit it accurately.
+
+
+
+I need to update `add_note_section` (line 414-417) to use `render_blocks(doc, h, blocks, base_level)` and `add_image_after_el(doc, last_el, ...)`. Let me fix that. `render_blocks` now takes `doc` first. And the image append after should use `add_image_after_el` with the raw element returned.
+
+Now the Executive Summary section (line 438-443) uses `insert_paragraph_after(h, ...)` which is fine (h is a Paragraph). But render_blocks signature changed — let me check the Glossary call which uses `render_blocks(gh, blocks, 2)`. Let me find and fix it.
+
+Let me check the Glossary and References rendering code further down.
+
+Let me view the rest of main() from line 455 onward.
+
+I need to fix the Glossary call at line 493 — `render_blocks(gh, blocks, 2)` needs `doc` as first arg. Let me fix it. Also the Glossary heading in the template is a Normal-style paragraph (not a Heading 2).
+
+Let me fix the Glossary call.
+
+Now let me also remove the unused `extract_subsections` and `so_secs`/`exec_text` references (harmless but dead). They're fine to leave. Let me run the script now.
+
+The template doesn't have a "List Bullet" style defined (the styles came from the template). The business-context.md note has a bullet list (Programme Scope intended outcomes) which uses "List Bullet", but the template doesn't define that style.
+
+Let me check what list styles ARE available in the template and use a fallback. If "List Bullet" isn't available, I'll fall back to adding manual bullet characters or use the built-in styles. Let me check available styles.
+
+Actually, the cleanest fix: check which list styles exist in the template. Let me query the template's paragraph styles, then make the renderer fall back gracefully (use "List Bullet" if it exists, else a plain paragraph with a "• " prefix / "List Paragraph").
+
+Let me check available styles in the template.Need to check which list styles exist in the template. Let me query the available paragraph styles.
+
+
+
+The template has "List Paragraph" but not "List Bullet" or "List Number". I'll map:
+- "List Bullet" → fall back to "List Paragraph" with a "• " prefix
+- "List Bullet 2" → "List Paragraph" with indentation + "• " prefix
+- "List Number" → "List Paragraph" with the number... but I don't have per-item numbers easily.
+
+The simplest robust approach: for list items, use "List Paragraph" style and prepend a bullet character. For numbered lists, I'd need numbering tracking. Let me handle:
+- bullets: prepend "• " 
+- numbered: prepend the sequence number I track
+
+Let me update the render_blocks list handling. For "List Bullet"/"List Bullet 2" → use "List Paragraph" style with "• " (and for level 2, add indentation via paragraph_format.left_indent). For "List Number" → track counter.
+
+Actually, since I process blocks generically, let me handle the list style mapping in render_blocks. Let me add a style map and a counter for numbered lists.
+
+Let me update render_blocks to map list styles and prepend bullets/numbers.
+
+Now the References section uses `insert_paragraph_after(rh, style="List Bullet", ...)` which will also fail since "List Bullet" isn't in the template. Let me fix that too — change to "List Paragraph" with a bullet prefix. Let me update the References loop.
+
+Also the Executive Summary path uses `insert_paragraph_after(h, text=l)` which is fine (no style).
+
+Let me fix the References style usage.
+
+
+
+Now let me run the script again.
+
+I need to update the Executive Summary — it previously used `insert_paragraph_after(h, text=l)` which is now fine (paragraph-based insert with correct addnext fix). Let me run.
+
+I also need to check: `render_blocks` earlier for the Executive Summary — I don't call render_blocks there, I use the manual loop. That's fine now.
+
+Let me run the script.
 [Timestamp: 2026/08/27 15:48:17]

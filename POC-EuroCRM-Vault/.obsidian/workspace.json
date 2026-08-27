@@ -217,9 +217,14 @@
   },
   "active": "597aa953c2405097",
   "lastOpenFiles": [
+    "outputs",
+    "projects/~$roCRM_Solution_Overview_Document_2026-08-27.docx",
+    "archive/~$roCRM_Solution_Overview_Document_v2.docx",
+    "archive/~$roCRM_Solution_Overview_Document.docx",
+    "scripts/__pycache__/generate_sod_from_wiki.cpython-314.pyc",
+    "scripts/__pycache__",
     "projects/EuroCRM_Solution_Overview_Document_2026-08-27.docx",
     "scripts/generate_sod_from_wiki.py",
-    "archive/~$roCRM_Solution_Overview_Document_v2.docx",
     "wiki/solution-overview.md",
     "dashboard.md",
     "wiki/property-data-model.md",
@@ -248,11 +253,6 @@
     "wiki/wip-data-model-schema.puml",
     "wiki/data-model-core-tables.md",
     "wiki/data-model-core-tables-schema.puml",
-    "wiki/client-data-model.md",
-    "wiki/client-data-model-schema.puml",
-    "wiki/capital-markets-data-model-schema.puml",
-    "wiki/architecture-diagram.puml",
-    "wiki/architecture-dataflow.puml",
-    "archive/~WRD0001.tmp"
+    "wiki/client-data-model.md"
   ]
 }

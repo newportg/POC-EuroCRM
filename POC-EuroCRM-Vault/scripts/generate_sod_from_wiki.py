@@ -147,7 +147,8 @@ def parse_markdown(doc: Document, content: str, image_dir: Path) -> None:
         image_match = re.fullmatch(r"!\[\[(.+?)\]\]", stripped)
         if image_match:
             flush_paragraph()
-            image_path = image_dir / f"{Path(image_match.group(1)).stem}.png"
+            image_name = Path(image_match.group(1)).name
+            image_path = diagram_paths.get(image_name, image_dir / f"{Path(image_name).stem}.png")
             if image_path.exists():
                 paragraph = doc.add_paragraph()
                 paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -210,7 +211,11 @@ def render_diagrams(output_dir: Path) -> dict[str, Path]:
         capture_output=True,
         text=True,
     )
-    return {source.name: output_dir / f"{source.stem}.png" for source in puml_files}
+    rendered = {}
+    for source in puml_files:
+        startuml = next((line.strip()[9:].strip() for line in source.read_text(encoding="utf-8").splitlines() if line.strip().lower().startswith("@startuml")), source.stem)
+        rendered[source.name] = output_dir / f"{startuml}.png"
+    return rendered
 
 
 def trim_template_to_cover(doc: Document) -> None:
