@@ -3,7 +3,7 @@ epoch: 1787825186672
 mode: agent
 backendId: opencode
 sessionId: "ses_fbdb0fa83ffeb48rJhTKQohw6q"
-usage: '{"usedTokens":35820,"contextWindow":200000,"updatedAt":1787826337825}'
+usage: '{"usedTokens":47454,"contextWindow":200000,"updatedAt":1787828043287}'
 tags:
   - copilot-conversation
 ---
@@ -369,3 +369,148 @@ Committed successfully.
 
 The `.obsidian` config, `Untitled.canvas`, and copilot conversation log remain unstaged as before. Let me know if you'd like me to adjust any of the provisional likelihood/impact ratings or add owners to the register.
 [Timestamp: 2026/08/27 11:25:24]
+
+**user**: what items of third party software in this project needs to be purchased
+[Timestamp: 2026/08/27 11:48:33]
+
+**ai**: I'll look into the project's architecture and technology notes to identify third-party software that needs to be purchased. Let me search the relevant wiki notes.
+
+I have a good picture of the technology stack. Let me also check the cost-estimates note and the out-of-scope note for the Loqate mention, plus the dependencies note about the "Hub" vendor, to give a complete answer.
+
+I now have a comprehensive picture. Let me also check the out-of-scope note's Loqate detail and the solution-options note to be thorough, then answer.
+
+Based on what I've gathered, this is a Microsoft Power Platform architecture. The key finding is that most of the software is **Microsoft licensing** (Power Apps, Dataverse, Power Automate, Power BI, D365 Finance, D365 Customer Insights — Journeys, Copilot), which is procured via Microsoft subscription rather than typically "purchased" as third party. There are two genuine **third-party** items: **Loqate** (address validation) and the **"Hub" vendor** (external system integration in Phase 6).
+
+Let me check solution-options to see if there's an explicit vendor list.
+
+I now have a complete, evidence-based picture. Let me answer.
+
+Based on the vault's architecture, technology, dependencies, and scope notes, here's what needs to be purchased for this project.
+
+## Overview
+
+The EuroCRM solution is built almost entirely on the **Microsoft Power Platform** ecosystem. That means the bulk of the "software" is **Microsoft licensing** procured via subscription — not third-party purchases. There are only **two genuine third-party purchases** and one identified external dependency.
+
+## Genuine third-party software (needs purchase)
+
+**1. Loqate — address validation** `[[architecture-technology]]`, `[[roadmap-dependencies]]`
+- Purpose: auto-address lookup for `kf_Site` records.
+- Licensing model: per-lookup.
+- Status: in-scope for MVP (the out-of-scope note explicitly says "Loqate only for MVP"). An API key is a Phase 1 dependency, currently marked TBD / to be provided by IT.
+
+**2. The "Hub" vendor — external system integration** `[[roadmap-dependencies]]`, `[[solution-scope-out-of-scope]]`
+- The project integrates with an external "Hub" system in **Phase 6** (currently deferred — manual transition for MVP).
+- This is a third-party commercial dependency; the notes flag that the vendor selection and API availability aren't confirmed, and explicitly design for "API integration, not specific vendor."
+- **Not a current purchase** — deferred, but on the horizon.
+
+## Microsoft licensing to procure (subscription, not third-party purchase)
+
+These aren't "third party" but they are the licensed items that need procurement, and `roadmap-dependencies` flags that **licensing procurement is a known risk** (mitigation: early engagement with Microsoft). From `[[architecture-technology]]` and `[[roadmap-dependencies]]`:
+
+| Component | Licensing model |
+| --- | --- |
+| Dataverse | Per-user/per-app or per-org |
+| Power Apps | Per-user or per-app |
+| Power Automate | Per-user or per-flow |
+| Power BI | Per-user or capacity-based |
+| D365 Finance | Per-user |
+| D365 Customer Insights — Journeys | Per-contact |
+| Copilot for Sales | AI licensing (Phase 1 dependency) |
+| Microsoft 365 (Outlook/SharePoint) | Assumed existing per assumptions |
+
+## Where the answer is incomplete
+
+The vault explicitly hasn't quantified any of this yet:
+- `[[cost-estimates]]` — all **TBD**, "pending vendor selection," to be modelled in the business case.
+- `[[solution-options]]` — options analysis "to be completed with vendor evaluation," all costs TBD.
+- `[[solution-overview]]` cost/benefit section is placeholder.
+- `[[roadmap-dependencies]]` lists licensing procurement as a Phase 0/1 gate with risk of delay.
+
+## Bottom line
+
+- **Actual third-party purchases today:** Loqate (address validation) — the only MVP, in-scope, third-party spend.
+- **Future third-party:** the Hub system integration (Phase 6), vendor not yet selected.
+- **Everything else** is Microsoft platform licensing to be procured via subscription.
+
+If you'd like, I can capture this as a dedicated "third-party software / licensing" register note in the wiki (e.g. consolidating the Loqate and Hub items plus the Microsoft licensing list) so the purchase decisions are visible in one place — since `cost-estimates` currently just says "TBD." Just say the word.
+[Timestamp: 2026/08/27 11:48:33]
+
+**user**: Hub is a internal company system, so the only costs would be software integration
+[Timestamp: 2026/08/27 11:50:57]
+
+**ai**: Good correction — thanks for that. If the Hub is an internal company system rather than a third-party vendor, then it's an **integration effort**, not a software purchase. That removes the "Hub vendor" as a third-party software cost and reframes it as an internal integration project.
+
+Let me reconcile this against what's currently in the notes, because there are a few places that describe the Hub as vendor-facing and would now be inaccurate:
+
+- `[[roadmap-dependencies]]` — lists "Hub Vendor" as the owner of "Hub API Availability," has a "Hub Vendor Roadmap" external dependency, and a "Hub API integration, not specific vendor" risk.
+- `[[solution-scope-out-of-scope]]` — lists "Full Hub API integration (Phase 6)" as deferred.
+
+Since this reframes things, I want to confirm the scope of what you'd like me to do before editing. Two options:
+
+1. **Update the existing notes** to reflect that the Hub is internal (so cost = integration effort, and there's no third-party vendor to procure). This touches `roadmap-dependencies.md`, `solution-scope-out-of-scope.md`, and possibly the cost/technology notes.
+
+2. **Capture the revised cost picture** in a dedicated note (a licensing/third-party cost register) so the purchase decisions are documented in one place — Loqate being the only true third-party spend, plus the Microsoft licensing, plus the internal Hub integration effort.
+
+On the actual answer to your question, the corrected view is:
+
+## Third-party software to purchase
+- **Loqate** (address validation) — the only genuine third-party software purchase, and it's in-scope for MVP. Per-lookup licensing.
+
+## Not third-party purchases
+- **Hub** — internal company system. Cost is **software/framework integration** (build effort + Power Platform connectors/API), not a purchase. The API availability is an internal dependency, and the out-of-scope note treats full integration as a Phase 6 deferral (manual transition for MVP).
+- **Everything else** — Microsoft Power Platform licensing (Dataverse, Power Apps, Power Automate, Power BI, D365 Finance, CI-Journeys, Copilot), procured via subscription, not third-party.
+
+So the "purchase" answer collapses to essentially just **Loqate**, with the Hub being an internal integration cost.
+
+Want me to go ahead and update the notes so they correctly describe the Hub as an internal system (and no longer as a third-party vendor), and/or create a consolidated licensing/cost register? I'll wait for your go-ahead on scope before editing.
+[Timestamp: 2026/08/27 11:50:57]
+
+**user**: please go ahead and describe Hub as a internal system
+[Timestamp: 2026/08/27 11:53:05]
+
+**ai**: I'll update the notes that currently describe the Hub as a vendor to reflect that it's an internal company system. Let me find all references to the Hub first.
+
+I need to update the references that describe the Hub as a **vendor** (third-party) rather than an internal system. The key places are in `roadmap-dependencies.md`:
+
+1. Line 69: `| Hub API Availability | Technical | Hub Vendor | TBD | Phase 6 blocked |`
+2. Line 92: `| Hub roadmap changes | Medium | Medium | Design for API integration, not specific vendor |`
+3. Line 99: `| Hub Vendor Roadmap | External | Hub Vendor | API availability and support |`
+
+The other references (Hub Replacement, Hub coexistence) are already neutral/fine. Let me update the vendor-specific ones in roadmap-dependencies.
+
+Now let me check the implementation-phases note which references "Hub roadmap evaluation" — this is neutral but could be refined. Let me also check architecture-target-state. First let me look at the relevant section of implementation-phases around the Hub references.
+
+The implementation-phases references are all neutral ("Hub Replacement", "Hub coexistence") and don't mention a vendor, so they're fine. But let me double-check there are no other "vendor" descriptors tied to Hub elsewhere. Let me grep for "vendor" across the wiki to see if any remaining reference implies Hub is third-party.
+
+The remaining "vendor" mentions are unrelated to the Hub (they're about the property data model's "vendor" contact role, and generic vendor-selection placeholders for the platform). None incorrectly describe the Hub as a vendor. The `cost-estimates` "Pending vendor selection" is about the platform software, not the Hub.
+
+The Hub-specific vendor references are now all corrected. Let me verify the roadmap-dependencies changes are clean.
+
+The roadmap-dependencies changes are clean. Now there's a subtle consideration: the "External Dependencies" section still lists "Hub Roadmap" as an **External** type, but since the Hub is an internal system, the dependency isn't "external" in the third-party sense. However, from the EuroCRM project's perspective, a dependency on another internal company team is still effectively "external" to this project (owned by a different internal team). 
+
+Given the user just wants the Hub described as internal, the owner change to "Internal Hub team" and the type "External" is defensible (external to the project, not external to the company). But to be precise and avoid confusion, I could relabel the type to clarify it's an internal-but-independent dependency. Let me reconsider — the section is titled "External Dependencies," and keeping "External" type with "Internal Hub team" owner is a slight tension. 
+
+I'll keep it minimal and consistent with the user's request: the Hub is now owned by the internal Hub team, which reflects reality. The "External" type here at least means external to the EuroCRM project, which is accurate. I won't over-engineer this.
+
+Now, should I also reflect the cost framing? The user previously noted "the only costs would be software integration." The notes don't currently have a place that explicitly captures the Hub as integration-effort-only. But the user's current instruction was specifically "describe Hub as a internal system" — which I've done. I'll keep scope tight to that instruction and offer the cost-register capture as a follow-up.
+
+Let me also verify the implementation-phases "Hub roadmap evaluation" reference — it says "Phase 6: Hub Replacement" with "Dependencies: Phase 2 complete, Hub roadmap evaluation." That's neutral, no vendor implication, so it's fine.
+
+The changes are complete. Let me summarize.
+
+I've updated `[[wiki/roadmap-dependencies]]` to describe the Hub as an internal system:
+
+- **Hub API Availability** — owner changed from "Hub Vendor" → **IT**
+- **Hub roadmap changes** (risk register) — mitigation changed from "not specific vendor" → "Hub is an internal system"; integration using its API
+- **Hub Vendor Roadmap** (external dependencies) → **Hub Roadmap**, owner → **Internal Hub team**
+
+The other Hub references across the vault (Hub Replacement, Hub coexistence, Hub API integration in `implementation-phases`, `architecture-target-state`, `roadmap-timelines`, `kpis-and-success`, `solution-scope-out-of-scope`) were already neutral and don't describe the Hub as a vendor, so I left those untouched.
+
+One note on the "External Dependencies" section: the Hub Roadmap still sits under it, typed "External." That's defensible because the Hub team is an internal-but-independent team *external to this project's delivery* — but if you'd prefer it relabelled to make the internal nature unmistakable (e.g. a separate "Internal System Dependencies" section), I can do that.
+
+The practical consequence for your original question stands confirmed: the Hub is **not a software purchase** — its cost is integration effort only. **Loqate** remains the only genuine third-party software purchase for the MVP.
+
+Want me to:
+1. Relabel the Hub dependency out of "External" into an internal-systems section for clarity, and/or
+2. Commit these changes?
+[Timestamp: 2026/08/27 11:53:05]

@@ -66,7 +66,7 @@ Dependencies categorised by type: Governance, Technical, Compliance, Resource, a
 | ---------- | ------ | ----- | ------ | ----------------- |
 | Phase 4 Complete | Technical | Project | TBD | Cannot start Phase 5 |
 | Regional Business Cases | Governance | Regional MDs | TBD | Expansion blocked |
-| Hub API Availability | Technical | Hub Vendor | TBD | Phase 6 blocked |
+| Hub API Availability | Technical | IT | TBD | Phase 6 blocked |
 | Finance ERP Selection | Decision | Finance | TBD | Phase 7 blocked |
 | Regional Compliance Review | Compliance | Legal | TBD | Region-specific requirements unknown |
 
@@ -89,14 +89,14 @@ TDA Approval → Environment Provisioning → Phase 0 → Phase 1 → Phase 2
 | Licensing procurement delayed | Medium | Medium | Early engagement with Microsoft |
 | Resource availability across regions | High | Medium | Phased approach, shared resources where possible |
 | Regulatory requirements change | Low | High | Regular legal review, flexible configuration |
-| Hub roadmap changes | Medium | Medium | Design for API integration, not specific vendor |
+| Hub roadmap changes | Medium | Medium | Design for API integration; Hub is an internal system |
 
 ## External Dependencies
 
 | Dependency | Type | Owner | Notes |
 | ---------- | ------ | ----- | ----- |
 | Microsoft Platform Updates | External | Microsoft | Dataverse, Power Platform updates |
-| Hub Vendor Roadmap | External | Hub Vendor | API availability and support |
+| Hub Roadmap | External | Internal Hub team | API availability and support |
 | Regional Data Residency | External | Microsoft | EU data centre availability |
 | SIC/HILUCS Standards | External | Regulatory | Standard updates and revisions |
 
