@@ -3,7 +3,7 @@ epoch: 1787825186672
 mode: agent
 backendId: opencode
 sessionId: "ses_fbdb0fa83ffeb48rJhTKQohw6q"
-usage: '{"usedTokens":47454,"contextWindow":200000,"updatedAt":1787828043287}'
+usage: '{"usedTokens":75782,"contextWindow":200000,"updatedAt":1787830027776}'
 tags:
   - copilot-conversation
 ---
@@ -514,3 +514,417 @@ Want me to:
 1. Relabel the Hub dependency out of "External" into an internal-systems section for clarity, and/or
 2. Commit these changes?
 [Timestamp: 2026/08/27 11:53:05]
+
+**user**: are you able to access this page https://knightfrank.visualstudio.com/hub/_wiki/wikis/Hub%20Wiki/8172/Addressing
+[Timestamp: 2026/08/27 12:03:07]
+
+**ai**: I can attempt to fetch that URL. However, it's an internal company resource (an Azure DevOps Wiki inside `knightfrank.visualstudio.com`), which almost certainly requires authentication to access. My fetch tools perform unauthenticated web requests and can't hold a session for a private/internal system.
+
+Let me try anyway in case it happens to be reachable.
+
+As I expected, the page isn't accessible. The fetch returned Azure DevOps's sign-in/interstitial page rather than the actual wiki content, which means it's behind authentication (as an internal company Azure DevOps instance). My tooling can't authenticate to internal systems.
+
+Here's what this means for the "hub" integration:
+
+- **I can't retrieve the Hub wiki content** — it requires sign-in that my tools can't perform.
+- This is consistent with how the Hub has been described in the vault as an internal company system that needs API integration, but whose API details/roadmap I can't independently read.
+
+If you want the Hub's addressing details captured in the wiki, you have a few options:
+
+1. **Paste or summarize the relevant content here** (the Addressing wiki page) and I'll fold it into the appropriate note — e.g. the address-validation/`kf_Site` work in `[[architecture-technology]]` or a data-model note, or a new note if it's substantive.
+2. **Tell me what the Hub exposes via its API** (endpoints, entities, auth model) and I'll document the integration scope.
+3. If you have the page open in a browser, you could copy the body text directly.
+
+One clarifying point worth flagging: the wording "Hub Wiki / Addressing" and the earlier context (address validation via Loqate) suggest this page may relate to the **addressing/data model** for the Hub rather than the EuroCRM integration itself. Let me know what you'd like done with it and I'll proceed.
+[Timestamp: 2026/08/27 12:03:07]
+
+**user**: here is the md for the addressing page. 
+# Standards 
+The ISO standard is a implementation of the UPU S42a-6 standard
+* [ISO](https://www.iso.org/obp/ui/#iso:std:iso-iec:19773:ed-1:v1:en:term:3.16.1.19)
+* [UPU S42a-6](https://www.upu.int/UPU/media/upu/publications/manualAddressingAddressingAndPostcodeManualEn.pdf)
+
+
+| Element      | Field name | Description | Max length| 
+|----|----|----|----|
+| Organisation | Organisation Name                 |             | 60|
+|              | Department Name                   |             | 60|
+| Premises     | Sub Building Name                 |             | 30|
+|              | Building Name                     |             | 50|
+|              | Building Number                   |             | 4|
+| Thoroughfare | Dependent Thoroughfare Name       |             | 60|
+|              | Dependent Thoroughfare Descriptor |             | 20|
+|              | Thoroughfare Name                 | Street      | 60|
+|              | Thoroughfare Descriptor           |             | 20|
+| Locality     | Double Dependent Locality         | Small villages | 35|
+|              | Dependent Locality                |             | 35|
+|              | Post town                         |             | 30|
+| Postcode     | Postcode           |             | 7|
+| PO Box       | PO Box             |             | 6|
+
+## Then apply the following display format for each country
+
+https://support.loqate.com/wp-content/uploads/2023/03/Loqate-international-address-formats-2023Q1.1.pdf
+
+
+
+
+
+
+
+Because we deal with properties across the globe we cannot store addresses biased to one country as it causes formatting issues. So this Addressing Markdown seeks to address that. It uses a version of both thUPU and ISO standards, and with the application of the Loqate-international-address-formats.pdf you are able to read the correct address based on country formats. Can you update the property data schema to reflect this
+[Timestamp: 2026/08/27 12:07:41]
+
+**ai**: I need to understand the property data schema before updating it. Let me read the property data model note and check the app/technology architecture references to `kf_Site` and addressing.
+
+Now I understand the schema. The user wants me to update the property data schema to reflect the Hub's addressing model — the UPU/ISO-based store-address-neutral fields with country-specific display formats via Loqate.
+
+The Hub's addressing model uses a **country-neutral canonical address** stored in granular fields (Organisation, Premises, Thoroughfare, Locality, Postcode, PO Box), and then country display formats are applied via Loqate. This directly supports the existing `kf_Site` flt model, particularly the "Auto Address Look Up with Loqate" section and the `kf_loqateid — verified address` field.
+
+The best place to reflect this is in the `property-data-model.md` note, specifically in the `kf_Site` entity section, plus extending the existing Loqate/auto-address-lookup section to document the addressing standard.
+
+Let me update the `kf_Site` section to add the canonical address fields from the Hub's model, and update the Loqate section to reference the UPU/ISO standard and the country-neutral storage principle.
+
+Let me plan the edit carefully. I'll:
+
+1. Add an "Addressing (Country-Neutral Standard)" subsection to `kf_Site` documenting the granular address element fields.
+2. Update the "Auto Address Look Up with Loqate" section to note the UPU/ISO standard and country display formatting.
+
+The kf_Site key fields currently: `kf_uprn`, `kf_cadastralref`, `kf_landregistrytitle`, `kf_loqateid`. I'll expand with the address element fields following the Hub's naming.
+
+Now let me update the "Auto Address Look Up with Loqate" section to reflect the underlying standard and country-display application.
+
+
+
+I left an awkward `e.g. TBD-style` placeholder in that last paragraph — that's not clean. Let me fix that wording to something accurate without a fake example.
+
+Actually, re-reading the Hub content: the display format is applied per country via the Loqate international address formats PDF. The UK post town concept, for example, relates to the UK address format. But rather than fabricate a specific example, let me phrase it plainly.
+
+Now let me verify the final result of the property-data-model note.
+
+The update is complete and reads cleanly. There's also a companion diagram file `property-data-model-schema.puml` referenced at the top (line 9). The user asked to "update the property data schema" — the schema diagram (PlantUML) may also reflect the address fields. Let me check whether it's worth updating, since the vault uses PlantUML/Archimate for diagrams and keeping the diagram consistent matters. But first, let me focus on whether the user wants the schema diagram touched.
+
+Let me look at the puml file to see if it contains address fields that should be updated too.
+
+The PlantUML schema diagram currently models `kf_Site` with country-specific address fields (`kf_addressline1`, `kf_addressline2`, `kf_city`, `kf_postcode`, `kf_country`). This is exactly what the user's addressing model aims to replace — a country-biased storage layout. To properly "update the property data schema," I should update the PlantUML diagram too so the `kf_Site` entity reflects the country-neutral UPU/ISO address element fields, keeping the diagram consistent with the note.
+
+Let me update the `kf_Site` class in the PUML to use the granular country-neutral address fields. I'll replace the address-line fields with the granular elements from the Hub model.
+
+Now let me update the SITE note in the PUML to reflect the country-neutral addressing model. The current note says "Loqate auto-creates via Power Automate." I'll add the country-neutral addressing point.
+
+Let me update the related docs note also since I should keep the architecture-technology note's Loqate context consistent. Actually, the technology note already says Loqate does "Auto-address lookup for kf_Site" which is consistent — no change needed there.
+
+Let me verify the updated PUML file is valid PlantUML.
+
+The updates are complete and the PUML is valid. Let me summarize what I did.
+
+I've updated the property data schema to reflect the Hub's country-neutral addressing model, in **two** files (the note and its companion diagram) so they stay consistent:
+
+## [[wiki/property-data-model]] — the note
+
+**1. New section under `kf_Site`: "Address Storage (Country-Neutral Standard)"**
+- Documents the rationale (properties across the globe → can't store addresses biased to one country or formatting issues arise).
+- Records the standard: a version of **UPU S42a-6 / ISO 19773**, split into granular elements.
+- Full element table with max lengths (Organisation, Premises, Thoroughfare, Locality, Postcode, PO Box).
+- Notes that country-specific display format is applied on read via the Loqate international address formats reference.
+
+**2. Extended "Auto Address Look Up with Loqate"**
+- Added a closing paragraph tying the existing Loqate flow to the standard — Loqate populates the country-neutral elements, and the display layout is rendered per country via the Loqate formats reference.
+
+## [[wiki/property-data-model-schema.puml]] — the diagram
+
+**1. Rebuilt the `kf_Site` entity's address fields**
+- Replaced the country-biased layout (`kf_addressline1`, `kf_addressline2`, `kf_city`, `kf_country`) with the 14 granular country-neutral elements (`kf_orgname`, `kf_subbuildingname`, `kf_thorofname`, `kf_posttown`, etc.), each with its max length.
+- Kept `kf_uprn`, `kf_cadastralref`, `kf_landregistrytitle`, `kf_loqateid`, lat/long.
+
+**2. Updated the `kf_Site` note** to state the address is stored country-neutral (UPU S42a-6 / ISO 19773) and rendered per-country via Loqate.
+
+A few points worth noting for your awareness:
+
+- **Field naming:** I prefixed all new fields with `kf_` following the vault's convention (e.g. `kf_thorofname`, `kf_posttown`, `kf_pobox`) and shortened the long standard names (e.g. `kf_orgname` for "Organisation Name"). If your Hub system uses specific canonical field names you'd like mirrored exactly, tell me and I'll align them.
+- **Description columns:** The Hub's table had a "Description" column (e.g. "Street", "Small villages") — I didn't carry those over since they're illustrative; the field names carry the meaning.
+- **Two reference links** from the Hub page (the ISO term and the UPU PDF) — I referenced the standards by name rather than embedding external URLs, but I can add those as links if you'd like them recorded.
+
+One thing to flag for a design decision: the previous `kf_Site` model had a `kf_country` OptionSet field which I removed in favour of the country-neutral approach. The new canonical model doesn't include a country element in the table above (the standard's elements are format-agnostic). If you still want to store the country explicitly for regional rules/compliance, I can re-add a `kf_addresscountry` field — let me know.
+
+Want me to commit these changes?
+[Timestamp: 2026/08/27 12:07:41]
+
+**user**: items such as UPRN or cadastralref, Mankani are country or regional specific, along with Loqates international address formats for presentation https://docs.loqate.com/data-coverage/loqate-international-address-formats#loqate-international-address-formats.
+[Timestamp: 2026/08/27 12:14:18]
+
+**ai**: You're raising an important design point. Let me make sure I understand what you're saying before I edit.
+
+Your point: identifiers like **UPRN** (UK) and **cadastralref** (registry) are **country/regional-specific**, just like **Loqate's international address formats** are used for presentation. This reinforces the country-neutral storage principle — the canonical stored address elements are neutral, while country/region-specific things (national identifiers like UPRN, and the per-country display formats) sit separate from, or as presentation on top of, that neutral core.
+
+And you've given me the correct Loqate URL to reference: `https://docs.loqate.com/data-coverage/loqate-international-address-formats#loqate-international-address-formats` (note — the actual provider documentation rather than the PDF link I referenced earlier).
+
+Could you confirm exactly what you'd like reflected, so I get it right? My read of your intent is:
+
+1. **Flag/nuance the country-specific identifiers** — UPRN, cadastralref, land registry title are national/regional references that sit alongside but distinct from the neutral address core (they're not "country-biased storage," they're supplementary local identifiers).
+
+2. **Correct the Loqate reference** — update the note to link to the real Loqate documentation URL you gave (`docs.loqate.com/.../loqate-international-address-formats`), not the PDF I referenced earlier.
+
+Before I edit, one question to avoid over- or under-doing it: do you want me to
+- **A)** just fix the Loqate URL and add a brief note clarifying that UPRN/cadastralref are country/region-specific identifiers (light touch), or
+- **B)** restructure the `kf_Site` schema section more fully — separating the neutral canonical address elements from the country/regional-specific identifier fields, and capturing the per-country presentation formatting — so the design tension you're highlighting is explicit?
+
+I'm leaning toward B since it more faithfully captures the architectural point, but I don't want to restructure more than you intended. Which would you prefer?
+[Timestamp: 2026/08/27 12:14:18]
+
+**user**: the previous property data schema had fields which presented the address as a single line, this schema should do the same, but in respect to the international address format.
+[Timestamp: 2026/08/27 12:16:26]
+
+**ai**: Now I understand better. You're pointing out that the original `kf_Property`/`kf_Site` schema had a single-line address presentation field (`kf_addressfull` on `kf_Property`, and the old `kf_Site` had `kf_addressline1`, `kf_addressline2`). The new country-neutral schema should also provide a single-line presentation of the address — but rendered per the international address format.
+
+So the granular country-neutral elements are the **canonical storage**, and there should also be a **presentation field** that renders the address as a single line following the international (Loqate) address format. This is the "single line, but in respect to the international address format" requirement.
+
+Let me find where the single-line address field appears. In the original note, `kf_Property` had "Identity and address, geocoded" and the PUML has `kf_addressfull : Text` on `kf_Property`. The old `kf_Site` had address line fields.
+
+Let me reconcile. The user says "the previous property data schema had fields which presented the address as a single line" — that's `kf_addressfull` on `kf_Property`, and possibly address lines on `kf_Site`. This schema should do the same (provide a single-line address presentation), but rendered per the international address format.
+
+Let me look at where `kf_addressfull` is and decide where to add the single-line-but-international-format presentation field. Let me check the note - in `kf_Property` section it says "Identity and address, geocoded". Let me add a presentation field.
+
+Let me check the PUML again — `kf_Property` has `kf_addressfull : Text`. I should reflect that the single-line address is derived/rendered per the international address format from the neutral canonical elements.
+
+Let me confirm my understanding of "single line" formatting. The user wants the schema to expose a computed/presented single-line address, but its layout should follow the international address format (per country via Loqate).
+
+Let me look at the current state of both files and make the changes. First let me re-read the relevant parts.
+
+Let me check whether there was a `kf_addressfull` concept and how it should be repositioned. I'll grep for address-related fields across the wiki to be thorough.
+
+Now I have the full picture. The key finding: on `kf_Property`, there's a `kf_addressfull : Text` field in the PUML (line 40), and the note's `kf_Property` section says "Identity and address, geocoded". This `kf_addressfull` is the single-line address presentation field.
+
+Your point: the new schema should keep that **single-line address presentation**, but it must be rendered **per the international address format** (from the neutral canonical elements, via Loqate's international address formats).
+
+Now let me make the changes. I'll:
+
+1. **PUML `kf_Property`**: Update `kf_addressfull` to clarify it's the single-line rendered address (per international address format), derived from `kf_Site`'s neutral elements.
+
+2. **PUML `kf_Site`**: Add the single-line presentation field on `kf_Site` too (since the address lives on the site). Actually — where does the single-line address belong? In the original, `kf_Site` had `kf_addressline1`/`kf_addressline2` and `kf_Property` had `kf_addressfull`. 
+
+Let me think about the cleanest representation. The canonical address storage is on `kf_Site`. The single-line presentation should be on `kf_Site` (where the neutral elements live) so it renders correctly from the canonical data. But `kf_Property` also had `kf_addressfull`. 
+
+Given the user says "the previous property data schema had fields which presented the address as a single line, this schema should do the same" — I'll add a single-line presentation field (e.g. `kf_addressfull`) to `kf_Site`, rendered per the international address format, and keep/reflect it on `kf_Property` as well (a denormalised/rendered copy).
+
+Let me also update the note's `kf_Site` section to mention the single-line presentation field and update the "Address Storage" closing paragraph to note the single-line rendering.
+
+Let me also fix the Loqate URL to the correct one the user gave in the previous message: `https://docs.loqate.com/data-coverage/loqate-international-address-formats#loqate-international-address-formats`.
+
+Let me make the edits. First, the note — update the Address Storage section to add a single-line presentation field and the correct Loqate link.
+
+Now update the Loqate closing paragraph in the "Auto Address Look Up" section to reference the correct URL too.
+
+Now update the PUML. On `kf_Site`, add a single-line presentation field `kf_addressfull` (rendered per international format). On `kf_Property`, keep `kf_addressfull` but note it's the presented single line derived from the site.
+
+Let me update `kf_Site` in the PUML first — add `kf_addressfull : Text` after the neutral elements and geocode identifiers.
+
+Now update `kf_Property`'s `kf_addressfull` to reflect it's the presented single-line (rendered per international format, derived from site). Let me update that in the PUML.
+
+Now update the SITE note in the PUML to mention the single-line presentation per international format. Current note has 4 lines; let me add the single-line rendering point.
+
+Now let me also update the note's `kf_Property` section "Identity and address, geocoded" bullet to reflect the single-line presented address consistently. Let me re-read the current `kf_Property` section in the note.
+
+The `kf_Property` section's "Identity and address, geocoded" bullet is generic enough — but for consistency let me clarify that the single-line address is presented (rendered per international format). Let me update that bullet. Actually, "Identity and address, geocoded" is in the Key Fields list for kf_Property. Let me read that section and update it lightly.
+
+The "Identity and address, geocoded" bullet is fine — it doesn't conflict with the new model. I'll leave it as is to avoid over-editing.
+
+Now let me also verify the `data-model-core-tables.md` note, which listed `kf_loqateid — verified address` for kf_Site and had `address1_*` composite address for client. Those are different entities and consistent. The kf_Site fields in that note may also need a review. Let me check what `data-model-core-tables.md` says about kf_Site addressing, since it's a parallel description of the schema that should stay consistent.
+
+
+
+`data-model-core-tables.md` has a parallel `kf_Site` section. To keep the schema consistent across the wiki, I should update this note's `kf_Site` section too with the country-neutral addressing point. Following the AGENTS.md rule (merge, don't duplicate/orphan), this keeps a single consistent representation.
+
+Let me update the `kf_Site` section in `data-model-core-tables.md` to add the country-neutral address storage note, mirroring the property-data-model note.
+
+Now let me verify the final PUML state is valid and consistent.
+
+
+
+The schema is now consistent. Let me do a final review of the property-data-model note's address storage section to make sure it reads well and reflects all your points.
+
+The changes are complete across three files. Here's a summary of what I did to address your point about the single-line address and the country/regional-specific identifiers:
+
+## The core point you raised
+
+The previous schema presented the address as a single line (`kf_addressfull`) — the new country-neutral schema should do the same, but rendered per the **international address format**, not stored as a country-biased free-text string. And identifiers like UPRN/cadastralref remain country/regional-specific reference fields alongside the neutral core.
+
+## Changes made
+
+**[[wiki/property-data-model]] (note)**
+- Updated the Address Storage section to state the address is still presented as a single line (`kf_addressfull`), but that line is **rendered per the applicable international address format** from the country-neutral elements — not stored as free text.
+- Made explicit that `kf_uprn` (UK) and `kf_cadastralref` (EU registry) are **country/regional-specific reference fields** alongside the neutral core.
+- Corrected the Loqate reference to the real provider documentation URL you provided: `docs.loqate.com/data-coverage/loqate-international-address-formats` (replacing the PDF link). Applied it in both the Address Storage section and the Auto Address Look Up section.
+
+**[[wiki/property-data-model-schema.puml]] (diagram)**
+- Added `kf_addressfull : Text (rendered, intl. format)` to `kf_Site` (the single-line rendered address beside the neutral elements).
+- Updated `kf_Property`'s `kf_addressfull` to `Text (presented, from kf_Site)` — clarifying it's the presented single line derived from the site.
+- Updated the `kf_Site` note to mention `kf_addressfull` is the single-line address rendered per the international address format.
+
+**[[wiki/data-model-core-tables.md]] (parallel schema note)**
+- Updated the `kf_Site` section to reflect the country-neutral address elements, the `kf_addressfull` single-line rendered field, and the country-specific identifiers (linking to `[[property-data-model]]` for the full details) — so the parallel schema description stays consistent.
+
+## Points I want to flag for your decision
+
+1. **Where the single-line field lives.** I put `kf_addressfull` on both `kf_Site` (where the neutral elements live) and kept it on `kf_Property` as a presented copy. If you'd prefer the single-line rendered address to live **only** on `kf_Site` (single source of truth) with `kf_Property` referencing it rather than duplicating, say so and I'll adjust — currently it's duplicated on both, matching the previous schema's pattern.
+
+2. **The `kf_addressline1` / `kf_city` / `kf_country` fields on the old `kf_Site`** are now fully replaced by the granular neutral elements — that's the intended change.
+
+If this matches what you meant, I'm happy to commit these changes. Want me to go ahead?
+[Timestamp: 2026/08/27 12:16:26]
+
+**user**: so does this schema cache the international address format in a table, or grab it on the fly from loqate  when generating the single line address
+[Timestamp: 2026/08/27 12:20:35]
+
+**ai**: That's a genuinely important design decision, and right now the schema/vault is **ambiguous** on it — the wording I used says the format is "applied on read" but doesn't specify whether that means caching a format table or calling Loqate live. Let me be honest about what the current state implies rather than guess.
+
+## What the schema currently says
+
+The granular neutral elements (`kf_orgname`, `kf_thorofname`, `kf_posttown`, etc.) are the **canonical stored data**. Then:
+
+- (note) "...the correct country-specific display format is then applied **on read** via the Loqate international address formats reference" — and `kf_addressfull` is "rendered per the applicable international address format."
+- (PUML) `kf_addressfull : Text (rendered, intl. format)`.
+
+So the current answer is effectively: **"on read"** — the single line is generated at read time, not persisted as the source of truth. But the wording doesn't commit to *how* the format is obtained (cached table vs. live Loqate call), which is exactly the ambiguity you're probing.
+
+## The three realistic options
+
+**Option A — Cache the format spec in a reference table (static)**
+Store the per-country address format definitions (element order/line breaks for each country) in a reference/config table. `kf_addressfull` is generated from the cached format + the neutral elements. Loqate is used at *data capture* time (to validate and populate the neutral elements), not at read time.
+- Pros: fast, offline, no per-read dependency on Loqate, deterministic, single vendor dependency only at write.
+- Cons: you must keep the format table in sync when Loqate/UPU updates formats.
+
+**Option B — Live Loqate call every read**
+Call Loqate to render `kf_addressfull` each time it's needed.
+- Pros: always current, no format table to maintain.
+- Cons: per-read latency + cost (Loqate is per-lookup/billing), a runtime dependency for basic display, and it contradicts the "stored country-neutral" intent slightly if you join on a call every read.
+
+**Option C — Hybrid (most common)**
+Format logic is **cached/embedded** in the platform (e.g. a Power Apps function/plugin or a small reference table synced from Loqate), generating `kf_addressfull` at capture/write time and storing it. Reads use the persisted value; a refresh job syncs format updates.
+
+## What I'd recommend
+
+Given the vault's own design constraints (Loqate is **per-lookup contracted**; the schema already treats `kf_addressfull` as a stored rendered field; Power Platform is the platform), the consistent and cost-safe choice is **Option A or C**: cache the country format specifications in a reference table (or embed them in a rendering plugin), and generate `kf_addressfull` at write/capture time — not a live per-read Loqate call. Live Loqate on every read would add per-read cost and latency for something that's a stable country×format lookup.
+
+But — this is a judgment call with real operational consequences, and I shouldn't unilaterally bake one option into the schema. Would you like me to:
+
+1. **Document the decision explicitly** in the schema note (state that the format is cached in a reference table, generated at write time — Option A/C), and/or
+2. **Choose A vs C** (pure static reference table vs. plugin-generated-and-stored) — tell me which operational model Knight Frank prefers, and I'll encode that precisely, or
+3. Leave it as "on read" and just **add a clearly-marked open question** in the note so the decision is surfaced rather than silently assumed.
+
+Which way do you want to go?
+[Timestamp: 2026/08/27 12:20:35]
+
+**user**: go with option C cache the information in a table, update periodically
+[Timestamp: 2026/08/27 12:23:37]
+
+**ai**: I'll update the schema to reflect Option C: the international address formats are cached in a reference table, updated periodically, and used to generate the single-line `kf_addressfull` at capture/write time. Let me update the note and the PUML.
+
+First, let me re-read the current address storage section in the note to edit it precisely.
+
+Now let me update the note to document Option C — the cached reference table updated periodically. I'll replace lines 44 and 46 with the explicit decision.
+
+Now update the "Auto Address Look Up with Loqate" paragraph, which currently says the format reference is "applied on read" — that needs to align with the caching model. Let me read and update it.
+
+
+
+Now update the PUML to add the `kf_AddressFormat` reference table entity and a note reflecting the caching model. Let me add the reference table to the PUML's "Related Entities" rectangle and update the SITE note.
+
+Let me read the PUML sections I need to edit — the Related Entities rectangle and the SITE note.
+
+
+
+I'll add a `kf_AddressFormat` reference table to the "Related Entities" rectangle, and add a relationship from SITE to it. Let me add the class after `kf_Lease`.
+
+Now add a relationship from SITE to the AddressFormat reference table and update the SITE note. Let me add the relationship line and update the note.
+
+
+
+Now update the SITE note to reflect the caching model. Let me read the current note and edit it.
+
+
+
+Also update the `kf_addressfull` field annotation on `kf_Site` in the PUML to reflect it's generated at write time. Let me check and update it. Currently it reads `kf_addressfull : Text (rendered, intl. format)`. Let me clarify it's generated at write using cached format.
+
+Now let me also update `data-model-core-tables.md` which references `kf_addressfull` as "single-line address rendered per international format" — that's still accurate, but let me verify the wording is consistent with Option C. The current line says "`kf_addressfull` — single-line address rendered per international format". This is fine and consistent. No change needed there.
+
+Let me do a final verification of the full property-data-model note address section and the PUML to ensure coherence.
+
+The note is consistent. Option C is now fully documented. Let me verify the PUML renders correctly by checking the final FMT entity and relationships.
+
+The changes are complete. Here's how I've encoded **Option C** (cache the address formats in a reference table, update periodically) across the schema:
+
+## What the model now says
+
+**Decision (explicit, no longer ambiguous):**
+- The international address format definitions are cached in a reference table **`kf_AddressFormat`**.
+- The table is **updated periodically** from the Loqate international address formats source.
+- `kf_addressfull` (the single-line address) is **generated at capture/write time** from the country-neutral elements using the cached format.
+- Reads use the **persisted** single-line value thereafter.
+- This **avoids a live Loqate call (and its per-lookup cost) on every read**.
+
+## Files updated
+
+**[[wiki/property-data-model]] (note)**
+- Added an "**Address format caching**" paragraph under Address Storage stating the decision: `kf_AddressFormat` cache table, periodic updates, `kf_addressfull` generated at write time, persisted and read thereafter.
+- Updated the "Auto Address Look Up" paragraph to say formats are cached in `kf_AddressFormat` and used **at capture time** (removed the "on read" wording).
+
+**[[wiki/property-data-model-schema.puml]] (diagram)**
+- Added a new **`kf_AddressFormat`** reference entity (fields: `kf_country` ISO, `kf_formatspec` cached from Loqate, `kf_lastupdated`, `kf_sourceref`) in the Related Entities rectangle.
+- Added the relationship `SITE <|-- ADDRFMT : "address format (cached)"`.
+- Updated the `kf_Site` note: "rendered per-country via cached kf_AddressFormat... `kf_addressfull` generated at write using the cached format; formats refreshed periodically."
+- Refined `kf_addressfull` annotation on `kf_Site` to "single line, from cached format".
+
+**[[wiki/data-model-core-tables.md]]**
+- Already consistent (references `kf_addressfull` as the single-line rendered address); no change needed.
+
+## One consideration to note
+
+I've kept the recurrence ("updated periodically") open rather than pinning a specific cadence, since that's an operational choice — a nightly/scheduled sync job vs. an on-demand refresh when Loqate changes formats. If you want me to state a specific refresh cadence (e.g. a scheduled Power Automate flow re-importing the Loqate format set), I can add that.
+
+These have been a meaningful set of schema changes. Want me to commit them (along with the earlier addressing/Hub updates that aren't committed yet)? Note the pending uncommitted work includes: the risks-and-issues register, the Hub-as-internal updates, and this addressing schema work. I can split into logical commits or do one — your call.
+[Timestamp: 2026/08/27 12:23:37]
+
+**user**: commit
+[Timestamp: 2026/08/27 12:26:04]
+
+**ai**: Let me check the current git state to see what's uncommitted before committing.
+
+Interesting — there's been an automated vault backup commit (`c338c2a`) since my last commit, and the `roadmap-dependencies.md` Hub-as-internal changes appear to have been picked up in one of those backups (they're no longer showing as modified). Let me check what's currently uncommitted.
+
+Current state:
+- `.obsidian/workspace.json` — obsidian config noise, skip
+- `copilot/copilot-conversations/...` — conversation log, skip
+- `wiki/data-model-core-tables.md` — my addressing change, include
+- `wiki/property-data-model-schema.puml` — my addressing change, include
+- `wiki/property-data-model.md` — my addressing change, include
+
+Wait — `roadmap-dependencies.md` isn't showing as modified, which means the Hub-as-internal changes were committed in the automated backup. Let me verify the addressing schema changes are the only content changes I need to commit. The Dashboard, business-context, business-goals, solution-overview edits were all committed earlier (business-goals and dashboard/solution-overview in the first two commits). The risk register was committed.
+
+Let me confirm the roadmap-dependencies change was captured and there's nothing else outstanding from my session. Let me check git diff on the files I'm about to commit to make sure they're purely my addressing changes.
+
+Let me stage and commit the three addressing files with a clear message.
+
+The diffs are exactly my addressing schema changes. These are the three files I'll commit. I noticed the earlier `roadmap-dependencies.md` Hub-as-internal changes aren't in this diff — let me confirm whether they were captured by the automated backup commit or are still pending separately. Let me check.
+
+The `git diff c338c2a HEAD -- wiki/roadmap-dependencies.md` returned nothing, which means the roadmap-dependencies Hub changes are already committed (in c338c2a or earlier). Let me verify that the Hub-as-internal changes made it into the repo history.
+
+The Hub-as-internal changes to `roadmap-dependencies.md` were committed in the automated "vault backup: 2026-08-27 11:59:19" commit (`c338c2a`). Good — those are captured in history. So the only uncommitted content from my session is the addressing schema work. Let me stage and commit those three files.The Hub-as-internal changes were picked up by the automated vault backup commit, so they're already in history. The only uncommitted content from my session is the addressing schema work. Let me commit those three files.
+
+Committed successfully.
+
+**Commit `b2da2ef`** — `wiki: country-neutral address schema with cached international format rendering`
+
+3 files, 62 insertions, 6 deletions:
+- `wiki/property-data-model.md` — Address Storage section with the granular UPU/ISO elements, single-line rendering, and the `kf_AddressFormat` caching decision (Option C)
+- `wiki/property-data-model-schema.puml` — rebuilt `kf_Site` entity, added `kf_AddressFormat` reference table, relationships and notes
+- `wiki/data-model-core-tables.md` — parallel `kf_Site` section reconciled
+
+Two things worth noting for transparency:
+
+1. **The Hub-as-internal changes to `roadmap-dependencies.md` weren't in this commit** — they were already captured by the automated vault backup (`c338c2a`, "vault backup: 2026-08-27 11:59:19") that ran earlier. So that work is safely in history; I didn't need to re-commit it.
+
+2. The `.obsidian/workspace.json` and the copilot conversation log remain unstaged, as before.
+
+A reminder on the open item from earlier: I left the refresh cadence of `kf_AddressFormat` ("updated periodically") unspecified. If you want me to pin down a concrete mechanism — e.g. a scheduled Power Automate flow re-importing the Loqate format set — I can add that as a follow-up.
+[Timestamp: 2026/08/27 12:26:04]

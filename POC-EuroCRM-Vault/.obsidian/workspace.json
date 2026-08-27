@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/key-stakeholders.md",
-                "mode": "source",
+                "file": "dashboard.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "key-stakeholders"
+              "title": "dashboard"
             }
           },
           {
@@ -217,21 +217,23 @@
   },
   "active": "3caf48368ae6c7a1",
   "lastOpenFiles": [
+    "wiki/solution-overview.md",
+    "dashboard.md",
+    "wiki/property-data-model.md",
+    "wiki/problem-statement.md",
+    "wiki/property-data-model-schema.puml",
+    "wiki/key-stakeholders.md",
     "wiki/kpis-and-success.md",
     "wiki/power-apps-rationale.md",
-    "wiki/problem-statement.md",
-    "wiki/property-data-model.md",
     "wiki/risks-and-issues.md",
     "wiki/roadmap-dependencies.md",
     "wiki/roadmap-phases.md",
     "wiki/roadmap-timelines.md",
     "wiki/solution-options.md",
-    "wiki/solution-overview.md",
     "wiki/solution-package-model.md",
     "wiki/dependencies-and-constraints.md",
     "wiki/architecture-application.md",
     "wiki/cost-estimates.md",
-    "dashboard.md",
     "wiki/functional-requirements.md",
     "wiki/functional-non-functional-requirements.md",
     "wiki/business-goals.md",
@@ -245,10 +247,7 @@
     "wiki/data-model-core-tables-schema.puml",
     "wiki/client-data-model.md",
     "wiki/client-data-model-schema.puml",
-    "wiki/capital-markets-data-model.md",
     "wiki/capital-markets-data-model-schema.puml",
-    "wiki/data-model-overview.md",
-    "wiki/property-data-model-schema.puml",
     "wiki/architecture-diagram.puml",
     "wiki/architecture-dataflow.puml",
     "archive/~WRD0001.tmp",
