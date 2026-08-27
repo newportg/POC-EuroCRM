@@ -217,6 +217,7 @@
   },
   "active": "597aa953c2405097",
   "lastOpenFiles": [
+    "projects/EuroCRM_Solution_Overview_Document_2026-08-27.docx",
     "scripts/generate_sod_from_wiki.py",
     "archive/~$roCRM_Solution_Overview_Document_v2.docx",
     "wiki/solution-overview.md",
@@ -252,7 +253,6 @@
     "wiki/capital-markets-data-model-schema.puml",
     "wiki/architecture-diagram.puml",
     "wiki/architecture-dataflow.puml",
-    "archive/~WRD0001.tmp",
-    "archive/~WRD0000.tmp"
+    "archive/~WRD0001.tmp"
   ]
 }
