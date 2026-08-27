@@ -55,6 +55,8 @@ The shared asset register that every commercial service line reads.
 The canonical building or land parcel that every other record hangs off.
 
 **Key Fields:**
+- Country-neutral address elements (UPU S42a-6 / ISO 19773) — see [[property-data-model]]
+- `kf_addressfull` — single-line address rendered per international format
 - `kf_uprn` — UK reference
 - `kf_cadastralref` — EU registry
 - `kf_landregistrytitle` — deed

@@ -20,6 +20,33 @@ The canonical building or land parcel that every other record hangs off.
 - `kf_landregistrytitle` — deed
 - `kf_loqateid` — verified address
 
+### Address Storage (Country-Neutral Standard)
+
+Because properties span the globe, addresses cannot be stored biased to one country or formatting issues arise. `kf_Site` stores a single canonical, country-neutral address using a version of the UPU S42a-6 / ISO 19773 standard, split into granular elements:
+
+| Element | Field name | Max length |
+| ------- | ---------- | ---------- |
+| Organisation | Organisation Name | 60 |
+|  | Department Name | 60 |
+| Premises | Sub Building Name | 30 |
+|  | Building Name | 50 |
+|  | Building Number | 4 |
+| Thoroughfare | Dependent Thoroughfare Name | 60 |
+|  | Dependent Thoroughfare Descriptor | 20 |
+|  | Thoroughfare Name | 60 |
+|  | Thoroughfare Descriptor | 20 |
+| Locality | Double Dependent Locality | 35 |
+|  | Dependent Locality | 35 |
+|  | Post town | 30 |
+| Postcode | Postcode | 7 |
+| PO Box | PO Box | 6 |
+
+The correct country-specific display format is then applied via the [Loqate international address formats](https://docs.loqate.com/data-coverage/loqate-international-address-formats#loqate-international-address-formats), so the stored data stays country-neutral while presentation follows each market's conventions.
+
+As with the previous schema, the address is also presented as a single line (`kf_addressfull`), but that line is rendered per the applicable international address format from the country-neutral elements rather than stored as a country-biased free-text field. Identifiers such as `kf_uprn` (UK) and `kf_cadastralref` (EU registry) remain as country/regional-specific reference fields alongside the neutral core.
+
+**Address format caching:** The international address format definitions are cached in a reference table (`kf_AddressFormat`), updated periodically from the Loqate international address formats source. `kf_addressfull` is generated at capture/write time from the country-neutral elements using the cached format, and the persisted single-line value is read thereafter. This avoids a live Loqate call (and its per-lookup cost) on every read.
+
 ### kf_Property — The Commercial Record
 
 The shared asset register that every commercial service line reads.
@@ -95,6 +122,8 @@ Users do not manually create records for `kf_Site` — matching and creation hap
 3. User picks a match and all address fields auto-fill
 4. Standard save — no extra steps or new forms
 5. Power Automate matches or creates `kf_Site` silently
+
+Loqate validates and populates the country-neutral address elements above. The addresses it returns conform to the UPU S42a-6 / ISO 19773 standard. The [Loqate international address formats](https://docs.loqate.com/data-coverage/loqate-international-address-formats#loqate-international-address-formats) are cached in the `kf_AddressFormat` reference table (updated periodically) and used at capture time to render the display layout, including the single-line `kf_addressfull`, for each country.
 
 ## Every Service Line Reads the Same Record
 

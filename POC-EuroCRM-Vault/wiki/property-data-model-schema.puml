@@ -12,11 +12,21 @@ rectangle "Physical Asset" as PHYSICAL {
   class "kf_Site" as SITE {
     kf_siteid : GUID ++
     --
-    kf_addressline1 : Text
-    kf_addressline2 : Text
-    kf_city : Text
-    kf_postcode : Text
-    kf_country : OptionSet
+    kf_orgname : Text (60)
+    kf_departmentname : Text (60)
+    kf_subbuildingname : Text (30)
+    kf_buildingname : Text (50)
+    kf_buildingnumber : Text (4)
+    kf_deptthorofname : Text (60)
+    kf_deptthorofdescriptor : Text (20)
+    kf_thorofname : Text (60)
+    kf_thorofdescriptor : Text (20)
+    kf_ddependentlocality : Text (35)
+    kf_dependentlocality : Text (35)
+    kf_posttown : Text (30)
+    kf_postcode : Text (7)
+    kf_pobox : Text (6)
+    kf_addressfull : Text (single line, from cached format)
     kf_latitude : Decimal
     kf_longitude : Decimal
     kf_uprn : Text (UK)
@@ -37,7 +47,7 @@ rectangle "Property Records" as RECORDS {
     --
     kf_sitectid : Lookup → kf_Site
     kf_name : Text
-    kf_addressfull : Text
+    kf_addressfull : Text (presented, from kf_Site)
     kf_sector : OptionSet
     kf_propertytype : OptionSet
     kf_status : OptionSet
@@ -137,6 +147,15 @@ rectangle "Related Entities" as RELATED {
     kf_rent : Currency
     kf_propertyid : Lookup → kf_Property
   }
+
+  class "kf_AddressFormat" as ADDRFMT {
+    kf_addressformatid : GUID ++
+    --
+    kf_country : Text (ISO)
+    kf_formatspec : Text (cached from Loqate)
+    kf_lastupdated : DateTime
+    kf_sourceref : Text
+  }
 }
 
 ' ===== Relationships =====
@@ -151,10 +170,16 @@ PROP <|-- ESG : "propertyid"
 PROP <|-- VAL : "propertyid"
 PROP <|-- LEASE : "propertyid"
 
+SITE <|-- ADDRFMT : "address format (cached)"
+
 ' ===== Notes =====
 note bottom of SITE
   Canonical physical building or land parcel.
   Every property record hangs off this.
+  Address stored country-neutral (UPU S42a-6 / ISO 19773),
+  rendered per-country via cached kf_AddressFormat.
+  kf_addressfull is the single-line address generated at write
+  using the cached format; formats refreshed periodically.
   Loqate auto-creates via Power Automate.
 end note
 
