@@ -247,6 +247,17 @@ Regulatory and compliance requirements across all four European jurisdictions.
 
 See [[glossary]].
 
+## Next steps
+
+Outstanding work before formal approval:
+
+- Complete cost, risk, and roadmap sections — costs and benefits are placeholder (CAPEX/OPEX N/A), risk register and roadmap phasing/timelines to be defined
+- Confirm the relevant enterprise standards, PADs, and blueprints — target state table lists CTO Architecture Principles as pending review and data residency/security baseline as TBD
+- Gather functional and non-functional requirements from stakeholders across all four regions
+- Populate the risk register
+- Complete solution options and trade-offs analysis (vendor evaluation and architecture assessment)
+- Quantify expected benefits for the business case
+
 ## References
 
 - CTO Architecture Principles.pptx

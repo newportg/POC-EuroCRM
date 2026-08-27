@@ -4,15 +4,15 @@
 
 ```mermaid
 pie title Task Completion
-    "Outstanding" : 10
-    "Completed" : 51
+    "Outstanding" : 9
+    "Completed" : 52
 ```
 
-**Overall progress: 84%** (51 / 61 tasks)
+**Overall progress: 85%** (52 / 61 tasks)
 
 | Section | Outstanding | Completed | Progress |
 | ------- | ----------- | --------- | -------- |
-| Next steps | 3 | 2 | 40% |
+| Next steps | 2 | 3 | 60% |
 | Document sections | 6 | 25 | 81% |
 | Wiki content | 0 | 25 | 100% |
 
@@ -84,6 +84,7 @@ pie title Task Completion
 - [x] Executive summary #task
 - [x] Business context #task
 - [x] Business goals and objectives #task
+- [x] Populate the business context and goals with the actual EuroCRM scope #task
 - [x] Key stakeholders #task
 - [x] Business capabilities #task
 - [x] KPIs and success #task
@@ -105,7 +106,6 @@ pie title Task Completion
 
 ### Solution overview document — next steps
 
-- [ ] Populate the business context and goals with the actual EuroCRM scope #task
 - [ ] Complete cost, risk, and roadmap sections before formal approval #task
 - [ ] Confirm the relevant enterprise standards, PADs, and blueprints #task
 

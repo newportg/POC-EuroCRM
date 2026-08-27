@@ -4,6 +4,17 @@ Status: Draft
 Parent: [[solution-overview]]
 Source: European CRM Architecture Review 2.pdf
 
+## Programme Scope
+
+The business scope is to create a **common client, contact and property data foundation across Europe** that helps our teams win more business, collaborate more effectively across borders, and reduce operational risk. In practical terms the programme is intended to:
+
+- Create a single, trusted view of clients, contacts, properties and opportunities
+- Improve lead and deal management from origination through to completion
+- Enable better cross-border visibility and collaboration across the region
+- Centralise fragmented data currently on spreadsheets and local databases, and reduce reliance on manual reporting processes
+- Strengthen compliance, KYC and risk management controls
+- Provide a foundation for reporting, analytics and future AI-driven insights
+
 ## Current State
 
 - Four separate European offices: France, Germany, Spain, Poland
