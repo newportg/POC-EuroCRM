@@ -217,6 +217,7 @@
   },
   "active": "597aa953c2405097",
   "lastOpenFiles": [
+    "scripts/generate_sod_from_wiki.py",
     "archive/~$roCRM_Solution_Overview_Document_v2.docx",
     "wiki/solution-overview.md",
     "dashboard.md",
@@ -252,7 +253,6 @@
     "wiki/architecture-diagram.puml",
     "wiki/architecture-dataflow.puml",
     "archive/~WRD0001.tmp",
-    "archive/~WRD0000.tmp",
-    "archive/EuroCRM_Solution_Overview_Document_v2.docx"
+    "archive/~WRD0000.tmp"
   ]
 }
