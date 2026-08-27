@@ -4,16 +4,16 @@
 
 ```mermaid
 pie title Task Completion
-    "Outstanding" : 9
-    "Completed" : 52
+    "Outstanding" : 8
+    "Completed" : 53
 ```
 
-**Overall progress: 85%** (52 / 61 tasks)
+**Overall progress: 87%** (53 / 61 tasks)
 
 | Section | Outstanding | Completed | Progress |
 | ------- | ----------- | --------- | -------- |
 | Next steps | 2 | 3 | 60% |
-| Document sections | 6 | 25 | 81% |
+| Document sections | 5 | 26 | 84% |
 | Wiki content | 0 | 25 | 100% |
 
 ## Completed tasks
@@ -85,6 +85,7 @@ pie title Task Completion
 - [x] Business context #task
 - [x] Business goals and objectives #task
 - [x] Populate the business context and goals with the actual EuroCRM scope #task
+- [x] Risks and issues — populate risk register with risk of inaction #task
 - [x] Key stakeholders #task
 - [x] Business capabilities #task
 - [x] KPIs and success #task
@@ -114,7 +115,6 @@ pie title Task Completion
 ### Solution overview document — sections needing expansion
 
 - [ ] Functional and non-functional requirements — needs detailed requirements #task
-- [ ] Risks and issues — needs risk register populated #task
 - [ ] Solution options and trade-offs — needs options analysis #task
 - [ ] Cost and benefits summary — estimated costs — needs cost modelling #task
 - [ ] Cost and benefits summary — expected benefits — needs quantification #task
