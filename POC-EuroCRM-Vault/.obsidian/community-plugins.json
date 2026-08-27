@@ -4,5 +4,6 @@
   "dataview",
   "obsidian-linter",
   "obsidian-tasks-plugin",
-  "obsidian-plantuml"
+  "obsidian-plantuml",
+  "obsidian-git"
 ]
