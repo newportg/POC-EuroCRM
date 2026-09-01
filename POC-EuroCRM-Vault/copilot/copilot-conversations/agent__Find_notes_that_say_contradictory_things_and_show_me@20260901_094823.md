@@ -108,5 +108,5 @@ The three most damaging contradictions:
 **user**: can you create the SOD word document using the SOD template in the archive directory and use the content in the WIki directory. store the output in the output directory. When you create the document can you flatten the wiki references
 [Timestamp: 2026/09/01 10:19:42]
 
-**ai**: I'll pick up the SOD build — and incorporate the flattening of wiki references. Let me first check the current state and verify my content has no lingering `[[wikilink]]` syntax.
+**ai**: I'll pick up the SOD build — and incorporate the flattening of wiki references. Let me first check the current state and verify my content has no lingering `[[wikilink]]` syntax.The grep matches are in a leftover artifact from a prior session (`sod-gen\generate_sod.py`), not in my content file — my content is already wikilink-free. I'll still add an explicit "flatten wikilinks" safety net to the builder so any `[[note]]` or `![[note]]` that sneaks in renders as plain text. Then I'll run the build.
 [Timestamp: 2026/09/01 10:19:42]
