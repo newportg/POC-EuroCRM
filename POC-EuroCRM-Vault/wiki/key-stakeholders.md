@@ -5,17 +5,18 @@ Parent: [[solution-overview]]
 
 ## Stakeholder Register
 
-| Name             | Role                                 | Region                         | Interest | Influence |
-| ---------------- | ------------------------------------ | ------------------------------ | -------- | --------- |
-| Gary Newport     | Author/Solution Lead                 | Europe                         | High     | High      |
-| TDA              | Technical Design Authority           | Enterprise                     | High     | High      |
-| CTO              | Chief Technology Officer             | Enterprise                     | High     | High      |
-| European MDs     | Regional Managing Directors          | France, Germany, Spain, Poland | High     | High      |
-| CM Team Heads    | Capital Markets Service Line Leaders | Europe                         | High     | Medium    |
-| Legal/Compliance | Data Protection Officers             | Europe                         | High     | Medium    |
-| Finance Team     | Financial Controllers                | Europe                         | Medium   | Medium    |
-| IT Operations    | Infrastructure & Support             | Enterprise                     | Medium   | Medium    |
-| End Users        | Brokers, Analysts, Support Staff     | Europe                         | High     | Low       |
+| Name             | Role                                 | Region                          | Interest | Influence |
+| ---------------- | ------------------------------------ | ------------------------------- | -------- | --------- |
+| Gary Newport     | Author/Solution Lead                 | Europe                          | High     | High      |
+| Hannah Nguyen    | Business Aanlyst                     |                                 | High     | High      |
+| TDA              | Technical Design Authority           | Enterprise                      | High     | High      |
+| CTO              | Chief Technology Officer             | Enterprise                      | High     | High      |
+| European MDs     | Regional Managing Directors          | France, Germany, Spain, Poland  | High     | High      |
+| CM Team Heads    | Capital Markets Service Line Leaders | Europe                          | High     | Medium    |     |
+| Legal/Compliance | Data Protection Officers             | Europe                          | High     | Medium    |     |
+| Finance Team     | Financial Controllers                | Europe                          | Medium   | Medium    |     |
+| IT Operations    | Infrastructure & Support             | Enterprise                      | Medium   | Medium    |     |
+| End Users        | Brokers, Analysts, Support Staff     | Europe                          | High     | Low       |     |
 
 ## RACI Matrix
 

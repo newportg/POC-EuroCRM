@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "dashboard.md",
+                "file": "wiki/key-stakeholders.md",
                 "mode": "source",
-                "source": false
+                "source": true
               },
               "icon": "lucide-file",
-              "title": "dashboard"
+              "title": "key-stakeholders"
             }
           }
         ]
@@ -203,6 +203,7 @@
   },
   "active": "1b44ce69fb9d1b25",
   "lastOpenFiles": [
+    "dashboard.md",
     "outputs/~$roCRM_Solution_Overview_Document.docx",
     "outputs/~WRL0001.tmp",
     "outputs/~WRD0000.tmp",
@@ -212,7 +213,6 @@
     "wiki/solution-scope-in-scope.md",
     "wiki/solution-scope-out-of-scope.md",
     "wiki/architecture-target-state.md",
-    "dashboard.md",
     "copilot/copilot-conversations/agent__Find_notes_that_say_contradictory_things_and_show_me@20260901_094823.md",
     "outputs/~$roCRM_Solution_Overview_Document_2026-09-01.docx",
     "outputs/EuroCRM_Solution_Overview_Document_2026-09-01.docx",
