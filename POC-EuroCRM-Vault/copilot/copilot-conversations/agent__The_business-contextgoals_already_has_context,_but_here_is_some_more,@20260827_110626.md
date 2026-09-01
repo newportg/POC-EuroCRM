@@ -3,7 +3,7 @@ epoch: 1787825186672
 mode: agent
 backendId: opencode
 sessionId: "ses_fbdb0fa83ffeb48rJhTKQohw6q"
-usage: '{"usedTokens":137726,"contextWindow":200000,"updatedAt":1787844340470}'
+usage: '{"usedTokens":0,"contextWindow":200000,"updatedAt":1787845961319}'
 tags:
   - copilot-conversation
 ---
@@ -1756,3 +1756,472 @@ I also need to check: `render_blocks` earlier for the Executive Summary — I do
 
 Let me run the script.
 [Timestamp: 2026/08/27 15:48:17]
+
+**user**: its stopped again
+[Timestamp: 2026/08/27 16:44:10]
+
+**ai**: Let me check the state and run the script again.
+
+The script ran successfully this time and saved the document with no errors. Let me update my todos and then verify the output document thoroughly — checking heading structure, image count, and that all sections are populated.
+
+Let me write a verification script that opens the generated docx and reports its structure.The script ran successfully and saved the document. Let me verify the output thoroughly — heading structure, image count, and population of all sections.
+
+The document generated with all sections populated. There are 9 images in the document (8 diagrams + 1 from the template's logo image1.png). So all 8 diagrams are embedded (images 2-9 are the diagrams; image1 is the template logo). 
+
+Wait — but the headings reveal a problem. Under "Solution Architecture":
+- "Business Architecture", "Application Architecture", "Data Architecture", "Technology Architecture" appear as **H3** but nested **inside** "Key Components" (they appear at the same H3 level as "Key Components" sub-headings, and "Technical Rules" under Key Components is followed by "Business Architecture" etc.).
+
+This is because the template's "Business Architecture", "Application Architecture", "Data Architecture", "Technology Architecture" are H3 headings that appear in the template AFTER "Key Components" H2. My code used `find_heading` which finds the heading by exact text, but there's a subtlety: the template has `H3 Business Architecture` etc. as top-level H3 sections (siblings of Key Components's... no wait).
+
+Looking at the template structure I inspected earlier:
+- H2 Overview Diagrams (42)
+- H2 Key Components (43)
+- H3 Business Architecture (44)
+- H3 Application Architecture (45)
+- H3 Data Architecture (46)
+- H3 Technology Architecture (47)
+
+So in the template, Business/Application/Data/Technology Architecture are H3 sections that come after H2 Key Components. My rendering inserted Key Components content after the "Key Components" H2 heading, which then flushed everything together, and then inserted Business Architecture content after the "Business Architecture" H3 heading — which is fine structurally.
+
+But the heading output shows:
+```
+H2: Key Components
+  H3: Platform Decision
+  H3: Key Components
+  H4: 1. Dataverse...
+  ...
+  H3: Technical Rules
+  H3: Business Architecture   <- these are the template's H3 Business Architecture
+    H4: Business Architecture Overview
+```
+
+Actually this looks correct! The template's H3 "Business Architecture" heading IS there (after Key Components' content), and under it the business-architecture.md content is rendered. So the structure is fine — it's just that Key Components sub-headings (H3/H4) come first, then the H3 Business Architecture section.
+
+Wait, but there's an issue. The heading list shows "H3: Data Architecture" with H4 content, and it's nested under Key Components visually in my indentation, but that's just because my indentation script indents by level. The template's Data Architecture is H3, which after Key Components H2 makes it appear "inside" Key Components in a tree sense, but that's the template's own structure.
+
+However, there IS a real concern: the "Data Architecture" section should include the 5 data model images. Let me verify the images actually landed in the Data Architecture section (not Overview Diagrams). And I need to confirm the 8 diagrams are all there.
+
+Actually the bigger issue: 9 images but 8 are diagrams + 1 logo = 9. But the Overview Diagrams and Data Architecture image embeds — did all 8 diagrams get embedded? image2-image9 = 8 diagrams. Good, all 8 rendered diagrams are in.
+
+But I need to verify the images are in the RIGHT sections. The heading order shows the structure looks reasonable. Let me now verify:
+1. The 5 data model images are under Data Architecture.
+2. The 3 architecture images are under Overview Diagrams.
+3. No content is orphaned/wrongly placed.
+
+Let me also verify the "Key Components" section renders "Business Architecture" — wait, there's ambiguity: template has both "Key Components" H2 and the business-architecture note has "## Business Architecture Overview". And separately template "Business Architecture" H3. 
+
+Actually, let me look for a structural problem: In the heading dump, under "H1: Solution Architecture", I see:
+```
+H2: Overview Diagrams
+  H3: Diagrams
+  H4: Solution Architecture (this is a note heading, not the template's Business Architecture)
+  ...
+H2: Key Components
+  H3: Platform Decision
+  ...
+  H3: Technical Rules
+  H3: Business Architecture
+    H4: Business Architecture Overview
+  ...
+```
+
+So "Business Architecture" H3 (template) appears after Key Components content. Good. The note architecture-business.md has "## Business Architecture Overview" (H2→H4) and "## Core Business Capabilities"... all under the template's "Business Architecture" H3. 
+
+Hmm wait, but the business-architecture content headings are all H4 (mapped from note's H2 ## with base_level=4). And they appear correctly under the H3 Business Architecture. 
+
+But there's a concern: are "Application Architecture", "Data Architecture", "Technology Architecture" template H3 headings present and correctly placed? Yes, they appear in the dump:
+```
+H3: Application Architecture
+  H4: Application Architecture Overview
+...
+H3: Data Architecture
+  H4: Data Architecture Overview
+...
+H3: Technology Architecture
+  H4: Technology Architecture Overview
+```
+
+Wait, but the heading dump shows these nested under Key Components' content because after "H3: Technical Rules" (which is Key Components note content at H3), the template's "H3: Business Architecture" appears. Actually the indentation in my dump is by heading level, so an H3 after an H2 "Key Components" ... hmm, the H3 "Technical Rules" comes from the key-components note's "## Technical Rules" mapped to base_level=3 → H3. Then the template's H3 "Business Architecture". These are siblings. Fine.
+
+OK so structurally it looks largely correct. Now the key verification: are the images in the right sections? Let me check where each image is placed relative to headings. Let me write a verification to find the image positions.
+
+Interestingly — there may be an issue with image count. Let me confirm the 5 data model diagrams are under Data Architecture and 3 architecture under Overview Diagrams. Let me inspect image positions in document body order.The document generated with all sections populated and 9 images (8 diagrams + the template's 1 logo image). Let me verify the diagrams are placed in the correct sections and check overall quality by examining where the images landed relative to the headings.
+
+## Objective
+- Generate a Word Solution Overview Document (SOD) in the format of the vault's SOD template, from the wiki markdown content, including all diagrams.
+
+## Important Details
+- Template: `C:\Source\Obsidian\Projects\POC-EuroCRM\POC-EuroCRM-Vault\archive\SOD template.docx`
+- Wiki notes dir: `C:\Source\Obsidian\Projects\POC-EuroCRM\POC-EuroCRM-Vault\wiki\`
+- Output target: `C:\Source\Obsidian\Projects\POC-EuroCRM\POC-EuroCRM-Vault\outputs\EuroCRM_Solution_Overview_Document.docx` (folder already created)
+- 8 PlantUML diagrams already rendered to PNG in `C:\Users\NEWPORTG\AppData\Local\Temp\opencode\sod-gen\diagrams\` (DO NOT re-render)
+- Tooling: python-docx 1.2.0, Python 3.14, PlantUML 1.2024.3 jar at `C:\Users\NEWPORTG\.vscode\extensions\jebbs.plantuml-2.18.1\plantuml.jar`, Java 8, Graphviz (`dot`) available, no pandoc
+- Scratch script: `C:\Users\NEWPORTG\AppData\Local\Temp\opencode\sod-gen\generate_sod.py`
+
+## Work State
+### Completed
+- Located SOD template in archive; inspected its full body structure (cover Title, "X to the Y" subtitle placeholder, Author/Date/Version/Status lines, then H1/H2/H3 headings in exact order; version history table as Table 0)
+- Confirmed 44 wiki `.md` files; 8 `.puml` files mapped to notes via `![[...puml]]` embeds
+- Rendered all 8 diagrams to PNG successfully: EuroCRM Architecture, EuroCRM Layered Architecture, EuroCRM Data Flow, EuroCRM Client Data Model, EuroCRM Property Data Model, EuroCRM Capital Markets Data Model, EuroCRM WIP Data Model, EuroCRM Core Data Model (64-188 KB each)
+- Verified all 30 notes referenced by the script exist
+- Wrote converter script `generate_sod.py` (opens template as base, populates cover/version table, inserts per-section content, embeds diagrams)
+- Fixed two scripting bugs: (1) lxml `addnext()` returns None — fixed `insert_paragraph_after` to wrap the original element; (2) refactored insertion machinery to track raw lxml elements for correct ordering across paragraphs/tables/images
+
+### Active
+- Debugging the converter script. Latest run failed at `add_note_section("Business Context", ...)` with:
+  `KeyError: "no style with name 'List Bullet'"` (the template's styles.xml lacks a style literally named "List Bullet")
+
+### Blocked
+- The generator script does not yet run to completion. Current blocker: style-name mismatch for list styles in the template (no "List Bullet"/"List Bullet 2"/"List Number" styles). Likely the template uses different style names (e.g. localized or different list style names). Need to inspect available paragraph styles and map appropriately.
+
+## Next Move
+1. Inspect available paragraph style names in the template (run a quick python-docx introspection to list `doc.styles` paragraph style names) and determine correct names for bullets/numbered lists.
+2. Update `render_blocks` (case "list") and the parser's default list styles in `generate_sod.py` to use the template's actual list style names (or fall back gracefully to "List Paragraph"/Normal with manual bullet chars if no true list styles exist).
+3. Re-run `python generate_sod.py`; fix any further style/heading issues (Glossary is a Normal paragraph, Executive Summary/References extraction).
+4. Verify output: open generated docx, print paragraph/heading list, confirm all 8 images embedded, confirm no placeholder text ("X to the Y", "CAPEX: N/A") remains.
+
+## Relevant Files
+- `archive/SOD template.docx`: base template (full heading structure, version history table, logo image1.png)
+- `wiki/` (44 notes): markdown source; mapped to template sections by script
+- `outputs/EuroCRM_Solution_Overview_Document.docx`: intended output (not yet generated)
+- Temp `sod-gen/generate_sod.py`: converter script being debugged
+- Temp `sod-gen/diagrams/*.png`: 8 rendered diagrams to embedThere's a problem with image placement. The 8 diagrams are landing in the wrong sections:
+
+- Overview Diagrams should have 3 images (Solution Architecture, Layered, Data Flow)
+- Data Architecture should have 5 images (Client, Property, Capital Markets, WIP, Core data models)
+
+But instead, **3 images are under Overview Diagrams and 5 under Key Components** — and none under Data Architecture. The 5 data model images are showing up under "Key Components" instead of "Data Architecture".
+
+This is a tracking bug. The issue is that in the `render_blocks`, I track `last_el` within one block list, but the image insertion happens at a different anchor than where I think. Let me look at the actual script to understand how images are inserted — likely the `add_note_section` for Data Architecture inserts images after an anchor, but the anchor-tracking between separate `render_blocks` calls for sibling headings isn't maintaining order, so Data Architecture's images get placed after Key Components's content but before the "Data Architecture" heading.
+
+Let me examine the script to understand the insertion mechanism.The data model images (5) are landing under "Key Components" instead of "Data Architecture", and one is missing/is misplaced relative to the diagrams. This is an ordering bug — likely the image insertion anchor gets inserted before the heading it belongs to. Let me examine the script's insertion machinery.
+
+The crash was just an encoding issue in my inspection script, not the document. Let me look at the actual issue — the image placement. Let me target specifically the architecture section and around Overview Diagrams / Key Components / Data Architecture to see the image anchor ordering. Let me write a cleaner inspection that only prints the relevant section (and encodes safely).
+
+Now I can see the structure clearly, and there's a REAL problem in the "Overview Diagrams" section:
+
+```
+p   H3         | Diagrams
+p   H4         | Solution Architecture
+p              | Full component view showing layers, data domains, and integrations.
+p              | !architecture-diagram.puml        <- these are the literal markdown text, NOT rendered
+p   H4         | Layered Solution Model
+p              | Shows the L0-L7 layer hierarchy...
+p              | !architecture-layers.puml
+p   H4         | Data Flow & Integrations
+p              | Shows how data flows...
+p              | !architecture-dataflow.puml
+p              | ### IMAGE ###
+p              | Solution architecture
+p              | ### IMAGE ###
+p              | Layered solution model
+p              | ### IMAGE ###
+p              | Data flow and integrations
+```
+
+So in the first part, the `![[...puml]]` wikilinks were NOT replaced — they were rendered as literal text `!architecture-diagram.puml` (with the `![[` stripped but not the actual image embedded). The actual images got dumped ALL at the end, AFTER the last H4 "Data Flow & Integrations" content. And the image anchor placement is wrong.
+
+Wait — the images ARE in the Overview Diagrams section (all 3 architecture images, placed after the note's content). But the placement is a bit odd: the images for all 3 sub-notes appear at the very end of the last note rather than interleaved.
+
+Actually that's acceptable-ish, but the bigger issue: the literal `!architecture-diagram.puml` text appears in the doc. That means the image embed replacement didn't happen during the architecture.md processing. But then the images were added separately by a diagram-embedding pass.
+
+Hmm, let me reconsider. The issue: The `![[architecture-diagram.puml]]` context in the note was NOT replaced by the image during the main `render_blocks`. Then after all notes, a separate pass iterated the 8 diagrams and inserted `add_picture` with a caption AFTER some anchor.
+
+Actually looking at the Data Architecture section, the images ARE inserted correctly there (after "Data Model Statistics" table, the 5 data model images with captions "Client data model", etc.). Those are properly placed.
+
+But in Overview Diagrams, the images ended up at the end (correct section, but after the last H4 rather than interleaved), AND the literal `!architecture-diagram.puml` text remains.
+
+So two issues:
+1. The `![[...puml]]` wikilinks are rendered as literal text in some places (Overview Diagrams section).
+2. The architecture diagrams are all placed at the end of the section rather than under each H4.
+
+Let me look at how the script handles image embeds. Let me read the full script to understand the image-insertion logic.
+
+The key question: how does the script decide to insert images, and why did Overview Diagrams get literal `!architecture-diagram.puml` text while Data Architecture got proper image insertion?
+
+Let me read the generate_sod.py script, focusing on image handling.Now I can see two clear issues in the **Overview Diagrams** section:
+1. The `![[...puml]]` links appear as literal text (`!architecture-diagram.puml`) instead of being replaced with embedded images.
+2. The 3 architecture images all got dumped at the end of the section (after the last H4) rather than under each sub-note heading.
+
+Meanwhile, the **Data Architecture** section has the 5 images correctly placed with captions. So the image insertion logic works for one path but not another. Let me read the script to understand the difference.</parameter>
+
+Now I understand the issues clearly. Let me analyze:
+
+**Issue 1: Literal `![[...puml]]` text in Overview Diagrams section.**
+The note `architecture-overview-diagrams.md` contains `![[architecture-diagram.puml]]` embeds. My `parse_markdown_note` treats them as normal paragraphs, and `add_runs` doesn't render `![[...puml]]` as images — it just treats the line `!architecture-diagram.puml`... wait. Let me check. The line in the note is `![[architecture-diagram.puml]]`. In `add_runs`, the `[[...]]` regex would match and extract the label `architecture-diagram.puml`. So it renders as literal text "architecture-diagram.puml" minus the `!`. That's the `!architecture-diagram.puml` text we saw.
+
+So the note's own `![[...puml]]` embeds are being rendered as literal text. That's misleading/ugly. The images are added separately via `img_list`, so we get BOTH the literal text AND the real image. That's the duplication problem in Overview Diagrams.
+
+**Issue 2: Image placement in Overview Diagrams — images dumped at end of section rather than interleaved per sub-note.**
+
+In Overview Diagrams, the note has H4 sub-headings (Solution Architecture, Layered Solution Model, Data Flow & Integrations), each followed by a `![[...puml]]` embed. The `render_blocks` returns `last_el` = the last paragraph (the literal `![[...puml]]` text). Then for each img in img_list, it adds the image after `last_el` — so all 3 images stack up at the very end, after the last literal text. This is why the 3 arch diagrams are bunched at the end of the Overview Diagrams section.
+
+Meanwhile in Data Architecture, the note (`architecture-data.md`) does NOT contain `![[...puml]]` embeds (it references the data model notes via `See ... for full schema` text, not image embeds). So no literal text there, and the 5 images get properly appended at the end of the Data Architecture section with captions. That's why Data Architecture looks clean.
+
+So the **real problem is in the Overview Diagrams note** which embeds the puml images inline via `![[...puml]]`, and my parser renders them as literal text instead of images, plus the images aren't interleaved.
+
+**The fix:** I should handle `![[...puml]]` embeds properly. The cleanest approach:
+1. In `parse_markdown_note`, detect lines that are `![[somefile.puml]]` and either skip them (since we add images separately via img_list) or convert them to a special block.
+2. Since the images are already added via `img_list` in the right order for Data Architecture, but for Overview Diagrams the note interleaves them with H4 headings, I should convert the `![[...puml]]` line into an image block that renders the matching diagram right there.
+
+Best approach: map puml embed → the rendered PNG filename, and render the image at that exact spot in the note's block sequence. This gives correct interleaving for Overview Diagrams. And for Data Architecture the note has no embeds, so img_list still works there (appending at end).
+
+Let me build a mapping from the embedded `.puml` filename to the rendered PNG:
+- architecture-diagram.puml → EuroCRM Architecture.png
+- architecture-layers.puml → EuroCRM Layered Architecture.png
+- architecture-dataflow.puml → EuroCRM Data Flow.png
+
+Let me check the actual puml embed names used in architecture-overview-diagrams.md.
+
+Let me read that note to confirm.
+
+Now I understand the full picture. The note `architecture-overview-diagrams.md` contains inline `![[architecture-diagram.puml]]` embeds that my parser renders as literal text, and I need to convert these to actual images positioned at the right place.
+
+**My fix plan:**
+1. Add a puml→PNG mapping.
+2. In `parse_markdown_note`, detect `![[...puml]]` lines and convert them to a new block kind `"diagram"` carrying the puml filename.
+3. In `render_blocks`, handle the `"diagram"` kind by inserting the mapped PNG image with a caption at that exact position.
+4. Remove the redundant `img_list` passing for Overview Diagrams (since images now come from the note itself) — OR keep the mapping so images are interleaved. For Data Architecture, the note has no embeds, so keep `img_list` for that one.
+
+Also, I notice the note has a "## Diagram Sources" section that lists the `![[...puml]]` in a fenced code block with backticks — those are inside fenced code and will be rendered as code text. Actually looking at the parse, "Diagram Sources" is in STRIP_SECTIONS (contains "diagram sources"), so it's stripped. Good.
+
+Let me also check: the "## Status" section — STRIP_SECTIONS includes "status" and `in_strip` matches `t.startswith(s)`, so "Status" (capital S) matches "status". Good, it's stripped.
+
+So after stripping Diagram Sources and Status, the note's remaining blocks are:
+- heading "Diagrams" (H2)
+- heading "Solution Architecture" (H3)
+- para "Full component view showing layers, data domains, and integrations."
+- `![[architecture-diagram.puml]]` → should be diagram
+- heading "Layered Solution Model" (H3)
+- para "Shows the L0-L7 layer hierarchy and extension rules."
+- `![[architecture-layers.puml]]` → diagram
+- heading "Data Flow & Integrations" (H3)
+- para "Shows how data flows through the system and external integrations."
+- `![[architecture-dataflow.puml]]` → diagram
+
+So with the `![[...puml]]` → diagram block conversion, each image lands right under its H4/description. That's exactly correct. Then I can remove the `img_list` for Overview Diagrams.
+
+Let me implement this.
+
+First, add the puml→png mapping near the top and a helper to render a diagram block.
+
+Let me define the mapping:
+- "architecture-diagram.puml" → "EuroCRM Architecture.png"
+- "architecture-layers.puml" → "EuroCRM Layered Architecture.png"
+- "architecture-dataflow.puml" → "EuroCRM Data Flow.png"
+
+But to be robust, I'll generate the mapping dynamically from the DIAGS directory by parsing the puml files... actually simpler to just hardcode based on what I know, but let me make it derive from filenames. The rendered PNG names are like "EuroCRM Architecture.png" from `architecture-diagram.puml`. I can't robustly map without the puml's title. Let me just hardcode the 3 known mappings since they're the only embeds in the overview note.
+
+Actually, let me make it fully general: parse each `.puml` file in the wiki to get its `@startuml <title>` and map to the PNG in DIAGS. But that's overkill. Let me hardcode the known 3 mappings.
+
+Let me now edit the script.
+
+1. Add parser handling for `![[...puml]]` before the normal paragraph handling.
+2. Add a `"diagram"` block handler in `render_blocks`.
+3. Change Overview Diagrams call to not pass img_list (or leave it — but if I leave img_list AND the note emits diagrams, I'd get duplicates). So remove img_list for Overview Diagrams.
+
+Let me implement.
+
+First the parser: add after the table detection (or near bullets) a check for `![[...]]`:
+
+```python
+# image/diagram embed
+im = re.match(r"^!\[\[([^\]|]+(?:\.[A-Za-z0-9]+))\]\]$", stripped)
+if im:
+    started = True
+    blocks.append(("diagram", im.group(1)))
+    i += 1
+    continue
+```
+
+This handles both `![[file.puml]]` and any image `![[file.png]]`.
+
+Then in render_blocks, after "list" handler add:
+
+```python
+elif kind == "diagram":
+    last_el = add_diagram_after_el(doc, last_el, block[1])
+```
+
+And add `add_diagram_after_el` that maps a puml/ftype name to a PNG in DIAGS and inserts image+caption.
+
+Now, the mapping. Let me build it from the DIAGS dir: given the source name `architecture-diagram.puml`, find which PNG corresponds. I'll hardcode:
+
+```python
+PUML_TO_PNG = {
+    "architecture-diagram.puml": "EuroCRM Architecture.png",
+    "architecture-layers.puml": "EuroCRM Layered Architecture.png",
+    "architecture-dataflow.puml": "EuroCRM Data Flow.png",
+    "client-data-model.puml": "EuroCRM Client Data Model.png",
+    "property-data-model.puml": "EuroCRM Property Data Model.png",
+    "capital-markets-data-model.puml": "EuroCRM Capital Markets Data Model.png",
+    "wip-data-model.puml": "EuroCRM WIP Data Model.png",
+    "core-data-model.puml": "EuroCRM Core Data Model.png",
+}
+```
+
+But actually, only the overview note has inline embeds; data-model notes reference via "See ... for full schema" text, not embeds. But to be future-proof, I'll support the full mapping.
+
+Then `add_diagram_after_el`:
+```python
+def add_diagram_after_el(doc, last_el, src_name):
+    png = PUML_TO_PNG.get(src_name)
+    if not png or not os.path.exists(os.path.join(DIAGS, png)):
+        # fall back: insert the literal text
+        new_p = OxmlElement("w:p"); last_el.addnext(new_p)
+        pp = Paragraph(new_p, doc); pp.add_run(f"[diagram: {src_name}]")
+        return new_p
+    cap = os.path.splitext(src_name)[0].replace("-", " ").title()
+    return add_image_after_el(doc, last_el, os.path.join(DIAGS, png), caption=cap)
+```
+
+For the caption in the overview note, I'd prefer to use the H4 nearest heading as caption rather than generated from filename. But generating from filename gives "Architecture Diagram" etc. That's fine though the images already have captions from img_list currently. Hmm — but for Overview Diagrams I'm removing img_list, so captions come from the diagram block. The generated caption "Architecture Diagram" is okay but the existing one used "Solution architecture" etc. 
+
+Better: I can pass the caption from the context. But simplest robust: keep using img_list-style captions but placed correctly. Actually, the cleanest is to NOT strip the `![[...puml]]` into a generic diagram block, but rather keep the explicit img_list approach for Overview Diagrams but fix the interleaving.
+
+Hmm. The problem is interleaving. With img_list, images all append at the end. To interleave, I need per-embed placement. The `![[...puml]]` embed approach gives exact placement, which is better.
+
+For captions, I'll just set the caption to a clean name. Let me pass the caption alongside. Actually, I can capture the most recent H3/H4 heading text and use it as the caption. But that's complex. 
+
+Simplest acceptable: for the diagram block, use a fixed caption derived nicely. Let me just provide captions via a dict too:
+
+Actually, the images already have the descriptive captions I wanted ("Solution architecture", "Layered solution model", "Data flow and integrations"). Let me keep those. I'll extend the diagram block to carry a caption. But the parser doesn't know the caption.
+
+Cleanest: In the Overview Diagrams call, keep using `img_list` BUT make `render_blocks` interleave is hard.
+
+Let me reconsider. The truly clean solution: keep the note's structure and place each image at its embed location, using a caption that reflects the puml. Since the note provides the descriptive text right above each embed, the plain image with a small caption derived from filename is fine.
+
+I'll go with the dynamic approach: caption from a caption map keyed by puml name. Let me define:
+
+```python
+DIAGRAM_CAPTIONS = {
+    "architecture-diagram.puml": "Solution architecture",
+    "architecture-layers.puml": "Layered solution model",
+    "architecture-dataflow.puml": "Data flow and integrations",
+    "client-data-model.puml": "Client data model",
+    "property-data-model.puml": "Property data model",
+    "capital-markets-data-model.puml": "Capital Markets data model",
+    "wip-data-model.puml": "WIP and Finance integration data model",
+    "core-data-model.puml": "Core data model - shared tables",
+}
+```
+
+Then in the diagram handler, use caption from DIAGRAM_CAPTIONS or fall back to filename-derived.
+
+Now implement the edits.
+
+Then for Data Architecture, the note has no inline embeds, so I keep `img_list`. Good — no change needed there.
+
+Let me make the edits.
+
+Edit 1: add PUML_TO_PNG and DIAGRAM_CAPTIONS after DIAGS definition.
+
+Edit 2: add diagram block handler in render_blocks + add_diagram_after_el helper.
+
+Edit 3: add the `![[...]]` detection in parse_markdown_note.
+
+Edit 4: change Overview Diagrams `add_note_section` to NOT pass img_list (remove img_list arg) since images now inline.
+
+Let me do these edits.Now I fully understand the two issues:
+
+1. **Overview Diagrams note** has inline `![[...puml]]` embeds which my parser renders as literal text (`!architecture-diagram.puml`), AND the `img_list` images all get appended at the end of the section instead of interleaved under each sub-heading. That's the duplication + wrong placement.
+2. **Data Architecture note** has no inline embeds (it just says "See ... for full schema"), so the `img_list`-appended images at the end of that section is actually correct there.
+
+The proper fix: convert inline `![[...puml]]` embeds into real images placed at the exact spot in the note's block sequence, and drop the redundant `img_list` for Overview Diagrams (which has embeds). Let me implement this.
+
+First, add the diagram mappings after the DIAGS definition:
+
+Now add the `add_diagram_after_el` helper after `add_image_after_el`:
+
+Now add the `"diagram"` block handler in `render_blocks`:
+
+Now add the `![[...]]` embed detection in the parser. I'll add it just before the "bullets" handling (after the table block):
+
+Now change the Overview Diagrams call to remove the `img_list` (since the note's inline embeds now place images correctly):
+
+Now there's one more concern: the `add_image_after_el` and the diagram insertion use `last_el.addnext(...)`. But when the note emits multiple diagram blocks in sequence, each `addnext` goes right after `last_el`, and I return the newly created element, so ordering is maintained. Good.
+
+Let me also double check: in `render_blocks`, `last_el` starts as `anchor._p` and each block adds after `last_el` and updates it. The `add_image_after_el` returns `cp` (the caption element) if caption present, else `new_p`. So `last_el` becomes the caption paragraph — meaning the next block inserts after the caption. Correct.
+
+But wait — for the Overview Diagrams note, after the 3rd diagram there are no more blocks (Diagram Sources and Status are stripped), so it's fine.
+
+Let me re-run the script.
+
+I accidentally removed `find_heading` when I inserted the `add_diagram_after_el` helper — my edit's oldString included `def find_heading(doc, text):` and I didn't re-add it. Let me verify the current state of that region.
+
+I see — my edit accidentally captured the `find_heading` body inside `add_diagram_after_el` (lines 168-171 are the orphaned `for`/`return` loop of `find_heading`), and the `def find_heading` line itself was consumed. Let me fix by restoring `find_heading` properly after `add_diagram_after_el`:
+
+Now re-run the script:
+
+Saved successfully. Now let me verify the image placement is correct — the 3 architecture images should be interleaved under their H4 headings in Overview Diagrams, and the 5 data model images under Data Architecture.
+
+Let me re-run the image placement verification:
+
+The images are now all in the correct sections: 3 under **Overview Diagrams** and 5 under **Data Architecture** (which appears as an H3, so it shows under Key Components in this H2-level tracking — Data Architecture is an H3 section). 
+
+Let me verify the interleaving is correct within Overview Diagrams (image after each H4) and confirm no literal `![[...puml]]` text remains. Let me check the Overview Diagrams section in detail and confirm Data Architecture images are under the right H3.All 8 images are now in the correct sections: 3 under Overview Diagrams and 5 under Data Architecture (Data Architecture is an H3 section, so it correctly nests under the Solution Architecture H1). Let me confirm the interleaving within each section and that no literal `![[...puml]]` text remains:
+
+The document is now correct:
+
+- **Overview Diagrams**: The 3 architecture images are properly interleaved — each right after its corresponding H4 heading.
+- **Data Architecture**: The 5 data model images appear at the end of that section (after "Data Model Statistics" H4), which is correct since the note references them via text, not embeds.
+- **No literal `![[...puml]]` text** remains anywhere (the LITERAL-EMBED check found nothing).
+
+The document structure is complete and correct. Let me do a final quality check: verify the doc opens cleanly (is valid OOXML), confirm no placeholder text remains ("X to the Y", "CAPEX: N/A", "TBD"), and check the document doesn't have encoding issues.
+
+Let me check for remaining placeholder text and the total image count.
+
+The document is structurally valid and complete. The remaining "TBD" and "CAPEX: N/A"/"OPEX: N/A" placeholders come **from the wiki notes themselves** — these are content decisions the user (Gary) hasn't finalized yet (e.g., Solution Options "Option 1: TBD", security/NFR details "to be defined", cost estimates "N/A"). These are legitimate content gaps in the source wiki, not template artifacts or conversion bugs. I should NOT fabricate filler to replace them; per the AGENTS.md rules, "when uncertain, log it in the entry rather than guessing."
+
+The 9 images = 1 template logo (image1) + 8 rendered diagrams (image2-9). All correct.
+
+The document is now complete and correct. Let me update my todos and do a final commit since the AGENTS.md says to commit after meaningful changes. First let me check git status to see what changed.
+
+Let me verify the docx file details and check git status.
+
+The document is generated (1,040 KB — includes all 8 embedded diagrams). The `outputs/` folder is untracked (new files). The other modified files (workspace.json, copilot-conversations) are unrelated Obsidian workspace artifacts I shouldn't commit.
+
+Let me commit the new outputs folder with a clear message, per the AGENTS.md rule to commit after meaningful changes. I'll only stage the outputs folder.
+
+The document is done. Here's where things landed.
+
+## Summary
+
+The Solution Overview Document is generated successfully and committed:
+
+**`outputs/EuroCRM_Solution_Overview_Document.docx`** (~1,040 KB)
+
+### What's inside
+- Built on the [[SOD template]] so it keeps the cover page, Author/Date/Version/Status lines, heading structure, and version-history table.
+- Cover subtitle filled in, cover metadata, and a `0.1` row added to the version history.
+- **31 wiki notes** mapped onto the template sections (Executive Summary, Business Context, Solution Scope, Solution Architecture incl. Business/Application/Data/Technology architecture, Enterprise Alignment, Requirements, Risks, Options, Roadmap, Cost & Benefits, Governance, Glossary, References).
+- All **8 PlantUML diagrams embedded** at 1,040 KB: 3 architecture diagrams correctly interleaved under their sub-headings in Overview Diagrams, and 5 data-model diagrams under Data Architecture.
+
+### Fixture notes from this session
+Beyond the earlier conversion fixes (style fallback for `List Bullet` → `List Paragraph`, plus the lxml `addnext` ordering fix), the key issue this round was that the Overview Diagrams note uses inline `![[...puml]]` embeds. The original script rendered those as literal text and dumped all three images at the end of the section. I added a parser branch that converts `![[...puml]]` embeds into `diagram` blocks resolved against a `.puml`→PNG map, so each image now lands right under its heading with a caption. No literal embed text remains.
+
+### One thing to flag — not a bug, but unfinished source content
+The remaining `TBD` and `CAPEX: N/A` / `OPEX: N/A` strings come **from the wiki notes themselves**, not the template or the converter. Places like Option 1/2 in [[solution-options]], security/NFR details (auth, encryption, backup, uptime targets), and the cost figures in [[cost-estimates]] were still marked "to be defined" in the source. Per the wiki rules I didn't invent placeholder content to replace them — those need real values from you before the document goes to review.
+
+Want me to open the docx in Word for a visual pass, or draft a short list of the open `TBD`/`N/A` items you need to fill in?
+[Timestamp: 2026/08/27 16:44:10]
+
+**user**: dont like it, prefered the format of the document you created yesterday. and there still are no diagrams
+[Timestamp: 2026/08/27 16:51:43]
+
+**ai**: Let me understand what you mean — you preferred the format of a document created "yesterday." Let me find that earlier document and compare it with the current one.
+
+The only docx files are the template and the current output. There's no prior generated SOD docx in the vault/repo. The current repo was initialized recently ("feat: Initialize European CRM project structure" is the earliest commit). 
+
+The user says they preferred "the format of the document you created yesterday" and that "there still are no diagrams." Let me look for other artifacts — maybe a prior version of the generated document elsewhere, or in the temp directory mentioned in the context, or in an older session. Let me search more broadly for docx or earlier SOD outputs, including the temp sod-gen folder and anywhere on the system this might live.
+
+Let me search the temp folder and check what's in sod-gen, and look for any earlier generated doc.The current repo only has the template and the newly generated docx — no prior SOD document is in the repo. The user mentions a document created "yesterday" that they preferred. Let me search the temp working area and broader locations for any earlier generated document, and check git history more carefully.
+
+There's no prior generated SOD document anywhere in this environment — the only SOD-related artifact is today's output. The user references a document "created yesterday," but I don't have access to any such file in the vault, repo, or temp area.
+
+There's an important clue though: there's a PDF in the archive: **`European CRM Architecture Review 2.pdf`** dated 26/08/2026 (yesterday). This might actually be the document the user is referring to — perhaps I generated a document (in PDF or a different format) yesterday that they preferred. Let me check this PDF and understand what format it is, and compare its structure to what I generated.
+
+Actually, wait — the user said "the format of the document you created yesterday." The only yesterday-dated file is that architecture review PDF. But that's a PDF, not a docx. Let me look at it — maybe that's the "diagrams" reference too. Let me also reconsider: perhaps a previous session (before this repo's git history) created a document in a different/cleaner format that the current one diverges from.
+
+Let me inspect the archive PDF and also reconsider 
+[Timestamp: 2026/08/27 16:51:43]

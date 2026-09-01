@@ -531,15 +531,6 @@
     {
       "providerId": "9ca7751c-ed5a-4ce9-a394-bca22bcd7568",
       "info": {
-        "id": "opencode/hy3-free",
-        "displayName": "OpenCode Zen/Hy3 Free"
-      },
-      "configuredModelId": "2d8dc3e0-f154-49e8-ae33-8063bd2da841",
-      "configuredAt": 1787744324822
-    },
-    {
-      "providerId": "9ca7751c-ed5a-4ce9-a394-bca22bcd7568",
-      "info": {
         "id": "opencode/mimo-v2.5-free",
         "displayName": "OpenCode Zen/MiMo V2.5 Free"
       },
@@ -572,13 +563,21 @@
       },
       "configuredModelId": "350ba1cc-4517-4c99-b6e5-d9019840546c",
       "configuredAt": 1787744324832
+    },
+    {
+      "providerId": "9ca7751c-ed5a-4ce9-a394-bca22bcd7568",
+      "info": {
+        "id": "opencode/ling-3.0-flash-fin-free",
+        "displayName": "OpenCode Zen/Ling 3.0 Flash Fin Free"
+      },
+      "configuredModelId": "0393b504-2d8f-4760-b8f6-ab3ddcc89362",
+      "configuredAt": 1788252095775
     }
   ],
   "backends": {
     "opencode": {
       "enabledModels": [
         "eb91aef6-49dd-4e12-9f22-d5ca9d2053b4",
-        "2d8dc3e0-f154-49e8-ae33-8063bd2da841",
         "10f66e0b-a58a-462c-a6f5-c6253f343cd9"
       ]
     }
