@@ -18,8 +18,14 @@ from docx.shared import Inches, Pt
 VAULT_ROOT = Path(__file__).resolve().parents[1]
 WIKI_DIR = VAULT_ROOT / "wiki"
 TEMPLATE_FILE = VAULT_ROOT / "archive" / "SOD template.docx"
-OUTPUT_FILE = VAULT_ROOT / "projects" / "EuroCRM_Solution_Overview_Document_2026-08-27.docx"
+OUTPUT_FILE = VAULT_ROOT / "outputs" / "EuroCRM_Solution_Overview_Document.docx"
+OUTPUT_FILES = [
+    VAULT_ROOT / "outputs" / "EuroCRM_Solution_Overview_Document.docx",
+    VAULT_ROOT / "outputs" / "EuroCRM_Solution_Overview_Document_2026-09-01.docx",
+    VAULT_ROOT / "projects" / "EuroCRM_Solution_Overview_Document_2026-08-27.docx",
+]
 PLANTUML_JAR = Path.home() / ".vscode" / "extensions" / "jebbs.plantuml-2.18.1" / "plantuml.jar"
+diagram_paths: dict[str, Path] = {}
 
 
 SECTION_SOURCES = {
@@ -28,7 +34,7 @@ SECTION_SOURCES = {
     "Key Stakeholders": ["key-stakeholders.md"],
     "Business Capabilities": ["business-capabilities.md"],
     "KPIs and Success": ["kpis-and-success.md"],
-    "Solution Scope": ["solution-scope-in-scope.md", "solution-scope-out-of-scope.md"],
+    "Solution Scope": ["solution-scope-in-scope.md", "solution-scope-out-of-scope.md", "crm-lite-mvp-scope.md"],
     "Solution Architecture": [
         "architecture-overview-diagrams.md",
         "architecture-key-components.md",
@@ -42,6 +48,7 @@ SECTION_SOURCES = {
         "wip-data-model.md",
         "data-model-overview.md",
         "data-model-core-tables.md",
+        "solution-package-model.md",
         "taxonomy-mappings.md",
         "taxonomy-hilucs-kf.md",
         "taxonomy-sic-kf.md",
@@ -56,7 +63,7 @@ SECTION_SOURCES = {
         "functional-non-functional-requirements.md",
     ],
     "Risks and Issues": ["risks-and-issues.md"],
-    "Solution Options and Trade-offs": ["solution-options.md"],
+    "Solution Options and Trade-offs": ["solution-options.md", "power-apps-rationale.md"],
     "Implementation Roadmap": ["roadmap-phases.md", "roadmap-timelines.md", "roadmap-dependencies.md", "implementation-phases.md"],
     "Cost and Benefits Summary": ["cost-estimates.md", "expected-benefits.md"],
     "Governance and Approval": ["governance-approval.md", "governance-oversight.md", "compliance.md"],
@@ -233,8 +240,10 @@ def replace_cover_placeholders(doc: Document) -> None:
     replacements = {
         "Solution Overview Document": "EuroCRM Solution Overview Document",
         "X to the Y": "Knight Frank European CRM Platform",
-        "26/08/2026": "27/08/2026",
-        "0.1": "0.2",
+        "26/08/2026": "01/09/2026",
+        "27/08/2026": "01/09/2026",
+        "0.1": "1.0",
+        "0.2": "1.0",
     }
     for paragraph in doc.paragraphs:
         for old, new in replacements.items():
@@ -252,21 +261,21 @@ def add_source(doc: Document, filename: str, image_dir: Path) -> None:
     parse_markdown(doc, source_path.read_text(encoding="utf-8"), image_dir)
 
 
-def create_document() -> Path:
+def create_document(image_dir: Path) -> Path:
     doc = Document(str(TEMPLATE_FILE))
     trim_template_to_cover(doc)
     replace_cover_placeholders(doc)
     doc.add_page_break()
 
     doc.add_heading("Version History", level=1)
-    add_markdown_table(doc, [["Version", "Comments", "Author", "Status", "Date"], ["0.2", "Wiki content and diagrams consolidated", "Gary Newport", "Draft", "27/08/2026"]])
+    add_markdown_table(doc, [["Version", "Comments", "Author", "Status", "Date"], ["1.0", "Wiki content and diagrams consolidated into SOD", "Gary Newport", "Draft", "01/09/2026"]])
     doc.add_heading("Table of Contents", level=1)
     quote_style = "Intense Quote" if any(item.name == "Intense Quote" for item in doc.styles) else "Normal"
     doc.add_paragraph("Update this field in Word to generate the table of contents.", style=quote_style)
     doc.add_page_break()
 
     doc.add_heading("Executive Summary", level=1)
-    add_source(doc, "solution-overview.md", Path())
+    add_source(doc, "solution-overview.md", image_dir)
 
     used = {"solution-overview.md"}
     for section in TOP_LEVEL_SECTIONS[1:-1]:
@@ -291,8 +300,10 @@ def create_document() -> Path:
     doc.core_properties.title = "EuroCRM Solution Overview Document"
     doc.core_properties.author = "Gary Newport"
     doc.core_properties.subject = "European CRM platform solution overview"
-    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    doc.save(str(OUTPUT_FILE))
+    
+    for out_file in OUTPUT_FILES:
+        out_file.parent.mkdir(parents=True, exist_ok=True)
+        doc.save(str(out_file))
     return OUTPUT_FILE
 
 
@@ -300,6 +311,6 @@ if __name__ == "__main__":
     with tempfile.TemporaryDirectory(prefix="eurocrm-sod-") as temp_dir:
         image_dir = Path(temp_dir)
         diagram_paths = render_diagrams(image_dir)
-        create_document()
+        create_document(image_dir)
     print(f"Created {OUTPUT_FILE}")
     print(f"Embedded diagrams: {len(diagram_paths)}")
