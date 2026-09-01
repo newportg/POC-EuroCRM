@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/problem-statement.md",
+                "file": "dashboard.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "problem-statement"
+              "title": "dashboard"
             }
           }
         ]
@@ -201,12 +201,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "597aa953c2405097",
+  "active": "1b44ce69fb9d1b25",
   "lastOpenFiles": [
+    "archive/~$D template.docx",
+    "wiki/problem-statement.md",
     "outputs/~WRL0001.tmp",
     "outputs/~WRD0000.tmp",
     "outputs/~$roCRM_Solution_Overview_Document.docx",
-    "archive/~$D template.docx",
     "wiki/solution-overview.md",
     "wiki/solution-scope-in-scope.md",
     "wiki/solution-scope-out-of-scope.md",
@@ -220,9 +221,7 @@
     "outputs/EuroCRM_Solution_Overview_Document.docx",
     "wiki/risks-and-issues.md",
     "archive/European CRM Architecture Review 2.pdf",
-    "outputs",
     "wiki/property-data-model.md",
-    "wiki/problem-statement.md",
     "wiki/key-stakeholders.md",
     "wiki/kpis-and-success.md",
     "wiki/power-apps-rationale.md",
