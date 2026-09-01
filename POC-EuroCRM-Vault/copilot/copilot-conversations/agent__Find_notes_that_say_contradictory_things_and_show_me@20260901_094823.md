@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_fa3de68f8ffex5e6re37DO5CUa"
 agentLabel: "Finding contradictory notes"
-usage: '{"usedTokens":0,"contextWindow":200000,"updatedAt":1788254328986}'
+usage: '{"usedTokens":137327,"contextWindow":200000,"updatedAt":1788259054426}'
 tags:
   - copilot-conversation
 ---
@@ -108,5 +108,44 @@ The three most damaging contradictions:
 **user**: can you create the SOD word document using the SOD template in the archive directory and use the content in the WIki directory. store the output in the output directory. When you create the document can you flatten the wiki references
 [Timestamp: 2026/09/01 10:19:42]
 
-**ai**: I'll pick up the SOD build — and incorporate the flattening of wiki references. Let me first check the current state and verify my content has no lingering `[[wikilink]]` syntax.The grep matches are in a leftover artifact from a prior session (`sod-gen\generate_sod.py`), not in my content file — my content is already wikilink-free. I'll still add an explicit "flatten wikilinks" safety net to the builder so any `[[note]]` or `![[note]]` that sneaks in renders as plain text. Then I'll run the build.Some headings didn't match — likely hidden character differences (non-breaking spaces or hyphens) in the template headings. Let me inspect the exact characters of the failing headings.All plain ASCII — the text matches. So the bug must be in my lookup logic. Let me reproduce the exact matching function against the untouched template to isolate it.The untouched template matches fine — so the failure is triggered by earlier insertions. Let me reproduce it in a focused test to pinpoint the cause:
+**ai**: I'll pick up the SOD build — and incorporate the flattening of wiki references. Let me first check the current state and verify my content has no lingering `[[wikilink]]` syntax.The grep matches are in a leftover artifact from a prior session (`sod-gen\generate_sod.py`), not in my content file — my content is already wikilink-free. I'll still add an explicit "flatten wikilinks" safety net to the builder so any `[[note]]` or `![[note]]` that sneaks in renders as plain text. Then I'll run the build.Some headings didn't match — likely hidden character differences (non-breaking spaces or hyphens) in the template headings. Let me inspect the exact characters of the failing headings.All plain ASCII — the text matches. So the bug must be in my lookup logic. Let me reproduce the exact matching function against the untouched template to isolate it.The untouched template matches fine — so the failure is triggered by earlier insertions. Let me reproduce it in a focused test to pinpoint the cause:Simple insertion doesn't break it. Let me replicate more faithfully — including the Heading 3 style, bullets, and table insertion of the first two sections:Reproduced. Now let me isolate which element of the insertion breaks subsequent heading lookups:Found the trigger: inserting a `Heading 3`- or `List Bullet`-styled paragraph breaks subsequent heading enumeration. Let me dump what the document actually looks like after such an insertion:Found the root cause. In the template, sections like **Business Context** are followed *directly* by the next heading (no empty placeholder paragraph). My insert position was the start of the *next heading's* paragraph, so the insertion split and re-styled that heading to Normal — making later lookups fail. The fix: insert an empty paragraph boundary after the heading first, then write content into it. Also, `Glossary` is a Normal-styled paragraph in the template, so the lookup needs a fallback.
+
+No warnings — all sections populated. Now let me verify the generated document:
+
+All content inserted, no `[[` wikilinks, version history updated. But I spot one misplacement: the **Compliance** section's content landed under the "Compliance" KPI subheading (my KPIs content also has a `## Compliance` heading, and the lookup picked the first match). I'll disambiguate the lookup with the target heading level:
+
+Now update the two call sites and regenerate:Now a full verification pass — checking the Compliance placement, Glossary, TOC, and title page:Mostly verified. Just need to confirm the Compliance content is now in the right place after the fix:Compliance content is correctly placed now. Final spot-checks, then I'm done:One check used the wrong literal — let me confirm the Executive Summary content properly:Done. The SOD has been generated and verified.
+
+## Output
+
+**`outputs/EuroCRM_Solution_Overview_Document.docx`** (~87 KB, overwritten from the previous draft)
+
+Built using the **`archive/SOD template.docx`** as the base — title page, TOC, section structure and styles all come from the template — populated with content derived from the wiki notes.
+
+## What was included
+
+| Template section | Wiki source |
+| --- | --- |
+| Version History / title page | `solution-overview` (Gary Newport, 0.1, Draft, 26/08/2026) |
+| Executive Summary, Business Context, Goals | `solution-overview`, `business-context`, `business-goals`, `problem-statement` |
+| Stakeholders, Capabilities, KPIs | `key-stakeholders`, `business-capabilities`, `kpis-and-success` (5 KPI tables, phase success criteria) |
+| In-Scope / Out-of-scope | `solution-scope-in-scope` / `solution-scope-out-of-scope` (incl. 22-row entity table) |
+| Architecture sections | `architecture-overview-diagrams` (text, no renders available), `key-components`, `application`, `data`, `technology`, `target-state`, `principles-compliance` |
+| Roadmap | `implementation-phases`, `roadmap-timelines`, `roadmap-dependencies` (8 phases, milestones, critical path) |
+| Governance, Compliance, Glossary, References | `governance-approval`, `governance-oversight`, `compliance`, `glossary`, references from `solution-overview` |
+
+## Wiki references flattened
+
+No `[[wikilink]]` syntax appears anywhere in the document — verified. References like `[[power-apps-rationale]]` render as plain text (e.g. "the platform rationale is documented in the wiki (power-apps-rationale)"), and the References section lists sources by name. I also added a regex safety net in the builder (`ConvertFrom-WikiLinks`) that strips any `[[target|display]]` / `![[]]` pattern before it reaches the document.
+
+## Issues found & fixed during the build
+
+1. **Template headings stacked directly against each other** (e.g. Business Context is immediately followed by Business Goals and Objectives, with no empty paragraph). Naive insertion was splitting the *next* heading and demoting it to Normal. Fixed by inserting an empty paragraph boundary before writing content.
+2. **Glossary is a Normal-styled paragraph** in the template, not a heading — the builder now has a fallback lookup for it.
+3. **Content/heading name collision** — the KPI section's "Compliance" subheading was grabbing the Governance "Compliance" section content. Fixed by targeting each section by its heading level.
+4. **TOC updated** — page numbers now reflect the real layout (Version History p.4, MVP content through ~p.33).
+
+Two things worth flagging: the three architecture diagrams exist only as .puml sources (no rendered images in the vault), so the Overview Diagrams section describes them and references the PlantUML files rather than embedding pictures; and per the contradictions audit, the Out-of-scope section frames the future service lines as "deferred to future phases" so the document doesn't internally contradict the in-scope list.
+
+The build script and content source live in `C:\Users\NEWPORTG\AppData\Local\Temp\opencode\` (build-sod.ps1 + sod-content.txt) if you want to regenerate or tweak. I haven't committed anything — say the word if you'd like changes committed.
 [Timestamp: 2026/09/01 10:19:42]
