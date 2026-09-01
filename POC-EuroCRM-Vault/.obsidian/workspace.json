@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/solution-scope-in-scope.md",
+                "file": "wiki/problem-statement.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "solution-scope-in-scope"
+              "title": "problem-statement"
             }
           }
         ]
@@ -201,26 +201,25 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "597aa953c2405097",
+  "active": "1b44ce69fb9d1b25",
   "lastOpenFiles": [
+    "wiki/solution-overview.md",
+    "wiki/solution-scope-in-scope.md",
     "outputs/~$roCRM_Solution_Overview_Document.docx",
     "archive/~$D template.docx",
     "wiki/solution-scope-out-of-scope.md",
-    "wiki/solution-scope-in-scope.md",
     "wiki/architecture-target-state.md",
     "dashboard.md",
     "copilot/copilot-conversations/agent__Find_notes_that_say_contradictory_things_and_show_me@20260901_094823.md",
     "outputs/~$roCRM_Solution_Overview_Document_2026-09-01.docx",
     "outputs/EuroCRM_Solution_Overview_Document_2026-09-01.docx",
     "projects/EuroCRM_Solution_Overview_Document_2026-08-27.docx",
-    "wiki/solution-overview.md",
     "projects/~$roCRM_Solution_Overview_Document_2026-08-27.docx",
     "outputs/EuroCRM_Solution_Overview_Document.docx",
     "wiki/risks-and-issues.md",
     "archive/European CRM Architecture Review 2.pdf",
     "outputs",
     "archive/~$roCRM_Solution_Overview_Document_v2.docx",
-    "archive/~$roCRM_Solution_Overview_Document.docx",
     "wiki/property-data-model.md",
     "wiki/problem-statement.md",
     "wiki/key-stakeholders.md",
