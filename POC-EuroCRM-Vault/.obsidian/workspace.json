@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/key-stakeholders.md",
-                "mode": "source",
-                "source": true
+                "file": "wiki/architecture-overview-diagrams.md",
+                "mode": "preview",
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "key-stakeholders"
+              "title": "architecture-overview-diagrams"
             }
           }
         ]
@@ -203,11 +203,19 @@
   },
   "active": "1b44ce69fb9d1b25",
   "lastOpenFiles": [
-    "dashboard.md",
+    "wiki/architecture-layers.puml",
+    "wiki/architecture-key-components.md",
+    "wiki/architecture-diagram.puml",
+    "wiki/architecture-dataflow.puml",
+    "wiki/architecture-data.md",
+    "wiki/architecture-business.md",
+    "wiki/architecture-application.md",
+    "wiki/key-stakeholders.md",
     "outputs/~$roCRM_Solution_Overview_Document.docx",
     "outputs/~WRL0001.tmp",
     "outputs/~WRD0000.tmp",
     "archive/~$D template.docx",
+    "dashboard.md",
     "wiki/problem-statement.md",
     "wiki/solution-overview.md",
     "wiki/solution-scope-in-scope.md",
@@ -218,11 +226,8 @@
     "outputs/EuroCRM_Solution_Overview_Document_2026-09-01.docx",
     "projects/EuroCRM_Solution_Overview_Document_2026-08-27.docx",
     "projects/~$roCRM_Solution_Overview_Document_2026-08-27.docx",
-    "outputs/EuroCRM_Solution_Overview_Document.docx",
     "wiki/risks-and-issues.md",
-    "archive/European CRM Architecture Review 2.pdf",
     "wiki/property-data-model.md",
-    "wiki/key-stakeholders.md",
     "wiki/kpis-and-success.md",
     "wiki/power-apps-rationale.md",
     "wiki/roadmap-dependencies.md",
@@ -231,13 +236,9 @@
     "wiki/solution-options.md",
     "wiki/solution-package-model.md",
     "wiki/dependencies-and-constraints.md",
-    "wiki/architecture-application.md",
     "wiki/cost-estimates.md",
     "wiki/functional-requirements.md",
     "wiki/functional-non-functional-requirements.md",
-    "wiki/business-goals.md",
-    "wiki/business-context.md",
-    "copilot/copilot-conversations/agent__The_business-contextgoals_already_has_context,_but_here_is_some_more,@20260827_110626.md",
     "Untitled.canvas"
   ]
 }

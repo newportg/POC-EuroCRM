@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_fa3de68f8ffex5e6re37DO5CUa"
 agentLabel: "Finding contradictory notes"
-usage: '{"usedTokens":137327,"contextWindow":200000,"updatedAt":1788259054426}'
+usage: '{"usedTokens":25409,"contextWindow":200000,"updatedAt":1788262826012}'
 tags:
   - copilot-conversation
 ---
@@ -149,3 +149,60 @@ Two things worth flagging: the three architecture diagrams exist only as .puml s
 
 The build script and content source live in `C:\Users\NEWPORTG\AppData\Local\Temp\opencode\` (build-sod.ps1 + sod-content.txt) if you want to regenerate or tweak. I haven't committed anything — say the word if you'd like changes committed.
 [Timestamp: 2026/09/01 10:19:42]
+
+**user**: can you update the output document with the updated key stakeholders
+[Timestamp: 2026/09/01 12:36:50]
+
+**ai**: Let me check the current state of the key-stakeholders note and the relevant section in the generated document.
+
+The key-stakeholders note has been updated: Gary Newport's region changed to Enterprise, **Hannah Nguyen** added as Business Analyst, **Nick Wadge** named as CTO, **Marco Capelli** named as Regional MD, and email addresses added. Let me update the content source and regenerate the document:## Objective
+- Create the SOD Word document from `archive/SOD template.docx` + `wiki/` content, saving to `outputs/`, with all Obsidian `[[wikilink]]` references flattened to plain text.
+
+## Important Details
+- Output: `C:\Source\Obsidian\Projects\POC-EuroCRM\POC-EuroCRM-Vault\outputs\EuroCRM_Solution_Overview_Document.docx` (overwritten with Word COM, not Write tool)
+- Template title page now: **Solution Overview Document / EuroCRM**; Author: *Gary Newport*; Date: *26/08/2026*; Version: *0.1*; Status: *Draft* (from `wiki/solution-overview.md`)
+- Version History table: `Richard Davies / 9/04/2025` → `Gary Newport / 26/08/2026` via Replace-All
+- Builder artifacts (kept for reuse):
+  - `C:\Users\NEWPORTG\AppData\Local\Temp\opencode\sod-content.txt` — section content (wikilink-free)
+  - `C:\Users\NEWPORTG\AppData\Local\Temp\opencode\build-sod.ps1` — Word COM builder + `ConvertFrom-WikiLinks` flattening + `$sectionLevel` heading-style map
+- Known quirks handled: template headings are often directly followed by the next heading (no placeholder paragraph) → builder inserts an empty paragraph boundary first; `Glossary` is a Normal-styled paragraph in the template → lookup by level `Normal`, last exact text match
+- Contradictions from the earlier audit remain **unresolved** in the wiki and affect SOD accuracy: in/out-of-scope flip-flop for OSS/Valuations/Residential/Private Office; MVP 20–26 weeks ("6–12 months" line also in `roadmap-timelines.md`); 12 vs 11 CM entities; `kf_Site`/`kf_WIP`/`kf_DealProperty` inconsistencies; compliance ✅ vs "not documented"
+- SOD built from the detailed in-scope/out-of-scope notes; out-of-scope framed as "deferred to future phases" to avoid the contradiction
+
+## Work State
+### Completed
+- Verified generated doc (39 tables, 1,817 paragraphs): no `[[`-style wikilinks; no "Richard Davies"/"9/04/2025"/"X to the Y"; "Gary Newport" present
+- All template headings intact and populated; TOC field updated (page numbers now reflect body)
+- Glossary content present (e.g. "Bundesdatenschutzgesetz")
+- Compliance content verified correctly under **Governance and Approval → Compliance** (H3 'Regulatory requirements' at paragraph 1713, inside Governance and Approval ✓); KPI "Compliance" table followed cleanly by "Phase success criteria" ✓
+
+### Active
+- (none)
+
+### Blocked
+- (none)
+
+## Next Move
+1. (none) — document generated and verified
+2. If further edits are needed, edit `sod-content.txt`/`build-sod.ps1` and re-run: `powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Users\NEWPORTG\AppData\Local\Temp\opencode\build-sod.ps1"`
+
+## Relevant Files
+- `archive/SOD template.docx`: source template
+- `wiki/*.md`: content source (solution-overview, business-context, business-goals, key-stakeholders, business-capabilities, kpis-and-success, solution-scope-in-scope, solution-scope-out-of-scope, architecture-*, implementation-phases, roadmap-*, dependencies-and-constraints, functional-requirements, functional-non-functional-requirements, risks-and-issues, solution-options, cost-estimates, expected-benefits, governance-approval, governance-oversight, compliance, glossary, problem-statement)
+- `outputs/EuroCRM_Solution_Overview_Document.docx`: generated output
+- `C:\Users\NEWPORTG\AppData\Local\Temp\opencode\build-sod.ps1` + `sod-content.txt`: build artifacts (reuse for rebuilds)Content updated. Now regenerating the document:Build succeeded. Verifying the stakeholder register landed correctly in the document:The register now has 11 rows (header + 10). The "Enterprise" check failed only because my search string omitted the email that now sits between the name and role — let me verify the actual row cells directly:Done — the updated stakeholder register is now in the output document.
+
+## Changes applied (`outputs/EuroCRM_Solution_Overview_Document.docx`)
+
+The Stakeholder register (Key Stakeholders → section, table now 10 rows + header) reflects the updated `wiki/key-stakeholders.md`:
+
+- **Gary Newport** — region changed to **Enterprise** (was Europe)
+- **Hannah Nguyen** (**new**) — Business Analyst, Europe, High/High
+- **Nick Wadge** — named as CTO (was generic "CTO")
+- **Marco Capelli** — named as Regional MDs lead (was "European MDs")
+- **Emails added** for all four named individuals (Knight Frank addresses)
+
+All earlier content intact — verified. The doc regenerated cleanly from the template, so title page, TOC, and other sections are unchanged aside from this table.
+
+One caveat: the register stays a plain table. If you'd like hyperlinked email addresses (clickable `mailto:` links) rather than plain text, say so and I'll adjust the builder.
+[Timestamp: 2026/09/01 12:36:50]
