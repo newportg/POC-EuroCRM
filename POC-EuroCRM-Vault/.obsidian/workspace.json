@@ -201,12 +201,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "1b44ce69fb9d1b25",
+  "active": "597aa953c2405097",
   "lastOpenFiles": [
-    "wiki/solution-overview.md",
-    "wiki/solution-scope-in-scope.md",
+    "outputs/~WRL0001.tmp",
+    "outputs/~WRD0000.tmp",
     "outputs/~$roCRM_Solution_Overview_Document.docx",
     "archive/~$D template.docx",
+    "wiki/solution-overview.md",
+    "wiki/solution-scope-in-scope.md",
     "wiki/solution-scope-out-of-scope.md",
     "wiki/architecture-target-state.md",
     "dashboard.md",
@@ -219,7 +221,6 @@
     "wiki/risks-and-issues.md",
     "archive/European CRM Architecture Review 2.pdf",
     "outputs",
-    "archive/~$roCRM_Solution_Overview_Document_v2.docx",
     "wiki/property-data-model.md",
     "wiki/problem-statement.md",
     "wiki/key-stakeholders.md",
