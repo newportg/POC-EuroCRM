@@ -98,3 +98,9 @@ The three most damaging contradictions:
 2. **#1 & #2 (in-scope/out-of-scope flip-flops)** — the same items appear in both lists. Decide whether future-phase items belong in-scope or out-of-scope and remove from the other.
 3. **#6 (stale roadmap-phases.md)** — this is the top-level roadmap summary and it's entirely empty while the detail notes are fully populated. Either populate it or delete it.
 [Timestamp: 2026/09/01 09:48:23]
+
+**user**: can you create the SOD word document using the SOD template in the archive directory and use the content in the WIki directory. store the output in the output directory
+[Timestamp: 2026/09/01 10:05:54]
+
+**ai**: The template is a .docx file — I need to extract its structure. Let me read it via PowerShell and also read all the wiki content.Good, I have the template structure. Now let me read all the wiki content to populate each section.I now have all the wiki content. Before generating, let me inspect the template's structure (styles, tables, title page layout) so I can populate it programmatically.
+[Timestamp: 2026/09/01 10:05:54]

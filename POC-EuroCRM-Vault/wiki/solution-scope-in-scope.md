@@ -19,9 +19,9 @@ Parent: [[solution-overview]]
 
 - Capital Markets (MVP)
 - Occupier Strategy & Solutions (Future)
-- Valuations (Future)
-- Residential (Future)
-- Private Office (Future)
+- Valuations (Foundation)
+- Residential (Foundation)
+- Private Office (Foundation)
 
 ### Countries
 
