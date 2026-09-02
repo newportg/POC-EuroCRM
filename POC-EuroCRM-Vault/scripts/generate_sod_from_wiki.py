@@ -360,12 +360,19 @@ def replace_cover_placeholders(doc: Document) -> None:
             paragraph.add_run(f" {cover_fields[paragraph.text.strip()]}")
 
 
-def add_source(doc: Document, filename: str, image_dir: Path) -> None:
+def add_source(doc: Document, filename: str, image_dir: Path, suppress_heading: str | None = None) -> None:
     source_path = WIKI_DIR / filename
     if not source_path.exists():
         return
-    doc.add_heading(source_path.stem.replace("-", " ").title(), level=2)
-    parse_markdown(doc, source_path.read_text(encoding="utf-8"), image_dir)
+    content = source_path.read_text(encoding="utf-8")
+    if suppress_heading:
+        lines = content.replace("\r\n", "\n").splitlines()
+        for i, line in enumerate(lines):
+            if line.startswith("#"):
+                if line.lstrip("#").strip() == suppress_heading:
+                    content = "\n".join(lines[:i] + lines[i+1:])
+                break
+    parse_markdown(doc, content, image_dir)
 
 
 def create_document(image_dir: Path) -> Path:
@@ -391,7 +398,7 @@ def create_document(image_dir: Path) -> Path:
     for section in TOP_LEVEL_SECTIONS[1:-1]:
         doc.add_heading(section, level=1)
         for filename in SECTION_SOURCES.get(section, []):
-            add_source(doc, filename, image_dir)
+            add_source(doc, filename, image_dir, suppress_heading=section)
             used.add(filename)
         doc.add_page_break()
 
