@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_f9e93bd8dffec36cnJyECpuXuk"
 agentLabel: "Create Word doc from wiki using Wibble template"
-usage: '{"usedTokens":95062,"contextWindow":200000,"updatedAt":1788344275990}'
+usage: '{"usedTokens":31098,"contextWindow":200000,"updatedAt":1788346432649}'
 tags:
   - copilot-conversation
 ---
@@ -128,5 +128,42 @@ The old restored version had almost no images. Let me check the version that was
 
 Let me check the sibling vault referenced by the legacy script, and look at git history for any fully-rendered SOD:The sibling vault doesn't exist. Let me directly compare the text formatting between the previous generated SOD (20aa7ec) and the current one:Now I can see the formatting regression clearly. Let me diff the script versions to understand what changed:The current script matches the 09-01 backup, but the "previous document" was generated 08-27. Let me diff the script as it was then:The generator script's markdown parser is unchanged — so the old document must have been produced differently. Let me examine the old docx's XML directly to see how bullets/lists were actually encoded:The old document used `ListParagraph` style + a literal bullet glyph prefixed in text. That's a different generator than the current one. Let me find the script that produced it:Now I understand the formatting issue. Let me check the remaining missing diagram sources and whether mermaid-cli is available:
 
-Mermaid diagrams and code-block diagrams are confirmed. Let me find all diagram blocks across the wiki and check for an available browser for rendering:
+Mermaid diagrams and code-block diagrams are confirmed. Let me find all diagram blocks across the wiki and check for an available browser for rendering:Chrome is available for mermaid rendering. Let me check the Critical Path diagrams in implementation-phases.md:Now I have the full picture. Let me first check the SOD template's cover structure, then set up mermaid rendering:
+
+
+mmdc is installed. Let me verify the template styles and its history:Template has `List Paragraph` style (never modified since 08-26). Now let me test mermaid rendering with the installed Chrome:Mermaid rendering works. Let me test the gantt chart too (used in the timeline):Let me use a proper script file to avoid quoting issues:Both flowchart and gantt render. Now let me verify how Python can invoke `npx` on Windows:Everything works. Now let me update the generator script with all fixes — old text format, mermaid rendering, code-block diagrams, and the Executive Summary slicing:npx resolves and runs fine from Python. Now let me read the full generator script so I can make precise edits.
+
+<｜DSML｜tool_calls>
+<｜DSML｜invoke name="read">
+<｜DSML｜parameter name="filePath" string="true">C:\Source\Obsidian\Projects\POC-EuroCRM\POC-EuroCRM-Vault\scripts\generate_sod_from_wiki.py</｜DSML｜parameter>
+</｜DSML｜invoke>
+</｜DSML｜tool_calls>Now let me run the updated generator and verify the output:
+
+Mermaid count is 4, but I expected 7 diagram blocks. Let me verify which wiki files actually contain mermaid fences:4 mermaid blocks confirmed — matches. Now verify the plain code-block diagrams (Business Unit Hierarchy, Critical Path, MVP Critical Path) exist in sources and landed in the doc:Source blocks confirmed. Now a verification pass on the output docx:
+
+Console encoding garbled the check. Let me re-verify with output to a file:Everything verified. Let me confirm the Executive Summary extraction matches the source section, and check git status:Executive Summary extraction matches the source section exactly. The vault has an automated backup commit system, but AGENTS.md rule 4 asks for a manual commit after meaningful changes, so I'll commit the script and regenerated documents:Committed as `54a0690`. Here's where we stand.
+
+## What we've done so far (this session)
+
+1. **Diagnosed the cover-page bug** — the regenerated SOD (dated `2026-09-01`) diverged because a plain docx copy only covers the document body; the template's cover is a gallery placeholder that got re-emitted on every page once body content was appended.
+2. **Verified the diagram toolchain** — `@mermaid-js/mermaid-cli` via npx works from Python, and installed Chrome is usable as the Puppeteer executable (temp install at `AppData\Local\Temp\opencode\mermaid`).
+3. **Reverse-engineered the good document's formatting** from the `2026-08-27` version:
+   - Bullets = `List Paragraph` style with a literal `• ` glyph (not Word auto-numbering)
+   - ASCII diagrams and code = `Consolas` monospace, no shading
+4. **Rewrote `scripts/generate_sod_from_wiki.py`**:
+   - ```` ```mermaid ```` blocks now render to PNG and embed (4 diagrams: Capability Map, Capital Markets 8-Stage BPF, Target State Components, Visual Timeline gantt)
+   - Plain code blocks become Consolas paragraphs (Business Unit Hierarchy, Critical Path, MVP Critical Path)
+   - Bullets now use `• ` in `List Paragraph` style
+   - Executive Summary now slices only the `## Executive Summary` section of [[solution-overview]] instead of dumping the whole file
+   - Cover fields filled: Author: Gary Newport, Date: 01/09/2026, Version: 1.0, Status: Draft
+5. **Regenerated all three outputs** and verified programmatically: 12 images embedded (8 PlantUML + 4 Mermaid), exec summary matches the source section verbatim, cover fields present, box-drawing characters intact in the hierarchy trees.
+
+## What I can't verify programmatically
+
+Word-side rendering — please open `outputs/EuroCRM_Solution_Overview_Document.docx` in Word and eyeball:
+- the mermaid images (especially the gantt timeline) render sensibly,
+- the cover looks right (fields landed, nothing duplicated),
+- bullet indentation is clean.
+
+One open question: the generator still overwrites the historical `projects/EuroCRM_Solution_Overview_Document_2026-08-27.docx` copy — say the word if you'd rather it stopped touching that file.
 [Timestamp: 2026/09/02 11:27:46]
