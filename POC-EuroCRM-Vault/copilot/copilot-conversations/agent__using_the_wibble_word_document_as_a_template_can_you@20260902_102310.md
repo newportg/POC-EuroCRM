@@ -118,3 +118,15 @@ The generator (`scripts/generate_sod_from_wiki.py`) also refreshed its two sibli
 
 The changes are pending in git and will be picked up by the vault's automated backup commit. Open the document in Word to check the diagrams render as expected — the PlantUML images are embedded at ~6.3" wide, sized for portrait pages.
 [Timestamp: 2026/09/02 11:16:51]
+
+**user**: The new document has some diagrams, but has the script for others such as the Capability Map, Capital Markets — 8-Stage BPF, Business Unit Hierarchy, Target State Components, Visual Timeline (Mermaid), Critical Path, MVP Critical Path, can you correct the missing diagrams. Plus the format of the text has changed please revert that back to the format of the previous document
+[Timestamp: 2026/09/02 11:27:46]
+
+**ai**: Let me investigate both issues — first compare the old and new documents, and check how the generator evolved.Let me extract and compare both versions of the document:The git path needs the vault prefix (repo root is the parent):
+
+The old restored version had almost no images. Let me check the version that was actually generated with diagrams (commit 20aa7ec) and the dated copies:The prior generated versions had the same 8 PlantUML diagrams. The missing diagrams are all Mermaid/code-block ones — let me check how they were ever rendered, and look at that mysterious `eek.docx`:
+
+Let me check the sibling vault referenced by the legacy script, and look at git history for any fully-rendered SOD:The sibling vault doesn't exist. Let me directly compare the text formatting between the previous generated SOD (20aa7ec) and the current one:Now I can see the formatting regression clearly. Let me diff the script versions to understand what changed:The current script matches the 09-01 backup, but the "previous document" was generated 08-27. Let me diff the script as it was then:The generator script's markdown parser is unchanged — so the old document must have been produced differently. Let me examine the old docx's XML directly to see how bullets/lists were actually encoded:The old document used `ListParagraph` style + a literal bullet glyph prefixed in text. That's a different generator than the current one. Let me find the script that produced it:Now I understand the formatting issue. Let me check the remaining missing diagram sources and whether mermaid-cli is available:
+
+Mermaid diagrams and code-block diagrams are confirmed. Let me find all diagram blocks across the wiki and check for an available browser for rendering:
+[Timestamp: 2026/09/02 11:27:46]
