@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_f9e93bd8dffec36cnJyECpuXuk"
 agentLabel: "Create Word doc from wiki using Wibble template"
-usage: '{"usedTokens":47908,"contextWindow":200000,"updatedAt":1788341827170}'
+usage: '{"usedTokens":95062,"contextWindow":200000,"updatedAt":1788344275990}'
 tags:
   - copilot-conversation
 ---
@@ -57,5 +57,64 @@ Now the technology architecture and data architecture:
 
 
 
-Now the target state architecture — add ECS to the Integration Layer and a future-state note:Now the diagrams. First the data flow diagram:Now the main architecture diagram:Now the layers diagram:Now the package model and dependencies:Now let me sync the generated Word document with the new architecture. Let me update the generator script:Now regenerate the Word document and verify everything:
+Now the target state architecture — add ECS to the Integration Layer and a future-state note:Now the diagrams. First the data flow diagram:Now the main architecture diagram:Now the layers diagram:Now the package model and dependencies:Now let me sync the generated Word document with the new architecture. Let me update the generator script:Now regenerate the Word document and verify everything:The vault has an automated backup that may have already committed. Let me check:All changes were committed by the vault's automated backup (e3390ba). Let me finalize the todo list.The architecture has been updated across the wiki to include the ECS change notification requirement. Here's what changed:
+
+**Wiki updates (merged into existing entries, committed as `e3390ba`):**
+
+| Entry | Change |
+|---|---|
+| [[architecture-application]] | Added **ECS Change Notification** section: trigger (create/update of Major entities), mechanism (Dataverse plugin/flow → ECS), payload (entity type, record ID, changed fields, timestamp), audit via `kf_IntegrationLog`, plus a row in the async integration patterns table |
+| [[architecture-key-components]] | Added **ECS Publisher** to integration components table with a summary paragraph |
+| [[architecture-technology]] | Added **Change Notification (ECS)** row to the integration layer |
+| [[architecture-data]] | Added **Major Entity Change Publishing (ECS)** section defining trigger, payload, candidates, contract |
+| [[architecture-target-state]] | ECS added to the Integration Layer in the mermaid diagram (`IL6[ECS]`) plus a bullet in Integration & Analytics |
+| [[architecture-layers.puml]] | ECS added to L0 External Systems + note about publishing |
+| [[architecture-diagram.puml]] | ECS component in L0 + ECS Publisher in the Integration Layer wired to the data domains |
+| [[architecture-dataflow.puml]] | `DV → ECS: Change events (Major entities)` flow added |
+| [[solution-package-model]] | L0 row now includes ECS |
+| [[dependencies-and-constraints]] | ECS added as a must-have integration dependency |
+| [[glossary]] | Definitions added for **ECS** and **Major entity** |
+
+**Three things flagged for TDA confirmation** (logged in the entries rather than guessed, per your hard rule 5):
+1. The **definitive Major entity list** — I've assumed Client (Account, Contact), Property (kf_Site, kf_Property), and Deal (kf_Deal), but there's no definition of "Major" anywhere in the vault.
+2. **ECS topic/contract** — payload schema and topics need confirming with the enterprise integration team. Note ECS is documented as notification-only (no data replication); consumers query Dataverse for the full record.
+3. Where the term came from — I found no prior mention of ECS in the vault; this is the first.
+
+**Word document:** The regenerated `outputs/EuroCRM_Domain_Architecture.docx` now includes "Major entity changes are published to the ECS message bus" in the future-state assumptions and a dedicated **ECS Change Notification** paragraph. The SOD (`EuroCRM_Solution_Overview_Document.docx`) was left untouched.
+
+One question for you: do you want me to name the "Major entities" explicitly somewhere (e.g., a managed definition in [[glossary]] once confirmed), or keep the TBD flag until TDA sign-off?
 [Timestamp: 2026/09/02 10:41:43]
+
+**user**: can you update the overview document, and include the diagrams.
+[Timestamp: 2026/09/02 11:14:29]
+
+**ai**: Let me investigate how the SOD was originally generated and whether I can render the diagrams.There are existing generation scripts. Let me read them.The script `generate_sod_from_wiki.py` is the current SOD generator — it renders the `.puml` diagrams to PNG via PlantUML and embeds them. Let me verify its prerequisites:
+
+All prerequisites are present. Running the generator:The output file is locked — it may be open in Word. Let me check:Word (PID 11496) has the file open, locking it. Let me check the two sibling output paths too:The main output file `outputs/EuroCRM_Solution_Overview_Document.docx` is currently open in Word (process WINWORD PID 11496), which prevents the script from overwriting it.
+
+Could you close that document in Word? If nothing else is holding it, I can then regenerate the updated SOD with the diagrams embedded.
+
+Once you've closed it, I'll re-run the generator. (If you'd rather not close it, I can instead save the updated document under a new name like `EuroCRM_Solution_Overview_Document_v2.docx` — just say the word.)
+[Timestamp: 2026/09/02 11:14:29]
+
+**user**: document closed
+[Timestamp: 2026/09/02 11:16:51]
+
+**ai**: The SOD regenerated successfully with 8 embedded diagrams. Let me verify the content includes the ECS updates and the diagrams are actually embedded.Let me write the verification as a script file instead:Document updated successfully. Let me check the full set of files the generator produced:Done. The overview document has been regenerated from the current wiki — including all the ECS architecture updates — with the diagrams embedded.
+
+**`outputs/EuroCRM_Solution_Overview_Document.docx`** now contains:
+
+- **8 embedded diagrams** rendered from the PlantUML sources:
+  - Solution architecture (`architecture-diagram.puml` — includes the new ECS Publisher component and ECS in L0)
+  - Layered solution model (`architecture-layers.puml` — ECS in L0 + change notification note)
+  - Data flow & integrations (`architecture-dataflow.puml` — Dataverse → ECS change events flow)
+  - Plus the 5 data model schema diagrams (client, property, capital markets, WIP, core tables)
+- **ECS content throughout**: 16 mentions of ECS, including the change notification pattern, Major entity publishing, integration components, and dependency notes
+- 128 tables and 19 H1 sections matching the standard SOD layout (Executive Summary through References)
+
+The generator (`scripts/generate_sod_from_wiki.py`) also refreshed its two sibling copies:
+- `projects/EuroCRM_Solution_Overview_Document_2026-08-27.docx` (updated)
+- `outputs/EuroCRM_Solution_Overview_Document_2026-09-01.docx` (new dated snapshot)
+
+The changes are pending in git and will be picked up by the vault's automated backup commit. Open the document in Word to check the diagrams render as expected — the PlantUML images are embedded at ~6.3" wide, sized for portrait pages.
+[Timestamp: 2026/09/02 11:16:51]

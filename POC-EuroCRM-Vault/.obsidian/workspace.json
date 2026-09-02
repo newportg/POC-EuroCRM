@@ -201,8 +201,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "1b44ce69fb9d1b25",
+  "active": "597aa953c2405097",
   "lastOpenFiles": [
+    "outputs/~$roCRM_Solution_Overview_Document_2026-09-01.docx",
+    "outputs/EuroCRM_Solution_Overview_Document_2026-09-01.docx",
     "outputs/~$roCRM_Solution_Overview_Document.docx",
     "outputs/~$roCRM_Domain_Architecture.docx",
     "outputs/EuroCRM_Solution_Overview_Document.docx",
@@ -213,9 +215,7 @@
     "outputs/Wibble_Solution_Overview_Document.docx",
     "outputs/create_sod.py",
     "copilot/copilot-conversations/agent__using_the_wibble_word_document_as_a_template_can_you@20260902_102310.md",
-    "wiki/architecture-layers.puml",
     "wiki/architecture-key-components.md",
-    "wiki/architecture-diagram.puml",
     "wiki/architecture-data.md",
     "wiki/architecture-business.md",
     "wiki/architecture-application.md",
