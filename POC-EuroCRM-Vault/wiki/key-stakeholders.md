@@ -91,16 +91,16 @@ Parent: [[solution-overview]]
 
 ## Communication Plan
 
-| Audience | Frequency | Format | Owner |
-| -------- | --------- | ------ | ----- |
-| TDA | Weekly | Architecture review meeting | Solution Lead |
-| CTO | Monthly | Steering committee | Solution Lead |
-| Regional MDs | Bi-weekly | Progress report | Solution Lead |
-| CM Team | Weekly | Sprint review | Solution Lead |
-| Legal/Compliance | Bi-weekly | Compliance review | Solution Lead |
-| Finance | Weekly | Integration sync | Integration Lead |
-| IT Ops | Daily | Stand-up | Project Lead |
-| End Users | Bi-weekly | Demo and feedback | Change Lead |
+| Audience         | Frequency                    | Format                      | Owner            |
+| ---------------- | ---------------------------- | --------------------------- | ---------------- |
+| TDA              | Initially, End of each phase | Architecture review meeting | Solution Lead    |
+| CTO              | Monthly                      | Steering committee          | Solution Lead    |
+| Regional MDs     | Bi-weekly                    | Progress report             | Solution Lead    |
+| CM Team          | Weekly                       | Sprint review               | Solution Lead    |
+| Legal/Compliance | Bi-weekly                    | Compliance review           | Solution Lead    |
+| Finance          | Weekly                       | Integration sync            | Integration Lead |
+| IT Ops           | Daily                        | Stand-up                    | Project Lead     |
+| End Users        | Bi-weekly                    | Demo and feedback           | Change Lead      |
 
 ## Approval Requirements
 

@@ -360,11 +360,19 @@ def replace_cover_placeholders(doc: Document) -> None:
             paragraph.add_run(f" {cover_fields[paragraph.text.strip()]}")
 
 
+def strip_metadata_lines(content: str) -> str:
+    """Remove Obsidian property-style metadata lines (e.g. Status: Draft, Parent: [[...]])."""
+    lines = content.replace("\r\n", "\n").splitlines()
+    filtered = [line for line in lines if not re.match(r"^(?:Status|Parent|Tags|Created|Modified|Type|Source[s]?):\s", line)]
+    return "\n".join(filtered)
+
+
 def add_source(doc: Document, filename: str, image_dir: Path, suppress_heading: str | None = None) -> None:
     source_path = WIKI_DIR / filename
     if not source_path.exists():
         return
     content = source_path.read_text(encoding="utf-8")
+    content = strip_metadata_lines(content)
     if suppress_heading:
         lines = content.replace("\r\n", "\n").splitlines()
         for i, line in enumerate(lines):

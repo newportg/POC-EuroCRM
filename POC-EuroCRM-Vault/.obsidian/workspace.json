@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/architecture-overview-diagrams.md",
-                "mode": "preview",
+                "file": "wiki/solution-package-model.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "architecture-overview-diagrams"
+              "title": "solution-package-model"
             }
           }
         ]
@@ -204,8 +204,13 @@
   "active": "597aa953c2405097",
   "lastOpenFiles": [
     "outputs/~$roCRM_Solution_Overview_Document.docx",
-    "outputs/~$roCRM_Solution_Overview_Document_2026-09-01.docx",
     "outputs/EuroCRM_Solution_Overview_Document_2026-09-01.docx",
+    "wiki/solution-overview.md",
+    "wiki/problem-statement.md",
+    "wiki/key-stakeholders.md",
+    "copilot/copilot-conversations/agent__can_you_regenerate_the_output_document_without_the_Status_Draft@20260902_161116.md",
+    "wiki/architecture-overview-diagrams.md",
+    "outputs/~$roCRM_Solution_Overview_Document_2026-09-01.docx",
     "outputs/~$roCRM_Domain_Architecture.docx",
     "outputs/EuroCRM_Solution_Overview_Document.docx",
     "outputs/EuroCRM_Domain_Architecture.docx",
@@ -213,16 +218,12 @@
     "outputs/EuroCRM_Solution_Overview_Document - Copy.docx",
     "outputs/~$bble_Solution_Overview_Document.docx",
     "outputs/Wibble_Solution_Overview_Document.docx",
-    "outputs/create_sod.py",
     "copilot/copilot-conversations/agent__using_the_wibble_word_document_as_a_template_can_you@20260902_102310.md",
     "wiki/architecture-key-components.md",
     "wiki/architecture-data.md",
     "wiki/architecture-business.md",
     "wiki/architecture-application.md",
-    "wiki/key-stakeholders.md",
     "dashboard.md",
-    "wiki/problem-statement.md",
-    "wiki/solution-overview.md",
     "wiki/solution-scope-in-scope.md",
     "wiki/solution-scope-out-of-scope.md",
     "wiki/architecture-target-state.md",
@@ -237,8 +238,6 @@
     "wiki/solution-options.md",
     "wiki/solution-package-model.md",
     "wiki/dependencies-and-constraints.md",
-    "wiki/cost-estimates.md",
-    "wiki/functional-requirements.md",
     "Untitled.canvas"
   ]
 }
