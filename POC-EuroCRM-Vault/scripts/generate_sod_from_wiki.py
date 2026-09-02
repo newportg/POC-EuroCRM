@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import json
+import os
 import re
 import shutil
 import subprocess
@@ -12,6 +14,7 @@ from pathlib import Path
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.oxml.ns import qn
 from docx.shared import Inches, Pt
 
 
@@ -26,6 +29,16 @@ OUTPUT_FILES = [
 ]
 PLANTUML_JAR = Path.home() / ".vscode" / "extensions" / "jebbs.plantuml-2.18.1" / "plantuml.jar"
 diagram_paths: dict[str, Path] = {}
+
+# Mermaid rendering via @mermaid-js/mermaid-cli (npx cache) + an installed browser
+NPX = shutil.which("npx") or "npx"
+CHROME_CANDIDATES = [
+    Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "Google" / "Chrome" / "Application" / "chrome.exe",
+    Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")) / "Google" / "Chrome" / "Application" / "chrome.exe",
+    Path(os.environ.get("ProgramFiles", r"C:\Program Files")) / "Microsoft" / "Edge" / "Application" / "msedge.exe",
+    Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")) / "Microsoft" / "Edge" / "Application" / "msedge.exe",
+]
+MERMAID_COUNT = 0
 
 
 SECTION_SOURCES = {
@@ -133,7 +146,50 @@ def add_markdown_table(doc: Document, rows: list[list[str]]) -> None:
                         run.bold = True
 
 
+def add_code_paragraph(doc: Document, text: str) -> None:
+    """Add a monospaced code/ASCII-diagram line, preserving layout."""
+    paragraph = doc.add_paragraph()
+    paragraph.paragraph_format.left_indent = Inches(0.15)
+    paragraph.paragraph_format.space_after = Pt(0)
+    run = paragraph.add_run(text)
+    run.font.name = "Consolas"
+    run.font.size = Pt(9)
+    rpr = run._element.get_or_add_rPr()
+    rfonts = rpr.get_or_add_rFonts()
+    rfonts.set(qn("w:eastAsia"), "Consolas")
+
+
+def find_chrome() -> Path | None:
+    for candidate in CHROME_CANDIDATES:
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def render_mermaid(block: str, output_png: Path, width_px: int = 1400) -> bool:
+    """Render a Mermaid block to PNG using mermaid-cli + local Chrome."""
+    chrome = find_chrome()
+    if chrome is None:
+        return False
+    input_mmd = output_png.with_suffix(".mmd")
+    input_mmd.write_text(block, encoding="utf-8")
+    config = output_png.with_suffix(".json")
+    config.write_text(json.dumps({
+        "executablePath": str(chrome),
+        "args": ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+        "headless": True,
+    }), encoding="utf-8")
+    result = subprocess.run(
+        [NPX, "--yes", "@mermaid-js/mermaid-cli",
+         "-p", str(config), "-i", str(input_mmd), "-o", str(output_png),
+         "-b", "white", "-w", str(width_px)],
+        capture_output=True, text=True,
+    )
+    return output_png.exists() and result.returncode == 0
+
+
 def parse_markdown(doc: Document, content: str, image_dir: Path) -> None:
+    global MERMAID_COUNT
     lines = content.replace("\r\n", "\n").splitlines()
     index = 0
     paragraph_buffer: list[str] = []
@@ -169,6 +225,33 @@ def parse_markdown(doc: Document, content: str, image_dir: Path) -> None:
             doc.add_heading(normalise_link(heading_match.group(2)), level=level)
             index += 1
             continue
+        fence_match = re.match(r"^```(\S*)\s*$", stripped)
+        if fence_match:
+            flush_paragraph()
+            language = fence_match.group(1).strip().lower()
+            index += 1
+            code_lines = []
+            while index < len(lines):
+                line = lines[index]
+                if line.strip().startswith("```"):
+                    index += 1
+                    break
+                code_lines.append(line)
+                index += 1
+            if language == "mermaid":
+                MERMAID_COUNT += 1
+                png = image_dir / f"mermaid-{MERMAID_COUNT:03d}.png"
+                if render_mermaid("\n".join(code_lines), png):
+                    paragraph = doc.add_paragraph()
+                    paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    paragraph.add_run().add_picture(str(png), width=Inches(6.3))
+                else:
+                    for code_line in code_lines:
+                        add_code_paragraph(doc, code_line)
+            else:
+                for code_line in code_lines:
+                    add_code_paragraph(doc, code_line)
+            continue
         if stripped.startswith("|") and "|" in stripped[1:]:
             flush_paragraph()
             table_lines = []
@@ -185,9 +268,12 @@ def parse_markdown(doc: Document, content: str, image_dir: Path) -> None:
         list_match = re.match(r"^([-*+] |\d+[.] )(.*)$", stripped)
         if list_match:
             flush_paragraph()
-            style = "List Number" if list_match.group(1)[0].isdigit() else "List Bullet"
-            paragraph = doc.add_paragraph(style=style if any(item.name == style for item in doc.styles) else "Normal")
-            add_inline(paragraph, list_match.group(2))
+            list_style = "List Paragraph" if any(item.name == "List Paragraph" for item in doc.styles) else "Normal"
+            paragraph = doc.add_paragraph(style=list_style)
+            marker, item_text = list_match.group(1), list_match.group(2)
+            prefix = "• " if not marker[0].isdigit() else f"{marker.strip()} "
+            paragraph.add_run(prefix)
+            add_inline(paragraph, item_text)
             index += 1
             continue
         if stripped.startswith("> "):
@@ -204,6 +290,22 @@ def parse_markdown(doc: Document, content: str, image_dir: Path) -> None:
         paragraph_buffer.append(stripped)
         index += 1
     flush_paragraph()
+
+
+def extract_section(content: str, heading: str) -> str:
+    """Return the body of a single '## Heading' section (heading line excluded)."""
+    lines = content.replace("\r\n", "\n").splitlines()
+    out: list[str] = []
+    capture = False
+    for line in lines:
+        if line.startswith("## "):
+            if capture:
+                break
+            capture = line[3:].strip().lower() == heading.lower()
+            continue
+        if capture:
+            out.append(line)
+    return "\n".join(out).strip()
 
 
 def render_diagrams(output_dir: Path) -> dict[str, Path]:
@@ -251,6 +353,11 @@ def replace_cover_placeholders(doc: Document) -> None:
                 for run in paragraph.runs:
                     if old in run.text:
                         run.text = run.text.replace(old, new)
+    # Fill in bare cover labels with values (as in earlier document versions)
+    cover_fields = {"Author:": "Gary Newport", "Date:": "01/09/2026", "Version:": "1.0", "Status:": "Draft"}
+    for paragraph in doc.paragraphs:
+        if paragraph.text.strip() in cover_fields:
+            paragraph.add_run(f" {cover_fields[paragraph.text.strip()]}")
 
 
 def add_source(doc: Document, filename: str, image_dir: Path) -> None:
@@ -275,7 +382,10 @@ def create_document(image_dir: Path) -> Path:
     doc.add_page_break()
 
     doc.add_heading("Executive Summary", level=1)
-    add_source(doc, "solution-overview.md", image_dir)
+    overview_content = (WIKI_DIR / "solution-overview.md").read_text(encoding="utf-8")
+    exec_content = extract_section(overview_content, "Executive Summary")
+    if exec_content:
+        parse_markdown(doc, exec_content, image_dir)
 
     used = {"solution-overview.md"}
     for section in TOP_LEVEL_SECTIONS[1:-1]:
@@ -288,8 +398,8 @@ def create_document(image_dir: Path) -> Path:
     doc.add_heading("References", level=1)
     doc.add_paragraph("The following wiki notes were used as the source of this document:")
     for filename in sorted(used):
-        list_style = "List Bullet" if any(item.name == "List Bullet" for item in doc.styles) else "Normal"
-        doc.add_paragraph(filename, style=list_style)
+        list_style = "List Paragraph" if any(item.name == "List Paragraph" for item in doc.styles) else "Normal"
+        doc.add_paragraph(f"• {filename}", style=list_style)
 
     remaining = sorted(path.name for path in WIKI_DIR.glob("*.md") if path.name not in used)
     if remaining:
@@ -300,7 +410,7 @@ def create_document(image_dir: Path) -> Path:
     doc.core_properties.title = "EuroCRM Solution Overview Document"
     doc.core_properties.author = "Gary Newport"
     doc.core_properties.subject = "European CRM platform solution overview"
-    
+
     for out_file in OUTPUT_FILES:
         out_file.parent.mkdir(parents=True, exist_ok=True)
         doc.save(str(out_file))
@@ -313,4 +423,5 @@ if __name__ == "__main__":
         diagram_paths = render_diagrams(image_dir)
         create_document(image_dir)
     print(f"Created {OUTPUT_FILE}")
-    print(f"Embedded diagrams: {len(diagram_paths)}")
+    print(f"Embedded PlantUML diagrams: {len(diagram_paths)}")
+    print(f"Embedded Mermaid diagrams: {MERMAID_COUNT}")
