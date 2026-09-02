@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_f9e93bd8dffec36cnJyECpuXuk"
 agentLabel: "Create Word doc from wiki using Wibble template"
-usage: '{"usedTokens":31098,"contextWindow":200000,"updatedAt":1788346432649}'
+usage: '{"usedTokens":42646,"contextWindow":200000,"updatedAt":1788347971313}'
 tags:
   - copilot-conversation
 ---
@@ -167,3 +167,134 @@ Word-side rendering — please open `outputs/EuroCRM_Solution_Overview_Document.
 
 One open question: the generator still overwrites the historical `projects/EuroCRM_Solution_Overview_Document_2026-08-27.docx` copy — say the word if you'd rather it stopped touching that file.
 [Timestamp: 2026/09/02 11:27:46]
+
+**user**: diagrams look good, and so does the rest of the document
+[Timestamp: 2026/09/02 12:04:23]
+
+**ai**: Confirmed. Task complete.
+
+**Summary of the fix:**
+- [[generate_sod_from_wiki]] now renders mermaid diagrams into the SOD, uses the old doc's `List Paragraph` style with `• ` bullets, slices the executive summary to just the relevant section, and fills cover metadata.
+- Three outputs updated (two in `outputs/`, one in `projects/`), committed as `54a0690`.
+- Run `python scripts/generate_sod_from_wiki.py` to regenerate whenever wiki content changes.
+[Timestamp: 2026/09/02 12:04:23]
+
+**user**: there is some duplication of headings such as Business Context etc some with hyphens. can you clean it up
+[Timestamp: 2026/09/02 12:05:39]
+
+**ai**: The duplication is coming from `add_source` adding a heading from the filename *and* the markdown file containing its own heading. Let me check which files have headings that clash:Every wiki file starts with a `#` heading, and `add_source` adds another from the filename — so we get duplicates. The fix: skip the first heading line of each file when `add_source` already provides one.The structure is: `create_document` adds H1 for the section, `add_source` adds H2 from filename, and `parse_markdown` adds a third heading from the file's own `#` line. The fix: strip the first heading from the markdown content in `add_source` since it already provides one.Now regenerate and verify the heading count:Still duplicate headings. The files have YAML frontmatter, so `strip_first_heading` isn't finding the `#`. Let me check:The files do start with `#`. Let me debug why `strip_first_heading` isn't catching it:The first heading IS stripped — the remaining duplication is from `create_document` adding H1 + `add_source` adding H2 from filename + the file's own headings within the content. The real fix: don't add a heading in `add_source` at all, let the file's own content speak:Now `add_source` uses the file's own `#` headings instead of generating one from the filename. But the file headings are H1, which would clash with the section H1s. Let me check what level the document's own headings are at now. Let me regenerate and inspect:
+
+Now the H1 "Business Context" (section) + H2 "Business Context" (from the file's own `#` heading, demoted to H2 by my parse logic level `min(3, max(2, ...))`). 
+
+The issue: the file's `#` heading gets demoted to H2, but the section H1 is "Business Context" too, so "Business Context / Business Context" duplicates. 
+
+The real `create_document` section H1 is the duplicate problem. Since `add_source` now handles the section's own heading from the file, the per-file duplicate appears when the section H1 equals the file's H1.
+
+Let me look at this more holistically. The section header is added by `create_document`. Files are then added under it. The cleanest approach: the section header (H1) is useful as a divider, but I should prevent the immediate duplicate where a file's H1 equals the section H1.
+
+Looking at the actual duplication the user sees: "Business Context ... some with hyphens". The hyphenated ones are from filenames like `architecture-overview-diagrams.md` → "Architecture Overview Diagrams". Now that I removed filename-generated headings, we only get file-native headings. But the plain "# Business Context" (H1 from section) + "# Business Context" (H2, file's own demoted) still duplicates for files whose H1 matches the section.
+
+Given the structure, the right fix is: `add_source` should demote ALL headings in the file by one level (since they sit under a section H1), AND skip the file's first heading if it duplicates the section heading. Actually simpler: since each section H1 already labels the group, and files start with their own H1, I should demote the file's headings so `#` → H2 (which is what happens). The only remaining duplicate is when file H1 = section H1.
+
+Let me check which files have H1 == section name causing true duplication:
+
+No file has H1 == section name. So the duplication is not literally identical text. The user's complaint "some with hyphens" was about the previous filename-derived headings (e.g. "Architecture – Overview Diagrams"). 
+
+Wait — but after my edit, I still see "Business Context / Business Context" H1+H2 in the output. Let me re-examine. That's from file `business-context.md` whose own `# Business Context` demoted to H2. The section H1 is also "Business Context". Both are "Business Context". But my dupe-detection loop compared to section name "Business Context" and found... nothing? Oh — because the check `h1 == section` where section comes from `TOP_LEVEL_SECTIONS[1:-1]` — the first is "Business Context". So it should have matched `business-context.md`. Let me check the section list:
+
+The loop iterates `TOP_LEVEL_SECTIONS[1:-1]` = ["Business Context", "Business Goals...", ..., "Governance and Approval"]. And `SECTION_SOURCES["Business Context"] = ["business-context.md", "problem-statement.md"]`. `business-context.md` H1 = "# Business Context" → stripped = "Business Context" == section. So it SHOULD be a dupe. But output showed none. 
+
+Oh, the comparison — h1 is stripped with `.strip()` but line had leading... it's `l.strip()` so "Business Context". And section is "Business Context". These are equal. Unless there's a non-breaking space or different unicode. Let me check more carefully:
+
+The generator's check had a bug — `l.startswith('# ')` didn't include the `#` in `h1`. It returned `'# Business Context'` raw. So my comparison logic in `add_source` comparison earlier was fine in intent but the test script had the bug. Regardless, the actual file H1 is "Business Context" which equals the section name, causing the duplicate.
+
+So the fix: in `add_source`, demote the file's headings (already done via `min(3, max(2,...))` in parse), AND skip a file's first H1 when it matches the section heading, OR better — since `create_document` already adds the section H1, drop the file's own first heading entirely when it duplicates the section. 
+
+But actually a cleaner design overall: `create_document` shouldn't be adding section H1s that duplicate file H1s. But the section H1 acts as a grouping / page divider. Given files have their own meaningful H1s, the healthiest approach: keep the section H1 as a divider, and in `add_source` skip the file's first heading **only if** it duplicates the section heading (avoiding "Business Context / Business Context"). For files with different H1s (e.g. `problem-statement.md` → "Why We're Here — Problem Statement"), keep them as-is (they're informative sub-headings).
+
+Let me implement that — pass the section name down so `add_source` can suppress a redundant first heading:
+
+Wait — I need to reconsider. The file heading "Business Context" demoted to H2 under the section H1 "Business Context" is a duplicate. But suppressing it when it *equals* the section name handles that. However, there's a subtlety with "Business Goals and Objectives" section: `business-goals.md` has H1 "Business Goals and Objectives" == section → suppressed. Good. But `business-capabilities.md` H1 "Business Capabilities" == section → suppressed. Good.
+
+But other files have H1 that differ and get demoted to H2 — those are fine, they're useful sub-sections.
+
+However — there's another concern. When `create_document` adds section H1 and the file's H1 is suppressed, we have exactly one "Business Context" heading. Good. When file H1 differs, we get section H1 + file H1 (as H2). That's reasonable structure.
+
+Now update `create_document` to pass the section name:
+
+Now regenerate and verify the business context section and full heading uniqueness:
+
+The "Business Context / Business Context" duplicate is gone. Now there's only one "Business Context" H1, and the file's native sub-headings (Programme Scope, Current State, etc.) are demoted to H2. All top-level sections are unique, and there are zero immediate H1→H2 same-title duplicates across the entire document.
+
+Let me check the "Key Stakeholders" case specifically since that had a clear duplicate pattern:
+
+"Key Stakeholders" is now clean — the duplicated "Key Stakeholders" H2 is gone, and only the meaningful sub-headings remain. Let me commit this:
+
+Done, committed as `5ae39df`.
+
+**What was causing the duplication** — `add_source` was generating a heading from the wiki filename (`architecture-overview-diagrams.md` → "Architecture Overview Diagrams"), *and* the wiki file already started with its own heading, so you saw both plus the section header. For section-aligned files it read like "Business Context / Business Context", and elsewhere like "Architecture – Overview Diagrams" with hyphenated forms.
+
+**Fix:**
+- `add_source` now stops inventing headings from filenames — it uses the wiki note's own headings directly (demoted one level so they nest under the section).
+- If a file's first heading exactly matches its enclosing section heading (e.g. [[business-context]] → "Business Context"), that redundant heading is suppressed, so you get one clean section title.
+
+**Verified:** every top-level section appears once, there are zero "section heading immediately followed by same-title sub-heading" duplications, and the previously problem areas (Business Context, Key Stakeholders) now read cleanly with only the meaningful sub-headings (Programme Scope, RACI Matrix, Key Roles…).
+
+Worth a quick eyeball in Word to confirm the heading hierarchy looks right now — but the dupes are gone.
+[Timestamp: 2026/09/02 12:05:39]
+
+**user**: good can you make sure any future changes maintains this format
+[Timestamp: 2026/09/02 12:17:31]
+
+**ai**: The filename-based heading generator is already replaced and committed. To make sure future wiki changes keep this format, I should document the convention. Let me check whether the wiki has a conventions note already:
+
+The best way to make sure future changes keep the format is to add a note that the SOD generator reads directly — the wiki notes it consumes need to follow the conventions the generator expects (each file starts with `# Heading`, uses `##` subheadings, `•` bullets, `` ```mermaid ```` fences, and no `#` heading that duplicates its section).
+
+Let me check the README to see if there's a conventions section I should extend, and look at the existing wiki note structure:
+
+No README exists. The AGENTS.md file references "Read `README.md` first" but it doesn't exist. Let me check the vault root structure and the scripts folder to decide where to document the convention:
+
+There's no README at the vault root. The reference in AGENTS.md is to the "second brain" root README which doesn't exist here. Since the SOD generator is the thing that needs protecting, the most effective place to document the format convention is either a note the generator/AI reads, or comments in the script. 
+
+Given this is a knowledge-management vault and the task is "make sure future changes maintain this format," the right move is to document the convention where future AI/wiki-editing sessions will see it — and since wiki notes are the input, a conventions note in `wiki/` plus the generator's expectations is ideal. But adding a wiki note would get swept into the SOD appendix automatically.
+
+The cleaner approach: add a `#` heading convention note directly in the generator's `add_source` expectations is already encoded in code. What will truly "maintain the format" is a documented convention. Let me check the prompts folder and AGENTS.md to find the right place, and check how the CLAUDE.md structures things:
+
+I see there's an AGENTS.md but the README it references doesn't exist, and there's a separate CLAUDE.md. The best place to record the convention so future sessions (and the user) maintain it is a note that the SOD generator and any future assistant can reference. 
+
+Given the generator reads from `wiki/`, and any future wiki editing session is governed by AGENTS.md, I think the cleanest, most discoverable approach is to document the SOD format convention in AGENTS.md itself (the instruction file that always loads), since that's where the system's rules live. I'll add a short, factual section about what the SOD generator expects.
+
+Let me check the CLAUDE.md first to avoid creating conflicting conventions:
+
+I see. Both AGENTS.md and CLAUDE.md reference a README.md that doesn't exist, and they say "Read README.md first. This is the source of truth" — but the README is missing. That's relevant: the intended source of truth for conventions is a README. Since it's referenced as the "source of truth for the system," I have reason to think there should be one here. But I shouldn't create documentation files unless needed/requested.
+
+The user asked: "make sure any future changes maintains this format." The two things that actually enforce this going forward:
+1. The generator script itself (already encodes the format and won't produce filename-derived headings anymore).
+2. A recorded convention so future editing sessions don't break it.
+
+The most robust, low-friction way to honor this without creating files the user didn't ask for is to add the SOD format convention to AGENTS.md (the instruction file that loads for every session) — this tells future assistants exactly what the generator expects. Let me add that, since AGENTS.md explicitly says it can be customized and is the governing instruction file.
+
+Given AGENTS.md precedence rules (project file wins over vault root), and this is the project vault's AGENTS.md, adding a "SOD output format" subsection under Common Tasks is appropriate. I'll keep it terse and factual per the user's voice preference:
+
+Now let me commit that change:
+
+Done, committed as `ea1d167`.
+
+The format is now enforced from two directions:
+
+**1. The generator enforces it mechanically** (`scripts/generate_sod_from_wiki.py`)
+- It no longer invents headings from filenames — it reads each note's own headings, demotes them to nest under the section, and suppresses a `#` heading that duplicates the enclosing section title.
+- So as long as wiki notes follow the convention, the SOD stays clean.
+
+**2. The convention is documented for any future editing session** ([[AGENTS.md]])
+Added a "EuroCRM SOD Format" section under Common Tasks stating:
+- One `# Heading 1` per wiki note (its title), not duplicated in the SOD section it maps to.
+- `##` / `###` for sub-sections, never a mid-body `#`.
+- `- ` bullets (rendered as `• `).
+- ` ```mermaid ```` fences for Mermaid, `.puml` for PlantUML, plain ` ``` ` for ASCII/code.
+- Kebab-case filenames, one topic per file.
+
+This way any future assistant (or you) adding or editing `/wiki` notes has the rule in front of them before regenerating.
+
+One note: AGENTS.md and CLAUDE.md both reference a `README.md` as "the source of truth," but that file doesn't exist in this vault — so I documented the convention in AGENTS.md instead. If you'd like, I can create a `README.md` with the full conventions (including this SOD format) so that referenced source of truth is real.
+[Timestamp: 2026/09/02 12:17:31]
