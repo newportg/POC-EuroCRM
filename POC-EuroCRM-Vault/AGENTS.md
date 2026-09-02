@@ -17,9 +17,24 @@ Read `README.md` first. This the source of truth for the system. This file gives
 ## Common Tasks
 
 - **Translate raw** → run the prompt in `translate.md` against `/raw`.
+- **SOD regeneration** → run `python scripts/generate_sod_from_wiki.py` to rebuild `outputs/EuroCRM_Solution_Overview_Document.docx`.
 - **Project digest** → summarize a `/projects/<name>/` folder into its README.
 - **Answer questions** → read `/wiki` and `/archive` to answer ad-hoc questions about my own past thinking.
 - Diagrams: Archimate or Plantuml only
+
+---
+
+## EuroCRM SOD Format
+
+Hard rule for keeping the generated Solution Overview Document (SOD) clean. `scripts/generate_sod_from_wiki.py` reads `/wiki` notes and concatenates them into a Word document. To keep the output formatted:
+
+- Use one `# Heading 1` per wiki note — this is the note's title and becomes the section heading. Do **not** duplicate it in the enclosing SOD section (e.g. `business-context.md` starts `# Business Context` which matches its section; the generator suppresses that match).
+- Sub-sections use `##` / `###` — never introduce a `# Heading 1` in the middle of a note's body.
+- Lists use `- ` bullets; the generator renders them with a literal `• `.
+- Diagrams: PlantUML (`.puml` in `/wiki`) renders to images; use ` ```mermaid ```` fences for Mermaid and the generator renders them to images. ASCII art / code goes in plain ` ``` ` fences.
+- Keep kebab-case filenames and one topic per file.
+
+If in doubt whether a wiki note follows this, read the note and the generator's `SECTION_SOURCES` mapping first, then merge — never guess.
 
 ---
 
