@@ -123,6 +123,21 @@ See [[wip-data-model]] for full schema.
 | kf_EnergyRating | L2 | EPC energy performance ratings |
 | Lead | L5 | Marketing lead (D365 CI-Journeys integration) |
 
+## Major Entity Change Publishing (ECS)
+
+Whenever a **Major entity** is created or updated, a change notification is sent to the Knight Frank **ECS (Enterprise Connectivity Services)** platform — the internal notification and message bus that informs other systems a change has happened.
+
+| Aspect | Design |
+| ------ | ------ |
+| Trigger | Create/update of a Major entity in Dataverse |
+| Publish | Plugin / Power Automate flow → ECS topic |
+| Payload | Entity type, record ID, changed fields, timestamp, source system |
+| Candidates | Client (Account, Contact), Property (kf_Site, kf_Property), Deal (kf_Deal) |
+| Audit | Logged in `kf_IntegrationLog` |
+| Contract | Confirm definitive Major entity list and ECS topic/contract with TDA and enterprise architecture |
+
+The change events are notifications only — consumers query Dataverse (or enterprise mastered sources) for the full record; ECS does not replicate data.
+
 ## Taxonomy Standards
 
 ### Client Industry — SIC to KF Mapping

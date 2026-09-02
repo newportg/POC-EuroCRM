@@ -38,6 +38,7 @@ rectangle "External Systems" as EXT {
   rectangle "D365 Finance" as D365FIN
   rectangle "CI-Journeys" as CIJ
   rectangle "Copilot" as COPILOT
+  rectangle "ECS\nEnterprise\nConnectivity Services" as ECS
 }
 
 BROKER --> APP : "Manages deals,\nclients, properties"
@@ -53,6 +54,7 @@ PA --> CIJ : "Marketing handoff"
 FB --> D365FIN : "9 integration flows\n(Project, Budget,\nInvoice, WIP)"
 LOQATE --> PROPS : "Auto-address\nvalidation"
 
+DV --> ECS : "Change events\n(Major entities)"
 DV --> PBI : "Dashboards"
 COPILOT --> APP : "AI-powered\nmatching"
 

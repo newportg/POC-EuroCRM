@@ -91,6 +91,19 @@ See [[power-apps-rationale]] for the platform selection rationale.
 | Power Automate | Dataverse → CI-Journeys | Marketing handoff |
 | Finance Bridge | Dataverse → D365 Finance | 9 integration flows |
 | Loqate | Loqate → Dataverse | Address validation |
+| ECS Publish | Dataverse → ECS | Change notification for Major entity updates |
+
+### ECS Change Notification
+
+Whenever a **Major entity** is created or updated in Dataverse, a change notification is published to the Knight Frank **ECS (Enterprise Connectivity Services)** platform.
+
+- **What:** ECS is Knight Frank's internal notification and message bus. It notifies other systems that a change has happened — it is not a data replication service.
+- **Trigger:** Create or update of a Major entity record.
+- **Candidate Major entities:** [[architecture-data|Client]] (Account, Contact), [[architecture-data|Property]] (kf_Site, kf_Property), and [[architecture-data|Deal]] (kf_Deal) domains.
+  - **Note:** the definitive Major entity list is not yet defined in the wiki — confirm with TDA / enterprise architecture before build.
+- **Mechanism:** Dataverse plugin or Power Automate flow on entity create/update publish a change event (entity type, record ID, changed fields, timestamp, source) to ECS.
+- **Consumers:** any enterprise system subscribed to ECS topics reacts to the notification (e.g. downstream registries, reporting, downstream workstreams).
+- **Audit:** all publications are logged in `kf_IntegrationLog`.
 
 ### Finance Bridge — 9 Integration Flows
 

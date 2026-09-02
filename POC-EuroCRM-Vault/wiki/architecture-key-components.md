@@ -129,6 +129,11 @@ Multi-market entities:
 | Loqate | Dataverse | Auto-address validation for kf_Site |
 | Copilot | Dataverse | AI-powered client matching |
 | Power BI | Dataverse | Dashboards and reporting |
+| ECS Publisher | ECS (Enterprise Connectivity Services) | Publish change notifications for Major entity create/update |
+
+### ECS Publications
+
+Every create/update of a **Major entity** (Client, Property, Deal domains — confirm definitive list with TDA) publishes a change notification to the Knight Frank ECS platform, the internal notification and message bus that keeps other systems informed of changes. Publication is performed from a Dataverse plugin / Power Automate flow; delivery is asynchronous and logged in `kf_IntegrationLog`. See [[architecture-application]] for the detailed pattern.
 
 ## Technical Rules
 

@@ -8,7 +8,7 @@ Source: European CRM Architecture Review 2.pdf
 
 | Layer | Name | Description |
 | ----- | ---- | ----------- |
-| L0 | External Systems | D365 CI-Journeys (same env); Finance (future) |
+| L0 | External Systems | D365 CI-Journeys (same env); Finance (future); ECS — change notification bus (Major entity events) |
 | L1 | Dataverse Platform | System tables; security framework; audit log (Microsoft-managed) |
 | L2 | KF_Core | 40+ table shells; option sets; BU hierarchy; base security; Outlook sync; SharePoint; BI |
 | L3 | Region | KF_Europe — EUR default, GDPR baseline, Regional Power BI Dashboard |

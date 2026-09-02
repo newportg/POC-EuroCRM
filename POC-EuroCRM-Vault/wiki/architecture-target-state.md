@@ -37,6 +37,7 @@ graph TB
             IL3[D365 Finance]
             IL4[CI-Journeys]
             IL5[Loqate]
+            IL6[ECS]
         end
         subgraph "Security Layer"
             SL1[Entra ID]
@@ -61,6 +62,7 @@ graph TB
     DL1 --> IL3
     DL1 --> IL4
     DL1 --> IL5
+    DL1 --> IL6
 
     SL1 --> PL1
     SL2 --> PL1
@@ -121,6 +123,7 @@ graph TB
 - SharePoint deal folder auto-provisioning
 - CI-Journeys marketing handoff
 - Power BI dashboards and reports
+- **ECS change notification:** Major entity create/update events published to the Knight Frank ECS message bus (see [[architecture-application]])
 
 ## Target State vs Current State
 

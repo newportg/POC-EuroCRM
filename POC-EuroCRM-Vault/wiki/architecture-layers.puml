@@ -51,6 +51,7 @@ package "L0 — External Systems" as L0 #E8F5E9 {
   rectangle "D365 CI-Journeys" as CIJ
   rectangle "D365 Finance" as FIN_EXT
   rectangle "Outlook · SharePoint\nPower BI · Copilot" as M365
+  rectangle "ECS\nChange Notification Bus" as ECS_EXT
 }
 
 L0 -down-> L1
@@ -66,6 +67,7 @@ note right of L7
   Adding a service line = new L5
   Each layer = separate managed solution
   No unmanaged customisations in PROD
+  Major entity changes publish to ECS
 end note
 
 @enduml

@@ -52,7 +52,10 @@ EuroCRM runs on the **Microsoft Power Platform** with **Dataverse** as the data 
 | Marketing | D365 Customer Insights - Journeys | Marketing handoff, lead nurture |
 | Finance | D365 Finance (9 integration flows) | WIP, billing, revenue recognition |
 | Address Validation | Loqate | Auto-address lookup for kf_Site |
+| Change Notification | ECS (Enterprise Connectivity Services) | Publish Major entity change events to the enterprise message bus |
 | APIs | OData v4 + Custom API | External system integration |
+
+**Note:** ECS is Knight Frank's internal notification and message bus. EuroCRM publishes a change notification whenever a Major entity (Client, Property, Deal — confirm definitive list with TDA) is created or updated; subscribing systems are notified that a change has happened. See [[architecture-application]] for the pattern.
 
 ### Productivity Layer
 
