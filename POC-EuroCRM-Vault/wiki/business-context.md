@@ -8,6 +8,8 @@ source: European CRM Architecture Review 2.pdf
 
 ## Programme Scope
 
+The document covers the offices in France, Germany, Spain and Poland, and is referred to in several places as Europe.
+
 The business scope is to create a **common client, contact and property data foundation across Europe** that helps our teams win more business, collaborate more effectively across borders, and reduce operational risk. In practical terms the programme is intended to:
 
 - Create a single, trusted view of European clients, contacts, properties and opportunities that are used by the French, German, Spanish and Polish markets
