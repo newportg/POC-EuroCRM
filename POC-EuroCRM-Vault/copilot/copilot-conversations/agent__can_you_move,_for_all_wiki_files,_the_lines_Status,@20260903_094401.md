@@ -73,3 +73,9 @@ source:"European CRM Architecture Review 2.pdf, EU CRM Data Model.xlsx"
 ...
 ```
 [Timestamp: 2026/09/03 09:47:37]
+
+**user**: can you recreate the output document in the same format
+[Timestamp: 2026/09/03 14:19:33]
+
+**ai**: Let me check the SOD generator script first — it may rely on the metadata lines that just moved into frontmatter.The script has a `strip_metadata_lines()` function that already strips `Status:`, `Parent:`, `Source(s):` from the body — those lines are now in frontmatter but the function still matches and removes them. The `---` delimiters are treated as horizontal rules by the markdown parser and skipped. It should work as-is.
+[Timestamp: 2026/09/03 14:19:33]
