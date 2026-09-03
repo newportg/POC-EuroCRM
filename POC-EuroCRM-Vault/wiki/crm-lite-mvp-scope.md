@@ -1,8 +1,10 @@
-# CRM Lite — MVP Scope
+---
+status: Draft
+parent:"[[solution-overview]]"
+source: European CRM Architecture Review 2.pdf
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: European CRM Architecture Review 2.pdf
+# CRM Lite — MVP Scope
 
 ## Key Principle
 

@@ -1,8 +1,10 @@
-# Capital Markets Data Model
+---
+status: Draft
+parent:"[[solution-overview]]"
+source: European CRM Architecture Review 2.pdf
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: European CRM Architecture Review 2.pdf
+# Capital Markets Data Model
 
 ## Data Schema
 

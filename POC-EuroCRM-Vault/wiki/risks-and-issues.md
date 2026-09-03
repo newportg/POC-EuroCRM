@@ -1,7 +1,9 @@
-# Risks and Issues
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Risks and Issues
 
 ## Risk of Inaction
 

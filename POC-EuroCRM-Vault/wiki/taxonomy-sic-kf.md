@@ -1,8 +1,10 @@
-# SIC to KF Client Sector Mapping
+---
+status: Draft
+parent:"[[taxonomy-mappings]]"
+source: European CRM Architecture Review 2.pdf
+---
 
-Status: Draft
-Parent: [[taxonomy-mappings]]
-Source: European CRM Architecture Review 2.pdf
+# SIC to KF Client Sector Mapping
 
 ## Full Mapping
 

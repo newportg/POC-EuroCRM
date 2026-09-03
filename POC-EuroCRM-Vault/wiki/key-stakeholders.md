@@ -1,7 +1,9 @@
-# Key Stakeholders
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Key Stakeholders
 
 ## Stakeholder Register
 

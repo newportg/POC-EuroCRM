@@ -1,8 +1,10 @@
-# Client Data Model — One Client, One View
+---
+status: Draft
+parent:"[[solution-overview]]"
+source: European CRM Architecture Review 2.pdf
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: European CRM Architecture Review 2.pdf
+# Client Data Model — One Client, One View
 
 ## Data Schema
 

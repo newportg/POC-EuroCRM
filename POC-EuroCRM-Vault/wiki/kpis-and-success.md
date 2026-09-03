@@ -1,7 +1,9 @@
-# KPIs and Success Metrics
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# KPIs and Success Metrics
 
 ## Key Performance Indicators
 

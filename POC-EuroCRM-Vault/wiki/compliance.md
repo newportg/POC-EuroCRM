@@ -1,7 +1,9 @@
-# Compliance
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Compliance
 
 ## Regulatory Requirements
 

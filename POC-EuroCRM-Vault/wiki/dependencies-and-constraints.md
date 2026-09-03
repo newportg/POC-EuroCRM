@@ -1,7 +1,9 @@
-# Dependencies and Constraints
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Dependencies and Constraints
 
 ## Key Dependencies
 

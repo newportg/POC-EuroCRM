@@ -1,8 +1,10 @@
-# Business Goals and Objectives
+---
+status: Draft
+parent:"[[solution-overview]]"
+source: European CRM Architecture Review 2.pdf
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: European CRM Architecture Review 2.pdf
+# Business Goals and Objectives
 
 ## Programme Scope
 

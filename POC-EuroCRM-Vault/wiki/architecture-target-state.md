@@ -1,7 +1,9 @@
-# Architecture — Target State
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Architecture — Target State
 
 ## Target State Architecture
 

@@ -1,7 +1,9 @@
-# Cost Estimates
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Cost Estimates
 
 ## Capital Expenditure (CAPEX)
 

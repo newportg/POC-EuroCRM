@@ -1,7 +1,9 @@
-# Architecture — Overview Diagrams
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Architecture — Overview Diagrams
 
 ## Diagrams
 

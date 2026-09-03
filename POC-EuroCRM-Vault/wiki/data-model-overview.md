@@ -1,8 +1,10 @@
-# EU CRM Data Model
+---
+status: Draft
+parent:"[[solution-overview]]"
+source: EU CRM Data Model.xlsx
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: EU CRM Data Model.xlsx
+# EU CRM Data Model
 
 ## Overview
 

@@ -1,10 +1,13 @@
+---
+status: Draft
+sources:"European CRM Architecture Review 2.pdf, EU CRM Data Model.xlsx, European_CRM_Client_Industry_Master_Taxonomy.xlsx, European_CRM_Property360_Master_Taxonomy.xlsx"
+---
+
 # EuroCRM Solution Overview Document
 
-Status: Draft
 Author: Gary Newport
 Date: 26/08/2026
 Version: 0.1
-Sources: European CRM Architecture Review 2.pdf, EU CRM Data Model.xlsx, European_CRM_Client_Industry_Master_Taxonomy.xlsx, European_CRM_Property360_Master_Taxonomy.xlsx
 
 ## Version History
 

@@ -1,7 +1,9 @@
-# Solution Options and Trade-offs
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Solution Options and Trade-offs
 
 ## Options Analysis
 

@@ -1,8 +1,10 @@
-# Power Apps Model-Driven Apps Rationale
+---
+status: Draft
+parent:"[[solution-overview]]"
+source: European CRM Architecture Review 2.pdf
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: European CRM Architecture Review 2.pdf
+# Power Apps Model-Driven Apps Rationale
 
 ## Current Hypothesis
 

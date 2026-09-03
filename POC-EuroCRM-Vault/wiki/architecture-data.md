@@ -1,8 +1,10 @@
-# Architecture — Data
+---
+status: Draft
+parent:"[[solution-overview]]"
+sources:"European CRM Architecture Review 2.pdf, EU CRM Data Model.xlsx, European_CRM_Client_Industry_Master_Taxonomy.xlsx, European_CRM_Property360_Master_Taxonomy.xlsx"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Sources: European CRM Architecture Review 2.pdf, EU CRM Data Model.xlsx, European_CRM_Client_Industry_Master_Taxonomy.xlsx, European_CRM_Property360_Master_Taxonomy.xlsx
+# Architecture — Data
 
 ## Data Architecture Overview
 

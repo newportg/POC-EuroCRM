@@ -1,8 +1,10 @@
-# Taxonomy Mappings
+---
+status: Draft
+parent:"[[solution-overview]]"
+sources:"European CRM Architecture Review 2.pdf, European_CRM_Client_Industry_Master_Taxonomy.xlsx, European_CRM_Property360_Master_Taxonomy.xlsx"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Sources: European CRM Architecture Review 2.pdf, European_CRM_Client_Industry_Master_Taxonomy.xlsx, European_CRM_Property360_Master_Taxonomy.xlsx
+# Taxonomy Mappings
 
 ## Client Industry Taxonomy — SIC to KF Mapping
 

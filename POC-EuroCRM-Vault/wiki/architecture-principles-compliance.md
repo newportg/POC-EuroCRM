@@ -1,7 +1,9 @@
-# Architecture — Principles Compliance
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Architecture — Principles Compliance
 
 ## Reference Document
 

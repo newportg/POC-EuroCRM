@@ -1,7 +1,9 @@
-# Solution Scope — Out-of-Scope
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Solution Scope — Out-of-Scope
 
 ## Out-of-Scope Items
 

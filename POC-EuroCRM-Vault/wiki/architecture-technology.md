@@ -1,8 +1,10 @@
-# Architecture — Technology
+---
+status: Draft
+parent:"[[solution-overview]]"
+source:"European CRM Architecture Review 2.pdf, EU CRM Data Model.xlsx"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: European CRM Architecture Review 2.pdf, EU CRM Data Model.xlsx
+# Architecture — Technology
 
 ## Technology Architecture Overview
 

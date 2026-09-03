@@ -1,8 +1,10 @@
-# Property Data Model — Site, Property, Deal
+---
+status: Draft
+parent:"[[solution-overview]]"
+source: European CRM Architecture Review 2.pdf
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: European CRM Architecture Review 2.pdf
+# Property Data Model — Site, Property, Deal
 
 ## Data Schema
 

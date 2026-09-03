@@ -1,8 +1,10 @@
-# Core Data Model Tables
+---
+status: Draft
+parent:"[[data-model-overview]]"
+source: EU CRM Data Model.xlsx
+---
 
-Status: Draft
-Parent: [[data-model-overview]]
-Source: EU CRM Data Model.xlsx
+# Core Data Model Tables
 
 ## Data Schema
 

@@ -1,7 +1,9 @@
-# Governance — Approval
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Governance — Approval
 
 ## Approval Requirements
 

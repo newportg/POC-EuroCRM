@@ -1,7 +1,9 @@
-# Expected Benefits
+---
+status: Draft
+parent:"[[solution-overview]]"
+---
 
-Status: Draft
-Parent: [[solution-overview]]
+# Expected Benefits
 
 ## Quantifiable Benefits
 

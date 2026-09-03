@@ -1,8 +1,10 @@
-# WIP Data Model — Work in Progress
+---
+status: Draft
+parent:"[[solution-overview]]"
+source: European CRM Architecture Review 2.pdf
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: European CRM Architecture Review 2.pdf
+# WIP Data Model — Work in Progress
 
 ## Data Schema
 

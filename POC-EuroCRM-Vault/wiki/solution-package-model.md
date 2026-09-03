@@ -1,8 +1,10 @@
-# Solution Package Model — Layered Architecture
+---
+status: Draft
+parent:"[[solution-overview]]"
+source: European CRM Architecture Review 2.pdf
+---
 
-Status: Draft
-Parent: [[solution-overview]]
-Source: European CRM Architecture Review 2.pdf
+# Solution Package Model — Layered Architecture
 
 ## Layer Model
 
