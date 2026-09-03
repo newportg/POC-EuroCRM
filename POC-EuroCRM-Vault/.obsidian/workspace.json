@@ -201,8 +201,18 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3cab0696e0fd0dd5",
+  "active": "597aa953c2405097",
   "lastOpenFiles": [
+    "outputs/archimate/05-integration-view.archimate",
+    "outputs/archimate/04-layered-overview.archimate",
+    "outputs/archimate/03-technology-layer.archimate",
+    "outputs/archimate/02-application-layer.archimate",
+    "outputs/archimate/01-business-layer.archimate",
+    "outputs/archimate",
+    "outputs/~WRL0001.tmp",
+    "outputs/~WRD0000.tmp",
+    "outputs/~$roCRM_Solution_Overview_Document.docx",
+    "outputs/EuroCRM_Solution_Overview_Document_2026-09-01.docx",
     "wiki/problem-statement.md",
     "wiki/solution-overview.md",
     "wiki/wip-data-model.md",
@@ -214,18 +224,9 @@
     "copilot/copilot-conversations/agent__can_you_move,_for_all_wiki_files,_the_lines_Status,@20260903_094401.md",
     "wiki/architecture-business.md",
     "wiki/solution-package-model.md",
-    "outputs/~$roCRM_Solution_Overview_Document.docx",
-    "outputs/~$roCRM_Domain_Architecture.docx",
-    "outputs/~WRL0004.tmp",
-    "outputs/~WRD0003.tmp",
-    "outputs/~WRD0002.tmp",
-    "outputs/EuroCRM_Solution_Overview_Document_2026-09-01.docx",
     "wiki/key-stakeholders.md",
     "copilot/copilot-conversations/agent__can_you_regenerate_the_output_document_without_the_Status_Draft@20260902_161116.md",
     "wiki/architecture-overview-diagrams.md",
-    "outputs/~$roCRM_Solution_Overview_Document_2026-09-01.docx",
-    "outputs/EuroCRM_Solution_Overview_Document.docx",
-    "outputs/EuroCRM_Domain_Architecture.docx",
     "copilot/copilot-conversations/agent__using_the_wibble_word_document_as_a_template_can_you@20260902_102310.md",
     "wiki/architecture-key-components.md",
     "wiki/architecture-data.md",
@@ -238,7 +239,6 @@
     "wiki/property-data-model.md",
     "wiki/kpis-and-success.md",
     "wiki/power-apps-rationale.md",
-    "wiki/roadmap-dependencies.md",
     "Untitled.canvas"
   ]
 }

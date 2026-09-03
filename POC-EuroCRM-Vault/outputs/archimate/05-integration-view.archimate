@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.0/archimate3_Diagram.xsd"
+       identifier="id-model-eurocrm-integration">
+
+  <metadata>
+    <name>EuroCRM - Integration Architecture</name>
+    <documentation>Integration view showing synchronous and asynchronous data flows between EuroCRM (Dataverse) and external systems.</documentation>
+  </metadata>
+
+  <elements>
+    <!-- Central System -->
+    <element identifier="id-int-dataverse" type="ApplicationComponent">
+      <name>Dataverse (EuroCRM)</name>
+      <documentation>Central data store and application platform. Source and target of all integrations.</documentation>
+    </element>
+
+    <!-- External Systems -->
+    <element identifier="id-int-outlook" type="ApplicationComponent">
+      <name>Microsoft Outlook</name>
+      <documentation>Email client. Bi-directional sync: emails tracked as CRM activities, CRM contacts visible in Outlook.</documentation>
+    </element>
+    <element identifier="id-int-sharepoint" type="ApplicationComponent">
+      <name>SharePoint Online</name>
+      <documentation>Document management. Auto-provisioned deal folders, NDA storage, document linking.</documentation>
+    </element>
+    <element identifier="id-int-d365f" type="ApplicationComponent">
+      <name>D365 Finance</name>
+      <documentation>ERP receiving 9 integration flows: project creation, % complete, invoicing, WIP, reconciliation.</documentation>
+    </element>
+    <element identifier="id-int-ci-j" type="ApplicationComponent">
+      <name>D365 CI-Journeys</name>
+      <documentation>Marketing automation. Same Dataverse environment. Lead nurture and marketing handoff.</documentation>
+    </element>
+    <element identifier="id-int-ecs" type="ApplicationComponent">
+      <name>ECS (Enterprise Connectivity Services)</name>
+      <documentation>KF internal message bus. Receives change notifications for Major entity create/update events.</documentation>
+    </element>
+    <element identifier="id-int-loqate" type="ApplicationComponent">
+      <name>Loqate</name>
+      <documentation>Third-party address validation. Type-ahead API creates/matches kf_Site records.</documentation>
+    </element>
+    <element identifier="id-int-teams" type="ApplicationComponent">
+      <name>Microsoft Teams</name>
+      <documentation>Collaboration platform. Credit hold alerts, notifications to brokers.</documentation>
+    </element>
+    <element identifier="id-int-powerbi-ext" type="ApplicationComponent">
+      <name>Power BI</name>
+      <documentation>Analytics and reporting. Regional, country, CM pipeline, WIP aging dashboards.</documentation>
+    </element>
+
+    <!-- Integration Services -->
+    <element identifier="id-int-svc-sync" type="ApplicationService">
+      <name>Synchronous Integration</name>
+      <documentation>OData API and Custom API for real-time data queries and triggered operations.</documentation>
+    </element>
+    <element identifier="id-int-svc-async" type="ApplicationService">
+      <name>Asynchronous Integration</name>
+      <documentation>Power Automate flows, Finance Bridge, ECS publisher, Loqate webhook.</documentation>
+    </element>
+
+    <!-- Integration Flows (as data objects representing the 9 flows) -->
+    <element identifier="id-int-flow1" type="DataObject">
+      <name>Flow 1: Create Finance Project</name>
+      <documentation>Triggered on S3 stage change. Creates project in D365 Finance.</documentation>
+    </element>
+    <element identifier="id-int-flow2" type="DataObject">
+      <name>Flow 2: Update % Complete</name>
+      <documentation>Triggered on stage change. Updates % complete in D365 Finance.</documentation>
+    </element>
+    <element identifier="id-int-flow3" type="DataObject">
+      <name>Flow 3: Draft Invoice Request</name>
+      <documentation>Triggered on deal won. Raises draft invoice request in Finance.</documentation>
+    </element>
+    <element identifier="id-int-flow4" type="DataObject">
+      <name>Flow 4: Invoice &amp; Payment Data</name>
+      <documentation>Triggered when invoice posted. Returns invoice and payment data to CRM.</documentation>
+    </element>
+    <element identifier="id-int-flow5" type="DataObject">
+      <name>Flow 5: WIP Balance Refresh</name>
+      <documentation>Monthly batch. Refreshes WIP balance and ageing from Finance.</documentation>
+    </element>
+    <element identifier="id-int-flow6" type="DataObject">
+      <name>Flow 6: Credit Hold Alert</name>
+      <documentation>Triggered on credit hold. Alerts broker in Teams.</documentation>
+    </element>
+    <element identifier="id-int-flow7" type="DataObject">
+      <name>Flow 7: Fee Schedule Sync</name>
+      <documentation>Triggered on fee schedule change. Syncs budget/contract lines to Finance.</documentation>
+    </element>
+    <element identifier="id-int-flow8" type="DataObject">
+      <name>Flow 8: Revenue Recognition</name>
+      <documentation>Triggered on deal closure. Final revenue recognition in Finance.</documentation>
+    </element>
+    <element identifier="id-int-flow9" type="DataObject">
+      <name>Flow 9: Reconciliation Report</name>
+      <documentation>Monthly. Reconciliation report between CRM and Finance.</documentation>
+    </element>
+
+    <!-- ECS Event -->
+    <element identifier="id-int-ecs-event" type="DataObject">
+      <name>Major Entity Change Event</name>
+      <documentation>Published on create/update of Client (Account, Contact), Property (kf_Site, kf_Property), Deal (kf_Deal). Payload: entity type, record ID, changed fields, timestamp, source.</documentation>
+    </element>
+
+    <!-- Integration Log -->
+    <element identifier="id-int-log" type="DataObject">
+      <name>kf_IntegrationLog</name>
+      <documentation>Audit trail for all integration transactions. 7-year retention.</documentation>
+    </element>
+  </elements>
+
+  <relationships>
+    <!-- Central system offers services -->
+    <relationship identifier="id-il-1" type="Serving" source="id-int-dataverse" target="id-int-svc-sync"/>
+    <relationship identifier="id-il-2" type="Serving" source="id-int-dataverse" target="id-int-svc-async"/>
+
+    <!-- Synchronous flows -->
+    <relationship identifier="id-il-10" type="Flow" source="id-int-dataverse" target="id-int-outlook"/>
+    <relationship identifier="id-il-11" type="Flow" source="id-int-outlook" target="id-int-dataverse"/>
+
+    <!-- Asynchronous flows -->
+    <relationship identifier="id-il-20" type="Flow" source="id-int-dataverse" target="id-int-sharepoint"/>
+    <relationship identifier="id-il-21" type="Flow" source="id-int-sharepoint" target="id-int-dataverse"/>
+    <relationship identifier="id-il-22" type="Flow" source="id-int-dataverse" target="id-int-ci-j"/>
+    <relationship identifier="id-il-23" type="Flow" source="id-int-loqate" target="id-int-dataverse"/>
+    <relationship identifier="id-il-24" type="Flow" source="id-int-dataverse" target="id-int-ecs"/>
+    <relationship identifier="id-il-25" type="Flow" source="id-int-dataverse" target="id-int-teams"/>
+    <relationship identifier="id-il-26" type="Flow" source="id-int-dataverse" target="id-int-powerbi-ext"/>
+
+    <!-- Finance Bridge flows -->
+    <relationship identifier="id-il-30" type="Flow" source="id-int-flow1" target="id-int-d365f"/>
+    <relationship identifier="id-il-31" type="Flow" source="id-int-flow2" target="id-int-d365f"/>
+    <relationship identifier="id-il-32" type="Flow" source="id-int-flow3" target="id-int-d365f"/>
+    <relationship identifier="id-il-33" type="Flow" source="id-int-d365f" target="id-int-flow4"/>
+    <relationship identifier="id-il-34" type="Flow" source="id-int-d365f" target="id-int-flow5"/>
+    <relationship identifier="id-il-35" type="Flow" source="id-int-flow6" target="id-int-teams"/>
+    <relationship identifier="id-il-36" type="Flow" source="id-int-flow7" target="id-int-d365f"/>
+    <relationship identifier="id-il-37" type="Flow" source="id-int-flow8" target="id-int-d365f"/>
+    <relationship identifier="id-il-38" type="Flow" source="id-int-d365f" target="id-int-flow9"/>
+
+    <!-- ECS event flow -->
+    <relationship identifier="id-il-40" type="Flow" source="id-int-dataverse" target="id-int-ecs-event"/>
+    <relationship identifier="id-il-41" type="Flow" source="id-int-ecs-event" target="id-int-ecs"/>
+
+    <!-- Audit -->
+    <relationship identifier="id-il-50" type="Access" source="id-int-svc-async" target="id-int-log" write="true"/>
+    <relationship identifier="id-il-51" type="Access" source="id-int-svc-sync" target="id-int-log" write="true"/>
+  </relationships>
+
+  <organizations>
+    <item identifier="id-org-int" type="Application">
+      <label xml:lang="en">Integration</label>
+      <item identifier="id-org-int-core" type="ApplicationComponent">
+        <label xml:lang="en">Core</label>
+        <ref identifier="id-int-dataverse"/>
+      </item>
+      <item identifier="id-org-int-ext" type="ApplicationComponent">
+        <label xml:lang="en">External Systems</label>
+        <ref identifier="id-int-outlook"/>
+        <ref identifier="id-int-sharepoint"/>
+        <ref identifier="id-int-d365f"/>
+        <ref identifier="id-int-ci-j"/>
+        <ref identifier="id-int-ecs"/>
+        <ref identifier="id-int-loqate"/>
+        <ref identifier="id-int-teams"/>
+        <ref identifier="id-int-powerbi-ext"/>
+      </item>
+      <item identifier="id-org-int-services" type="ApplicationService">
+        <label xml:lang="en">Services</label>
+        <ref identifier="id-int-svc-sync"/>
+        <ref identifier="id-int-svc-async"/>
+      </item>
+      <item identifier="id-org-int-flows" type="DataObject">
+        <label xml:lang="en">Integration Flows</label>
+        <ref identifier="id-int-flow1"/>
+        <ref identifier="id-int-flow2"/>
+        <ref identifier="id-int-flow3"/>
+        <ref identifier="id-int-flow4"/>
+        <ref identifier="id-int-flow5"/>
+        <ref identifier="id-int-flow6"/>
+        <ref identifier="id-int-flow7"/>
+        <ref identifier="id-int-flow8"/>
+        <ref identifier="id-int-flow9"/>
+        <ref identifier="id-int-ecs-event"/>
+        <ref identifier="id-int-log"/>
+      </item>
+    </item>
+  </organizations>
+
+  <views>
+    <view identifier="view-integration" type="ApplicationComponent" viewpoint="Integration">
+      <name>Integration Architecture</name>
+      <documentation>Synchronous and asynchronous integration patterns between EuroCRM and external systems.</documentation>
+      <!-- Central -->
+      <node identifier="node-int-dv" elementRef="id-int-dataverse" x="380" y="100" w="220" h="60">
+        <style><fillColor color="#4472C4"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-int-sync" elementRef="id-int-svc-sync" x="200" y="200" w="200" h="45"/>
+      <node identifier="node-int-async" elementRef="id-int-svc-async" x="560" y="200" w="200" h="45"/>
+      <node identifier="node-int-log" elementRef="id-int-log" x="380" y="280" w="200" h="40"/>
+      <!-- External (clockwise from top-left) -->
+      <node identifier="node-int-outlook2" elementRef="id-int-outlook" x="60" y="60" w="160" h="45"/>
+      <node identifier="node-int-sp2" elementRef="id-int-sharepoint" x="60" y="140" w="160" h="45"/>
+      <node identifier="node-int-d365f2" elementRef="id-int-d365f" x="60" y="350" w="180" h="50"/>
+      <node identifier="node-int-cij2" elementRef="id-int-ci-j" x="280" y="350" w="180" h="45"/>
+      <node identifier="node-int-ecs2" elementRef="id-int-ecs" x="600" y="350" w="220" h="45"/>
+      <node identifier="node-int-loqate2" elementRef="id-int-loqate" x="840" y="100" w="140" h="45"/>
+      <node identifier="node-int-teams2" elementRef="id-int-teams" x="840" y="200" w="140" h="45"/>
+      <node identifier="node-int-pbi2" elementRef="id-int-powerbi-ext" x="840" y="280" w="140" h="45"/>
+      <!-- Finance flows -->
+      <node identifier="node-int-f1" elementRef="id-int-flow1" x="100" y="430" w="200" h="35"/>
+      <node identifier="node-int-f2" elementRef="id-int-flow2" x="100" y="470" w="200" h="35"/>
+      <node identifier="node-int-f3" elementRef="id-int-flow3" x="100" y="510" w="200" h="35"/>
+      <node identifier="node-int-f4" elementRef="id-int-flow4" x="340" y="430" w="200" h="35"/>
+      <node identifier="node-int-f5" elementRef="id-int-flow5" x="340" y="470" w="200" h="35"/>
+      <node identifier="node-int-f7" elementRef="id-int-flow7" x="340" y="510" w="200" h="35"/>
+      <node identifier="node-int-f6" elementRef="id-int-flow6" x="580" y="430" w="200" h="35"/>
+      <node identifier="node-int-f8" elementRef="id-int-flow8" x="580" y="470" w="200" h="35"/>
+      <node identifier="node-int-f9" elementRef="id-int-flow9" x="580" y="510" w="200" h="35"/>
+      <node identifier="node-int-ecs-ev" elementRef="id-int-ecs-event" x="840" y="370" w="200" h="35"/>
+      <!-- Connections -->
+      <connection identifier="conn-il-1" source="node-int-dv" target="node-int-sync" type="Serving"/>
+      <connection identifier="conn-il-2" source="node-int-dv" target="node-int-async" type="Serving"/>
+      <connection identifier="conn-il-3" source="node-int-sync" target="node-int-log" type="Access"/>
+      <connection identifier="conn-il-4" source="node-int-async" target="node-int-log" type="Access"/>
+      <connection identifier="conn-il-5" source="node-int-dv" target="node-int-outlook2" type="Flow"/>
+      <connection identifier="conn-il-6" source="node-int-outlook2" target="node-int-dv" type="Flow"/>
+      <connection identifier="conn-il-7" source="node-int-dv" target="node-int-sp2" type="Flow"/>
+      <connection identifier="conn-il-8" source="node-int-loqate2" target="node-int-dv" type="Flow"/>
+      <connection identifier="conn-il-9" source="node-int-dv" target="node-int-ecs2" type="Flow"/>
+      <connection identifier="conn-il-10" source="node-int-dv" target="node-int-teams2" type="Flow"/>
+      <connection identifier="conn-il-11" source="node-int-dv" target="node-int-pbi2" type="Flow"/>
+      <connection identifier="conn-il-12" source="node-int-dv" target="node-int-cij2" type="Flow"/>
+      <connection identifier="conn-il-13" source="node-int-f1" target="node-int-d365f2" type="Flow"/>
+      <connection identifier="conn-il-14" source="node-int-f2" target="node-int-d365f2" type="Flow"/>
+      <connection identifier="conn-il-15" source="node-int-f3" target="node-int-d365f2" type="Flow"/>
+      <connection identifier="conn-il-16" source="node-int-d365f2" target="node-int-f4" type="Flow"/>
+      <connection identifier="conn-il-17" source="node-int-d365f2" target="node-int-f5" type="Flow"/>
+      <connection identifier="conn-il-18" source="node-int-f6" target="node-int-teams2" type="Flow"/>
+      <connection identifier="conn-il-19" source="node-int-f7" target="node-int-d365f2" type="Flow"/>
+      <connection identifier="conn-il-20" source="node-int-f8" target="node-int-d365f2" type="Flow"/>
+      <connection identifier="conn-il-21" source="node-int-d365f2" target="node-int-f9" type="Flow"/>
+      <connection identifier="conn-il-22" source="node-int-dv" target="node-int-ecs-ev" type="Flow"/>
+      <connection identifier="conn-il-23" source="node-int-ecs-ev" target="node-int-ecs2" type="Flow"/>
+    </view>
+  </views>
+</model>

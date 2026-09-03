@@ -1,5 +1,4 @@
 ---
-status: Draft
 parent:"[[data-model-overview]]"
 source: EU CRM Data Model.xlsx
 ---

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.0/archimate3_Diagram.xsd"
+       identifier="id-model-eurocrm-business">
+
+  <metadata>
+    <name>EuroCRM - Business Architecture</name>
+    <documentation>Business layer architecture for the Knight Frank European CRM platform. Covers business capabilities, processes, actors, and roles across the Capital Markets service line.</documentation>
+  </metadata>
+
+  <elements>
+    <!-- Business Actors -->
+    <element identifier="id-actor-cm-broker" type="BusinessActor">
+      <name>CM Broker</name>
+      <documentation>Capital Markets broker operating within a country Business Unit. Manages deal origination, client relationships, and property portfolio.</documentation>
+    </element>
+    <element identifier="id-actor-cm-manager" type="BusinessActor">
+      <name>CM Manager</name>
+      <documentation>Capital Markets manager with approval authority. Oversees country BU deal pipeline and broker performance.</documentation>
+    </element>
+    <element identifier="id-actor-eit-user" type="BusinessActor">
+      <name>EIT User</name>
+      <documentation>European Investment Team member. Handles cross-border deals, multi-jurisdiction KYC, and conflict checks.</documentation>
+    </element>
+    <element identifier="id-actor-finance" type="BusinessActor">
+      <name>Finance Team</name>
+      <documentation>Global finance function. Monitors WIP, fee schedules, transaction reports, and D365 Finance integration.</documentation>
+    </element>
+    <element identifier="id-actor-compliance" type="BusinessActor">
+      <name>Compliance Officer</name>
+      <documentation>Global compliance function. Reviews KYC/AML records, GDPR requests, and audit logs.</documentation>
+    </element>
+    <element identifier="id-actor-admin" type="BusinessActor">
+      <name>System Administrator</name>
+      <documentation>Global admin with full access across all Business Units. Manages security roles and solution deployment.</documentation>
+    </element>
+
+    <!-- Business Roles -->
+    <element identifier="id-role-cm-broker" type="BusinessRole">
+      <name>CM Broker Role</name>
+    </element>
+    <element identifier="id-role-cm-manager" type="BusinessRole">
+      <name>CM Manager Role</name>
+    </element>
+    <element identifier="id-role-eit" type="BusinessRole">
+      <name>EIT Role</name>
+    </element>
+    <element identifier="id-role-finance" type="BusinessRole">
+      <name>Finance Role</name>
+    </element>
+    <element identifier="id-role-compliance-role" type="BusinessRole">
+      <name>Compliance Role</name>
+    </element>
+
+    <!-- Business Processes -->
+    <element identifier="id-process-deal-lifecycle" type="BusinessProcess">
+      <name>Capital Markets Deal Lifecycle</name>
+      <documentation>8-stage BPF: Origination - Pitch - Instruction - Marketing - Bidding - Exclusivity - Due Diligence - Completion. Each stage maps to % complete in D365 Finance.</documentation>
+    </element>
+    <element identifier="id-process-client-onboarding" type="BusinessProcess">
+      <name>Client Onboarding</name>
+      <documentation>Account creation, contact linking, SIC classification, national registration validation, GDPR consent, KYC/AML checks.</documentation>
+    </element>
+    <element identifier="id-process-property-registration" type="BusinessProcess">
+      <name>Property Registration</name>
+      <documentation>Loqate address validation, kf_Site creation, kf_Property/kf_ResProperty linkage.</documentation>
+    </element>
+    <element identifier="id-process-kyc-aml" type="BusinessProcess">
+      <name>KYC/AML Compliance</name>
+      <documentation>Legal entity level KYC checks, multi-jurisdiction compliance, NDA counterparty management.</documentation>
+    </element>
+    <element identifier="id-process-finance-integration" type="BusinessProcess">
+      <name>Finance Integration</name>
+      <documentation>9 integration flows bridging Dataverse to D365 Finance: project creation, % complete, invoice requests, WIP refresh, reconciliation.</documentation>
+    </element>
+    <element identifier="id-process-deal-stage-gate" type="BusinessProcess">
+      <name>Deal Stage Gate Enforcement</name>
+      <documentation>Country-specific regulatory gates: France city pre-emption, France notarial process, Spain right-of-refusal, EIT multi-jurisdiction KYC.</documentation>
+    </element>
+
+    <!-- Business Functions -->
+    <element identifier="id-func-client-mgmt" type="BusinessFunction">
+      <name>Client Management</name>
+      <documentation>Two-tier hierarchy (Brand/Group to Legal Entity), SIC-coded classification, cross-border client intelligence, GDPR consent tracking.</documentation>
+    </element>
+    <element identifier="id-func-property-mgmt" type="BusinessFunction">
+      <name>Property Management</name>
+      <documentation>Physical site register, commercial/residential asset management, Loqate validation, ESG data, 10 service lines share same property records.</documentation>
+    </element>
+    <element identifier="id-func-deal-mgmt" type="BusinessFunction">
+      <name>Deal Management</name>
+      <documentation>8-stage deal lifecycle, pitch tracking, NDA management, bid management, due diligence, red flag tracking, portfolio management.</documentation>
+    </element>
+    <element identifier="id-func-compliance-mgmt" type="BusinessFunction">
+      <name>Compliance and Risk</name>
+      <documentation>KYC/AML at legal entity level, regulatory stage gates, data room access, 7-year audit trail, conflict checks.</documentation>
+    </element>
+    <element identifier="id-func-finance-reporting" type="BusinessFunction">
+      <name>Finance and Reporting</name>
+      <documentation>Fee management, WIP tracking, transaction reports, 9 integration flows to D365 Finance, Power BI dashboards.</documentation>
+    </element>
+
+    <!-- Business Services -->
+    <element identifier="id-bsvc-client-service" type="BusinessService">
+      <name>Client Data Service</name>
+      <documentation>Provides single trusted view of clients across all service lines and countries.</documentation>
+    </element>
+    <element identifier="id-bsvc-property-service" type="BusinessService">
+      <name>Property Data Service</name>
+      <documentation>Provides canonical property register shared across all service lines.</documentation>
+    </element>
+    <element identifier="id-bsvc-deal-service" type="BusinessService">
+      <name>Deal Lifecycle Service</name>
+      <documentation>Manages end-to-end deal tracking from origination to completion with regulatory gates.</documentation>
+    </element>
+    <element identifier="id-bsvc-compliance-service" type="BusinessService">
+      <name>Compliance Service</name>
+      <documentation>Provides KYC/AML checks, GDPR management, and audit trail across jurisdictions.</documentation>
+    </element>
+    <element identifier="id-bsvc-finance-service" type="BusinessService">
+      <name>Finance Reporting Service</name>
+      <documentation>Provides WIP tracking, fee management, and D365 Finance integration.</documentation>
+    </element>
+
+    <!-- Business Objects -->
+    <element identifier="id-obj-account" type="BusinessObject">
+      <name>Account</name>
+      <documentation>Organisation, brand, legal entity, fund, SPV. Two-tier: Brand/Group for relationships, Legal Entity for KYC and billing.</documentation>
+    </element>
+    <element identifier="id-obj-contact" type="BusinessObject">
+      <name>Contact</name>
+      <documentation>Individual person, always linked to Account. GDPR consent, activity history.</documentation>
+    </element>
+    <element identifier="id-obj-property" type="BusinessObject">
+      <name>Property</name>
+      <documentation>Commercial or residential asset register linked to canonical kf_Site.</documentation>
+    </element>
+    <element identifier="id-obj-deal" type="BusinessObject">
+      <name>Deal</name>
+      <documentation>Core deal record with 8-stage BPF, linked to properties via kf_DealProperty junction.</documentation>
+    </element>
+    <element identifier="id-obj-investor-profile" type="BusinessObject">
+      <name>Investor Profile</name>
+      <documentation>Investment strategy per Brand/Group: target sectors, geographies, ticket size.</documentation>
+    </element>
+    <element identifier="id-obj-fee-schedule" type="BusinessObject">
+      <name>Fee Schedule</name>
+      <documentation>Fee structure per deal with billing schedule tracking.</documentation>
+    </element>
+    <element identifier="id-obj-kyc-record" type="BusinessObject">
+      <name>KYC Record</name>
+      <documentation>KYC/AML checks at legal entity level, multi-jurisdiction.</documentation>
+    </element>
+    <element identifier="id-obj-nda" type="BusinessObject">
+      <name>NDA</name>
+      <documentation>Non-disclosure agreement counterparty management at legal entity level.</documentation>
+    </element>
+    <element identifier="id-obj-wip" type="BusinessObject">
+      <name>WIP Record</name>
+      <documentation>Work in progress: deal creation to fee earned (delivered, not yet billed).</documentation>
+    </element>
+
+    <!-- Product -->
+    <element identifier="id-product-eurocrm" type="Product">
+      <name>EuroCRM Platform</name>
+      <documentation>Knight Frank European CRM platform providing client, property, and deal management across Europe.</documentation>
+    </element>
+
+    <!-- Meaning and Value -->
+    <element identifier="id-meaning-single-view" type="Meaning">
+      <name>Single Trusted Client View</name>
+      <documentation>Unified view of clients, contacts, properties and opportunities across all countries and service lines.</documentation>
+    </element>
+    <element identifier="id-value-win-more" type="Value">
+      <name>Win More Business</name>
+      <documentation>Enable cross-border collaboration and cross-sell opportunities that are currently lost due to fragmented data.</documentation>
+    </element>
+  </elements>
+
+  <relationships>
+    <!-- Actors play roles -->
+    <relationship identifier="id-rel-1" type="Assignment" source="id-actor-cm-broker" target="id-role-cm-broker"/>
+    <relationship identifier="id-rel-2" type="Assignment" source="id-actor-cm-manager" target="id-role-cm-manager"/>
+    <relationship identifier="id-rel-3" type="Assignment" source="id-actor-eit-user" target="id-role-eit"/>
+    <relationship identifier="id-rel-4" type="Assignment" source="id-actor-finance" target="id-role-finance"/>
+    <relationship identifier="id-rel-5" type="Assignment" source="id-actor-compliance" target="id-role-compliance-role"/>
+
+    <!-- Roles trigger/perform processes -->
+    <relationship identifier="id-rel-10" type="Triggering" source="id-role-cm-broker" target="id-process-deal-lifecycle"/>
+    <relationship identifier="id-rel-11" type="Triggering" source="id-role-cm-broker" target="id-process-client-onboarding"/>
+    <relationship identifier="id-rel-12" type="Triggering" source="id-role-cm-broker" target="id-process-property-registration"/>
+    <relationship identifier="id-rel-13" type="Triggering" source="id-role-eit" target="id-process-deal-stage-gate"/>
+    <relationship identifier="id-rel-14" type="Triggering" source="id-role-finance" target="id-process-finance-integration"/>
+    <relationship identifier="id-rel-15" type="Triggering" source="id-role-compliance-role" target="id-process-kyc-aml"/>
+
+    <!-- Processes realize functions -->
+    <relationship identifier="id-rel-20" type="Realization" source="id-process-deal-lifecycle" target="id-func-deal-mgmt"/>
+    <relationship identifier="id-rel-21" type="Realization" source="id-process-client-onboarding" target="id-func-client-mgmt"/>
+    <relationship identifier="id-rel-22" type="Realization" source="id-process-property-registration" target="id-func-property-mgmt"/>
+    <relationship identifier="id-rel-23" type="Realization" source="id-process-kyc-aml" target="id-func-compliance-mgmt"/>
+    <relationship identifier="id-rel-24" type="Realization" source="id-process-finance-integration" target="id-func-finance-reporting"/>
+    <relationship identifier="id-rel-25" type="Triggering" source="id-process-deal-stage-gate" target="id-process-deal-lifecycle"/>
+
+    <!-- Functions realize services -->
+    <relationship identifier="id-rel-30" type="Realization" source="id-func-client-mgmt" target="id-bsvc-client-service"/>
+    <relationship identifier="id-rel-31" type="Realization" source="id-func-property-mgmt" target="id-bsvc-property-service"/>
+    <relationship identifier="id-rel-32" type="Realization" source="id-func-deal-mgmt" target="id-bsvc-deal-service"/>
+    <relationship identifier="id-rel-33" type="Realization" source="id-func-compliance-mgmt" target="id-bsvc-compliance-service"/>
+    <relationship identifier="id-rel-34" type="Realization" source="id-func-finance-reporting" target="id-bsvc-finance-service"/>
+
+    <!-- Services access objects -->
+    <relationship identifier="id-rel-40" type="Access" source="id-bsvc-client-service" target="id-obj-account"/>
+    <relationship identifier="id-rel-41" type="Access" source="id-bsvc-client-service" target="id-obj-contact"/>
+    <relationship identifier="id-rel-42" type="Access" source="id-bsvc-client-service" target="id-obj-investor-profile"/>
+    <relationship identifier="id-rel-43" type="Access" source="id-bsvc-property-service" target="id-obj-property"/>
+    <relationship identifier="id-rel-44" type="Access" source="id-bsvc-deal-service" target="id-obj-deal"/>
+    <relationship identifier="id-rel-45" type="Access" source="id-bsvc-compliance-service" target="id-obj-kyc-record"/>
+    <relationship identifier="id-rel-46" type="Access" source="id-bsvc-compliance-service" target="id-obj-nda"/>
+    <relationship identifier="id-rel-47" type="Access" source="id-bsvc-finance-service" target="id-obj-fee-schedule"/>
+    <relationship identifier="id-rel-48" type="Access" source="id-bsvc-finance-service" target="id-obj-wip"/>
+
+    <!-- Product serves values -->
+    <relationship identifier="id-rel-50" type="Serving" source="id-product-eurocrm" target="id-bsvc-client-service"/>
+    <relationship identifier="id-rel-51" type="Serving" source="id-product-eurocrm" target="id-bsvc-property-service"/>
+    <relationship identifier="id-rel-52" type="Serving" source="id-product-eurocrm" target="id-bsvc-deal-service"/>
+    <relationship identifier="id-rel-53" type="Serving" source="id-product-eurocrm" target="id-bsvc-compliance-service"/>
+    <relationship identifier="id-rel-54" type="Serving" source="id-product-eurocrm" target="id-bsvc-finance-service"/>
+    <relationship identifier="id-rel-55" type="Realization" source="id-bsvc-client-service" target="id-meaning-single-view"/>
+    <relationship identifier="id-rel-56" type="Realization" source="id-meaning-single-view" target="id-value-win-more"/>
+  </relationships>
+
+  <organizations>
+    <item identifier="id-org-business" type="Business">
+      <label xml:lang="en">Business</label>
+      <item identifier="id-org-actors" type="BusinessActor">
+        <label xml:lang="en">Actors</label>
+        <ref identifier="id-actor-cm-broker"/>
+        <ref identifier="id-actor-cm-manager"/>
+        <ref identifier="id-actor-eit-user"/>
+        <ref identifier="id-actor-finance"/>
+        <ref identifier="id-actor-compliance"/>
+        <ref identifier="id-actor-admin"/>
+      </item>
+      <item identifier="id-org-roles" type="BusinessRole">
+        <label xml:lang="en">Roles</label>
+        <ref identifier="id-role-cm-broker"/>
+        <ref identifier="id-role-cm-manager"/>
+        <ref identifier="id-role-eit"/>
+        <ref identifier="id-role-finance"/>
+        <ref identifier="id-role-compliance-role"/>
+      </item>
+      <item identifier="id-org-processes" type="BusinessProcess">
+        <label xml:lang="en">Processes</label>
+        <ref identifier="id-process-deal-lifecycle"/>
+        <ref identifier="id-process-client-onboarding"/>
+        <ref identifier="id-process-property-registration"/>
+        <ref identifier="id-process-kyc-aml"/>
+        <ref identifier="id-process-finance-integration"/>
+        <ref identifier="id-process-deal-stage-gate"/>
+      </item>
+      <item identifier="id-org-functions" type="BusinessFunction">
+        <label xml:lang="en">Functions</label>
+        <ref identifier="id-func-client-mgmt"/>
+        <ref identifier="id-func-property-mgmt"/>
+        <ref identifier="id-func-deal-mgmt"/>
+        <ref identifier="id-func-compliance-mgmt"/>
+        <ref identifier="id-func-finance-reporting"/>
+      </item>
+      <item identifier="id-org-services" type="BusinessService">
+        <label xml:lang="en">Services</label>
+        <ref identifier="id-bsvc-client-service"/>
+        <ref identifier="id-bsvc-property-service"/>
+        <ref identifier="id-bsvc-deal-service"/>
+        <ref identifier="id-bsvc-compliance-service"/>
+        <ref identifier="id-bsvc-finance-service"/>
+      </item>
+      <item identifier="id-org-objects" type="BusinessObject">
+        <label xml:lang="en">Objects</label>
+        <ref identifier="id-obj-account"/>
+        <ref identifier="id-obj-contact"/>
+        <ref identifier="id-obj-property"/>
+        <ref identifier="id-obj-deal"/>
+        <ref identifier="id-obj-investor-profile"/>
+        <ref identifier="id-obj-fee-schedule"/>
+        <ref identifier="id-obj-kyc-record"/>
+        <ref identifier="id-obj-nda"/>
+        <ref identifier="id-obj-wip"/>
+      </item>
+      <item identifier="id-org-product" type="Product">
+        <label xml:lang="en">Products</label>
+        <ref identifier="id-product-eurocrm"/>
+      </item>
+    </item>
+  </organizations>
+
+  <views>
+    <view identifier="view-business-capabilities" type="BusinessCapability" viewpoint="Business Capability">
+      <name>Business Capability Map</name>
+      <documentation>Knight Frank EuroCRM business capabilities showing the five core capability areas and their relationships to business processes and services.</documentation>
+      <node identifier="node-bc-client" elementRef="id-func-client-mgmt" x="80" y="60" w="240" h="55"/>
+      <node identifier="node-bc-property" elementRef="id-func-property-mgmt" x="80" y="150" w="240" h="55"/>
+      <node identifier="node-bc-deal" elementRef="id-func-deal-mgmt" x="80" y="240" w="240" h="55"/>
+      <node identifier="node-bc-compliance" elementRef="id-func-compliance-mgmt" x="80" y="330" w="240" h="55"/>
+      <node identifier="node-bc-finance" elementRef="id-func-finance-reporting" x="80" y="420" w="240" h="55"/>
+      <node identifier="node-bp-onboarding" elementRef="id-process-client-onboarding" x="420" y="60" w="260" h="45"/>
+      <node identifier="node-bp-property-reg" elementRef="id-process-property-registration" x="420" y="150" w="260" h="45"/>
+      <node identifier="node-bp-deal-lifecycle" elementRef="id-process-deal-lifecycle" x="420" y="240" w="260" h="45"/>
+      <node identifier="node-bp-stage-gate" elementRef="id-process-deal-stage-gate" x="420" y="300" w="260" h="45"/>
+      <node identifier="node-bp-kyc" elementRef="id-process-kyc-aml" x="420" y="370" w="260" h="45"/>
+      <node identifier="node-bp-finance" elementRef="id-process-finance-integration" x="420" y="430" w="260" h="45"/>
+      <node identifier="node-bsvc-client" elementRef="id-bsvc-client-service" x="760" y="60" w="220" h="45"/>
+      <node identifier="node-bsvc-property" elementRef="id-bsvc-property-service" x="760" y="150" w="220" h="45"/>
+      <node identifier="node-bsvc-deal" elementRef="id-bsvc-deal-service" x="760" y="240" w="220" h="45"/>
+      <node identifier="node-bsvc-compliance" elementRef="id-bsvc-compliance-service" x="760" y="370" w="220" h="45"/>
+      <node identifier="node-bsvc-finance" elementRef="id-bsvc-finance-service" x="760" y="430" w="220" h="45"/>
+      <node identifier="node-product" elementRef="id-product-eurocrm" x="1060" y="200" w="200" h="60"/>
+      <node identifier="node-value" elementRef="id-value-win-more" x="1060" y="320" w="200" h="50"/>
+      <connection identifier="conn-cap-1" source="node-bc-client" target="node-bp-onboarding" type="Realization"/>
+      <connection identifier="conn-cap-2" source="node-bc-property" target="node-bp-property-reg" type="Realization"/>
+      <connection identifier="conn-cap-3" source="node-bc-deal" target="node-bp-deal-lifecycle" type="Realization"/>
+      <connection identifier="conn-cap-4" source="node-bc-compliance" target="node-bp-kyc" type="Realization"/>
+      <connection identifier="conn-cap-5" source="node-bc-finance" target="node-bp-finance" type="Realization"/>
+      <connection identifier="conn-cap-6" source="node-bp-deal-lifecycle" target="node-bp-stage-gate" type="Triggering"/>
+      <connection identifier="conn-cap-7" source="node-bp-onboarding" target="node-bsvc-client" type="Realization"/>
+      <connection identifier="conn-cap-8" source="node-bp-property-reg" target="node-bsvc-property" type="Realization"/>
+      <connection identifier="conn-cap-9" source="node-bp-deal-lifecycle" target="node-bsvc-deal" type="Realization"/>
+      <connection identifier="conn-cap-10" source="node-bp-kyc" target="node-bsvc-compliance" type="Realization"/>
+      <connection identifier="conn-cap-11" source="node-bp-finance" target="node-bsvc-finance" type="Realization"/>
+      <connection identifier="conn-cap-12" source="node-bsvc-client" target="node-product" type="Serving"/>
+      <connection identifier="conn-cap-13" source="node-bsvc-property" target="node-product" type="Serving"/>
+      <connection identifier="conn-cap-14" source="node-bsvc-deal" target="node-product" type="Serving"/>
+      <connection identifier="conn-cap-15" source="node-bsvc-compliance" target="node-product" type="Serving"/>
+      <connection identifier="conn-cap-16" source="node-bsvc-finance" target="node-product" type="Serving"/>
+      <connection identifier="conn-cap-17" source="node-product" target="node-value" type="Realization"/>
+    </view>
+
+    <view identifier="view-business-process" type="BusinessProcess" viewpoint="Business Process Cooperation">
+      <name>Capital Markets Deal Lifecycle</name>
+      <documentation>8-stage deal lifecycle with actors, roles, and supporting functions.</documentation>
+      <node identifier="node-actor-broker" elementRef="id-actor-cm-broker" x="60" y="60" w="160" h="55"/>
+      <node identifier="node-actor-eit" elementRef="id-actor-eit-user" x="60" y="160" w="160" h="55"/>
+      <node identifier="node-actor-finance-2" elementRef="id-actor-finance" x="60" y="260" w="160" h="55"/>
+      <node identifier="node-actor-compliance-2" elementRef="id-actor-compliance" x="60" y="360" w="160" h="55"/>
+      <node identifier="node-bp2-deal" elementRef="id-process-deal-lifecycle" x="320" y="100" w="320" h="60"/>
+      <node identifier="node-bp2-gate" elementRef="id-process-deal-stage-gate" x="320" y="200" w="320" h="55"/>
+      <node identifier="node-bp2-kyc" elementRef="id-process-kyc-aml" x="320" y="290" w="320" h="55"/>
+      <node identifier="node-bp2-finance" elementRef="id-process-finance-integration" x="320" y="380" w="320" h="55"/>
+      <node identifier="node-obj-deal-2" elementRef="id-obj-deal" x="740" y="100" w="160" h="45"/>
+      <node identifier="node-obj-nda" elementRef="id-obj-nda" x="740" y="200" w="160" h="45"/>
+      <node identifier="node-obj-kyc" elementRef="id-obj-kyc-record" x="740" y="290" w="160" h="45"/>
+      <node identifier="node-obj-wip" elementRef="id-obj-wip" x="740" y="380" w="160" h="45"/>
+      <connection identifier="conn2-1" source="node-actor-broker" target="node-bp2-deal" type="Triggering"/>
+      <connection identifier="conn2-2" source="node-actor-eit" target="node-bp2-gate" type="Triggering"/>
+      <connection identifier="conn2-3" source="node-actor-compliance-2" target="node-bp2-kyc" type="Triggering"/>
+      <connection identifier="conn2-4" source="node-actor-finance-2" target="node-bp2-finance" type="Triggering"/>
+      <connection identifier="conn2-5" source="node-bp2-deal" target="node-bp2-gate" type="Triggering"/>
+      <connection identifier="conn2-6" source="node-bp2-gate" target="node-bp2-kyc" type="Triggering"/>
+      <connection identifier="conn2-7" source="node-bp2-deal" target="node-obj-deal-2" type="Access"/>
+      <connection identifier="conn2-8" source="node-bp2-kyc" target="node-obj-kyc" type="Access"/>
+      <connection identifier="conn2-9" source="node-bp2-finance" target="node-obj-wip" type="Access"/>
+    </view>
+  </views>
+</model>

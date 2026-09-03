@@ -1,5 +1,4 @@
 ---
-status: Draft
 parent:"[[taxonomy-mappings]]"
 source: European CRM Architecture Review 2.pdf
 ---

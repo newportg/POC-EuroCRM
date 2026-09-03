@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.0/archimate3_Diagram.xsd"
+       identifier="id-model-eurocrm-layered">
+
+  <metadata>
+    <name>EuroCRM - Layered Architecture Overview</name>
+    <documentation>Three-layer ArchiMate view showing how Knight Frank business capabilities are served by Power Platform applications running on Microsoft Cloud EU infrastructure.</documentation>
+  </metadata>
+
+  <elements>
+    <!-- Motivation -->
+    <element identifier="id-mot-goal" type="Goal">
+      <name>Unified European CRM</name>
+      <documentation>Create a single, trusted view of clients, contacts, properties and opportunities across Europe.</documentation>
+    </element>
+    <element identifier="id-mot-principle" type="Principle">
+      <name>Single Source of Truth</name>
+      <documentation>All client, property, and deal data in one Dataverse instance. No local copies, no spreadsheets.</documentation>
+    </element>
+    <element identifier="id-mot-req-data-residency" type="Requirement">
+      <name>EU Data Residency</name>
+      <documentation>All customer data must reside in EU data centres to meet GDPR, CNIL, BDSG requirements.</documentation>
+    </element>
+
+    <!-- Business Layer (compact) -->
+    <element identifier="id-bl-cap-client" type="BusinessFunction">
+      <name>Client Management</name>
+    </element>
+    <element identifier="id-bl-cap-property" type="BusinessFunction">
+      <name>Property Management</name>
+    </element>
+    <element identifier="id-bl-cap-deal" type="BusinessFunction">
+      <name>Deal Management</name>
+    </element>
+    <element identifier="id-bl-cap-compliance" type="BusinessFunction">
+      <name>Compliance &amp; Risk</name>
+    </element>
+    <element identifier="id-bl-cap-finance" type="BusinessFunction">
+      <name>Finance &amp; Reporting</name>
+    </element>
+    <element identifier="id-bl-process-deal" type="BusinessProcess">
+      <name>CM Deal Lifecycle (8-Stage BPF)</name>
+    </element>
+    <element identifier="id-bl-role-broker" type="BusinessRole">
+      <name>CM Broker</name>
+    </element>
+    <element identifier="id-bl-role-eit" type="BusinessRole">
+      <name>EIT User</name>
+    </element>
+    <element identifier="id-bl-role-finance-role" type="BusinessRole">
+      <name>Finance</name>
+    </element>
+    <element identifier="id-bl-product" type="Product">
+      <name>EuroCRM Platform</name>
+    </element>
+
+    <!-- Application Layer (compact) -->
+    <element identifier="id-al-crm-app" type="ApplicationComponent">
+      <name>Power Apps Model-Driven Apps</name>
+      <documentation>KF CRM, KF Capital Markets, dashboards, forms, views.</documentation>
+    </element>
+    <element identifier="id-al-dataverse" type="ApplicationComponent">
+      <name>Dataverse</name>
+      <documentation>Custom tables, relationships, security, OData/Custom API, audit trail.</documentation>
+    </element>
+    <element identifier="id-al-pa" type="ApplicationComponent">
+      <name>Power Automate</name>
+      <documentation>Workflows, approvals, email sync, document provisioning, integrations.</documentation>
+    </element>
+    <element identifier="id-al-pbi" type="ApplicationComponent">
+      <name>Power BI</name>
+      <documentation>Dashboards, analytics, KPIs across regional and country views.</documentation>
+    </element>
+    <element identifier="id-al-solutions" type="ApplicationComponent">
+      <name>Managed Solutions (L2-L7)</name>
+      <documentation>KF_Core, KF_Europe, country layers, CM core, CM country extensions, EIT, Finance Integration.</documentation>
+    </element>
+    <element identifier="id-al-copilot" type="ApplicationComponent">
+      <name>Copilot for Sales</name>
+      <documentation>AI-powered client matching.</documentation>
+    </element>
+
+    <!-- External Applications -->
+    <element identifier="id-al-outlook" type="ApplicationComponent">
+      <name>Outlook</name>
+    </element>
+    <element identifier="id-al-sharepoint" type="ApplicationComponent">
+      <name>SharePoint</name>
+    </element>
+    <element identifier="id-al-d365f" type="ApplicationComponent">
+      <name>D365 Finance</name>
+    </element>
+    <element identifier="id-al-ci-j" type="ApplicationComponent">
+      <name>CI-Journeys</name>
+    </element>
+    <element identifier="id-al-ecs-app" type="ApplicationComponent">
+      <name>ECS Bus</name>
+    </element>
+    <element identifier="id-al-loqate" type="ApplicationComponent">
+      <name>Loqate</name>
+    </element>
+
+    <!-- Technology Layer (compact) -->
+    <element identifier="id-tl-azure" type="Node">
+      <name>Microsoft Cloud (EU)</name>
+      <documentation>Azure West Europe / France Central. AES-256 at rest, TLS 1.2+ in transit.</documentation>
+    </element>
+    <element identifier="id-tl-entra" type="Node">
+      <name>Entra ID + MFA</name>
+      <documentation>Identity, Conditional Access, service principals.</documentation>
+    </element>
+    <element identifier="id-tl-network" type="CommunicationNetwork">
+      <name>Internet / VPN</name>
+    </element>
+    <element identifier="id-tl-desktop" type="Device">
+      <name>Desktop Browser</name>
+    </element>
+    <element identifier="id-tl-mobile" type="Device">
+      <name>Power Apps Mobile</name>
+    </element>
+    <element identifier="id-tl-monitor" type="Node">
+      <name>Azure Monitor</name>
+    </element>
+    <element identifier="id-tl-env-prod" type="Plateau">
+      <name>PROD Environment</name>
+    </element>
+  </elements>
+
+  <relationships>
+    <!-- Motivation -->
+    <relationship identifier="id-ml-1" type="Realization" source="id-bl-product" target="id-mot-goal"/>
+    <relationship identifier="id-ml-2" type="Realization" source="id-al-dataverse" target="id-mot-principle"/>
+    <relationship identifier="id-ml-3" type="Stakeholder" source="id-mot-req-data-residency" target="id-tl-azure"/>
+
+    <!-- Business roles serve capabilities -->
+    <relationship identifier="id-ml-10" type="Assignment" source="id-bl-role-broker" target="id-bl-cap-deal"/>
+    <relationship identifier="id-ml-11" type="Assignment" source="id-bl-role-eit" target="id-bl-cap-compliance"/>
+    <relationship identifier="id-ml-12" type="Assignment" source="id-bl-role-finance-role" target="id-bl-cap-finance"/>
+    <relationship identifier="id-ml-13" type="Triggering" source="id-bl-role-broker" target="id-bl-process-deal"/>
+    <relationship identifier="id-ml-14" type="Realization" source="id-bl-process-deal" target="id-bl-cap-deal"/>
+
+    <!-- Business serves product -->
+    <relationship identifier="id-ml-20" type="Serving" source="id-bl-cap-client" target="id-bl-product"/>
+    <relationship identifier="id-ml-21" type="Serving" source="id-bl-cap-property" target="id-bl-product"/>
+    <relationship identifier="id-ml-22" type="Serving" source="id-bl-cap-deal" target="id-bl-product"/>
+    <relationship identifier="id-ml-23" type="Serving" source="id-bl-cap-compliance" target="id-bl-product"/>
+    <relationship identifier="id-ml-24" type="Serving" source="id-bl-cap-finance" target="id-bl-product"/>
+
+    <!-- Application serves Business -->
+    <relationship identifier="id-ml-30" type="Serving" source="id-al-crm-app" target="id-bl-cap-client"/>
+    <relationship identifier="id-ml-31" type="Serving" source="id-al-crm-app" target="id-bl-cap-property"/>
+    <relationship identifier="id-ml-32" type="Serving" source="id-al-crm-app" target="id-bl-cap-deal"/>
+    <relationship identifier="id-ml-33" type="Serving" source="id-al-crm-app" target="id-bl-cap-compliance"/>
+    <relationship identifier="id-ml-34" type="Serving" source="id-al-pbi" target="id-bl-cap-finance"/>
+    <relationship identifier="id-ml-35" type="Serving" source="id-al-pa" target="id-bl-process-deal"/>
+
+    <!-- Application internal -->
+    <relationship identifier="id-ml-40" type="Serving" source="id-al-dataverse" target="id-al-crm-app"/>
+    <relationship identifier="id-ml-41" type="Serving" source="id-al-solutions" target="id-al-dataverse"/>
+    <relationship identifier="id-ml-42" type="Serving" source="id-al-copilot" target="id-al-crm-app"/>
+
+    <!-- Application integration -->
+    <relationship identifier="id-ml-50" type="Flow" source="id-al-pa" target="id-al-outlook"/>
+    <relationship identifier="id-ml-51" type="Flow" source="id-al-pa" target="id-al-sharepoint"/>
+    <relationship identifier="id-ml-52" type="Flow" source="id-al-pa" target="id-al-ci-j"/>
+    <relationship identifier="id-ml-53" type="Flow" source="id-al-dataverse" target="id-al-d365f"/>
+    <relationship identifier="id-ml-54" type="Flow" source="id-al-dataverse" target="id-al-ecs-app"/>
+    <relationship identifier="id-ml-55" type="Flow" source="id-al-loqate" target="id-al-dataverse"/>
+
+    <!-- Technology serves Application -->
+    <relationship identifier="id-ml-60" type="Serving" source="id-tl-azure" target="id-al-dataverse"/>
+    <relationship identifier="id-ml-61" type="Serving" source="id-tl-entra" target="id-al-crm-app"/>
+    <relationship identifier="id-ml-62" type="Deployment" source="id-al-solutions" target="id-tl-env-prod"/>
+    <relationship identifier="id-ml-63" type="Serving" source="id-tl-monitor" target="id-al-pa"/>
+
+    <!-- Devices -->
+    <relationship identifier="id-ml-70" type="Access" source="id-tl-desktop" target="id-tl-network"/>
+    <relationship identifier="id-ml-71" type="Access" source="id-tl-mobile" target="id-tl-network"/>
+    <relationship identifier="id-ml-72" type="Flow" source="id-tl-network" target="id-al-crm-app"/>
+  </relationships>
+
+  <organizations>
+    <item identifier="id-org-mot-l" type="Motivation">
+      <label xml:lang="en">Motivation</label>
+      <ref identifier="id-mot-goal"/>
+      <ref identifier="id-mot-principle"/>
+      <ref identifier="id-mot-req-data-residency"/>
+    </item>
+    <item identifier="id-org-biz-l" type="Business">
+      <label xml:lang="en">Business Layer</label>
+      <ref identifier="id-bl-cap-client"/>
+      <ref identifier="id-bl-cap-property"/>
+      <ref identifier="id-bl-cap-deal"/>
+      <ref identifier="id-bl-cap-compliance"/>
+      <ref identifier="id-bl-cap-finance"/>
+      <ref identifier="id-bl-process-deal"/>
+      <ref identifier="id-bl-role-broker"/>
+      <ref identifier="id-bl-role-eit"/>
+      <ref identifier="id-bl-role-finance-role"/>
+      <ref identifier="id-bl-product"/>
+    </item>
+    <item identifier="id-org-app-l" type="Application">
+      <label xml:lang="en">Application Layer</label>
+      <ref identifier="id-al-crm-app"/>
+      <ref identifier="id-al-dataverse"/>
+      <ref identifier="id-al-pa"/>
+      <ref identifier="id-al-pbi"/>
+      <ref identifier="id-al-solutions"/>
+      <ref identifier="id-al-copilot"/>
+      <ref identifier="id-al-outlook"/>
+      <ref identifier="id-al-sharepoint"/>
+      <ref identifier="id-al-d365f"/>
+      <ref identifier="id-al-ci-j"/>
+      <ref identifier="id-al-ecs-app"/>
+      <ref identifier="id-al-loqate"/>
+    </item>
+    <item identifier="id-org-tech-l" type="Technology">
+      <label xml:lang="en">Technology Layer</label>
+      <ref identifier="id-tl-azure"/>
+      <ref identifier="id-tl-entra"/>
+      <ref identifier="id-tl-network"/>
+      <ref identifier="id-tl-desktop"/>
+      <ref identifier="id-tl-mobile"/>
+      <ref identifier="id-tl-monitor"/>
+      <ref identifier="id-tl-env-prod"/>
+    </item>
+  </organizations>
+
+  <views>
+    <view identifier="view-layered" type="Layered" viewpoint="Layered">
+      <name>EuroCRM Layered Architecture</name>
+      <documentation>Three-layer ArchiMate view: Business capabilities served by Power Platform applications running on Microsoft Cloud EU infrastructure.</documentation>
+
+      <!-- MOTIVATION (top-left) -->
+      <node identifier="node-v-goal" elementRef="id-mot-goal" x="60" y="20" w="240" h="45">
+        <style><fillColor color="#A855F7"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-principle" elementRef="id-mot-principle" x="340" y="20" w="220" h="45">
+        <style><fillColor color="#A855F7"/><fontColor color="#FFFFFF"/></style>
+      </node>
+
+      <!-- BUSINESS LAYER -->
+      <node identifier="node-v-broker" elementRef="id-bl-role-broker" x="60" y="100" w="120" h="40"/>
+      <node identifier="node-v-eit" elementRef="id-bl-role-eit" x="200" y="100" w="120" h="40"/>
+      <node identifier="node-v-fin-role" elementRef="id-bl-role-finance-role" x="340" y="100" w="120" h="40"/>
+      <node identifier="node-v-cap-client" elementRef="id-bl-cap-client" x="60" y="170" w="160" h="50">
+        <style><fillColor color="#2E75B6"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-cap-prop" elementRef="id-bl-cap-property" x="240" y="170" w="160" h="50">
+        <style><fillColor color="#2E75B6"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-cap-deal" elementRef="id-bl-cap-deal" x="420" y="170" w="160" h="50">
+        <style><fillColor color="#2E75B6"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-cap-comp" elementRef="id-bl-cap-compliance" x="600" y="170" w="160" h="50">
+        <style><fillColor color="#2E75B6"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-cap-fin" elementRef="id-bl-cap-finance" x="780" y="170" w="160" h="50">
+        <style><fillColor color="#2E75B6"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-process" elementRef="id-bl-process-deal" x="420" y="250" w="280" h="40"/>
+      <node identifier="node-v-product" elementRef="id-bl-product" x="600" y="250" w="180" h="45">
+        <style><fillColor color="#1F4E79"/><fontColor color="#FFFFFF"/></style>
+      </node>
+
+      <!-- APPLICATION LAYER -->
+      <node identifier="node-v-apps" elementRef="id-al-crm-app" x="60" y="340" w="200" h="50">
+        <style><fillColor color="#4472C4"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-dv" elementRef="id-al-dataverse" x="280" y="340" w="200" h="50">
+        <style><fillColor color="#4472C4"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-sol" elementRef="id-al-solutions" x="500" y="340" w="200" h="50">
+        <style><fillColor color="#4472C4"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-pa2" elementRef="id-al-pa" x="60" y="420" w="160" h="45"/>
+      <node identifier="node-v-pbi2" elementRef="id-al-pbi" x="240" y="420" w="160" h="45"/>
+      <node identifier="node-v-copilot2" elementRef="id-al-copilot" x="420" y="420" w="160" h="45"/>
+      <node identifier="node-v-outlook2" elementRef="id-al-outlook" x="60" y="490" w="120" h="40"/>
+      <node identifier="node-v-sp2" elementRef="id-al-sharepoint" x="200" y="490" w="120" h="40"/>
+      <node identifier="node-v-d365f2" elementRef="id-al-d365f" x="340" y="490" w="140" h="40"/>
+      <node identifier="node-v-cij2" elementRef="id-al-ci-j" x="500" y="490" w="140" h="40"/>
+      <node identifier="node-v-loqate2" elementRef="id-al-loqate" x="660" y="490" w="120" h="40"/>
+      <node identifier="node-v-ecs2" elementRef="id-al-ecs-app" x="800" y="490" w="140" h="40"/>
+
+      <!-- TECHNOLOGY LAYER -->
+      <node identifier="node-v-azure" elementRef="id-tl-azure" x="60" y="580" w="280" h="50">
+        <style><fillColor color="#0078D4"/><fontColor color="#FFFFFF"/></style>
+      </node>
+      <node identifier="node-v-entra" elementRef="id-tl-entra" x="360" y="580" w="200" h="50"/>
+      <node identifier="node-v-net" elementRef="id-tl-network" x="580" y="580" w="180" h="45"/>
+      <node identifier="node-v-desk" elementRef="id-tl-desktop" x="60" y="660" w="140" h="40"/>
+      <node identifier="node-v-mob" elementRef="id-tl-mobile" x="220" y="660" w="140" h="40"/>
+      <node identifier="node-v-monitor" elementRef="id-tl-monitor" x="380" y="660" w="160" h="40"/>
+      <node identifier="node-v-prod" elementRef="id-tl-env-prod" x="560" y="660" w="160" h="40"/>
+
+      <!-- Connections: Business -->
+      <connection identifier="conn-vl-1" source="node-v-broker" target="node-v-cap-deal" type="Assignment"/>
+      <connection identifier="conn-vl-2" source="node-v-eit" target="node-v-cap-comp" type="Assignment"/>
+      <connection identifier="conn-vl-3" source="node-v-fin-role" target="node-v-cap-fin" type="Assignment"/>
+      <connection identifier="conn-vl-4" source="node-v-broker" target="node-v-process" type="Triggering"/>
+      <connection identifier="conn-vl-5" source="node-v-process" target="node-v-cap-deal" type="Realization"/>
+      <connection identifier="conn-vl-6" source="node-v-cap-client" target="node-v-product" type="Serving"/>
+      <connection identifier="conn-vl-7" source="node-v-cap-prop" target="node-v-product" type="Serving"/>
+      <connection identifier="conn-vl-8" source="node-v-cap-deal" target="node-v-product" type="Serving"/>
+      <connection identifier="conn-vl-9" source="node-v-cap-comp" target="node-v-product" type="Serving"/>
+      <connection identifier="conn-vl-10" source="node-v-cap-fin" target="node-v-product" type="Serving"/>
+
+      <!-- Connections: App serves Business -->
+      <connection identifier="conn-vl-20" source="node-v-apps" target="node-v-cap-client" type="Serving"/>
+      <connection identifier="conn-vl-21" source="node-v-apps" target="node-v-cap-prop" type="Serving"/>
+      <connection identifier="conn-vl-22" source="node-v-apps" target="node-v-cap-deal" type="Serving"/>
+      <connection identifier="conn-vl-23" source="node-v-apps" target="node-v-cap-comp" type="Serving"/>
+      <connection identifier="conn-vl-24" source="node-v-pbi2" target="node-v-cap-fin" type="Serving"/>
+      <connection identifier="conn-vl-25" source="node-v-pa2" target="node-v-process" type="Serving"/>
+
+      <!-- Connections: App internal -->
+      <connection identifier="conn-vl-30" source="node-v-dv" target="node-v-apps" type="Serving"/>
+      <connection identifier="conn-vl-31" source="node-v-sol" target="node-v-dv" type="Serving"/>
+      <connection identifier="conn-vl-32" source="node-v-pa2" target="node-v-outlook2" type="Flow"/>
+      <connection identifier="conn-vl-33" source="node-v-pa2" target="node-v-sp2" type="Flow"/>
+      <connection identifier="conn-vl-34" source="node-v-pa2" target="node-v-cij2" type="Flow"/>
+      <connection identifier="conn-vl-35" source="node-v-dv" target="node-v-d365f2" type="Flow"/>
+      <connection identifier="conn-vl-36" source="node-v-dv" target="node-v-ecs2" type="Flow"/>
+      <connection identifier="conn-vl-37" source="node-v-loqate2" target="node-v-dv" type="Flow"/>
+
+      <!-- Connections: Tech serves App -->
+      <connection identifier="conn-vl-40" source="node-v-azure" target="node-v-dv" type="Serving"/>
+      <connection identifier="conn-vl-41" source="node-v-entra" target="node-v-apps" type="Serving"/>
+      <connection identifier="conn-vl-42" source="node-v-sol" target="node-v-prod" type="Deployment"/>
+      <connection identifier="conn-vl-43" source="node-v-desk" target="node-v-net" type="Access"/>
+      <connection identifier="conn-vl-44" source="node-v-mob" target="node-v-net" type="Access"/>
+      <connection identifier="conn-vl-45" source="node-v-net" target="node-v-apps" type="Flow"/>
+
+      <!-- Motivation -->
+      <connection identifier="conn-vl-50" source="node-v-product" target="node-v-goal" type="Realization"/>
+    </view>
+  </views>
+</model>

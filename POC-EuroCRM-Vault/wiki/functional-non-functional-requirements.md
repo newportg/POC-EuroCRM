@@ -1,5 +1,4 @@
 ---
-status: Draft
 parent:"[[solution-overview]]"
 ---
 

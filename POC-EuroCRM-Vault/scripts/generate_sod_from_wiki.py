@@ -361,9 +361,15 @@ def replace_cover_placeholders(doc: Document) -> None:
 
 
 def strip_metadata_lines(content: str) -> str:
-    """Remove Obsidian property-style metadata lines (e.g. Status: Draft, Parent: [[...]])."""
+    """Remove YAML frontmatter and legacy property-style metadata lines."""
     lines = content.replace("\r\n", "\n").splitlines()
-    filtered = [line for line in lines if not re.match(r"^(?:Status|Parent|Tags|Created|Modified|Type|Source[s]?):\s", line)]
+    # Skip YAML frontmatter block at the top of the file
+    start = 0
+    if lines and lines[0].strip() == "---":
+        end = next((i for i, l in enumerate(lines[1:], 1) if l.strip() == "---"), None)
+        if end is not None:
+            start = end + 1
+    filtered = [line for line in lines[start:] if not re.match(r"^(?:Status|Parent|Tags|Created|Modified|Type|Source[s]?):\s", line)]
     return "\n".join(filtered)
 
 

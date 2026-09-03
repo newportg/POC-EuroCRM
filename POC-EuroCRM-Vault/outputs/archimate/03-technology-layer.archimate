@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.0/archimate3_Diagram.xsd"
+       identifier="id-model-eurocrm-technology">
+
+  <metadata>
+    <name>EuroCRM - Technology Architecture</name>
+    <documentation>Technology layer showing Microsoft Cloud infrastructure, hosting, security, and deployment environments.</documentation>
+  </metadata>
+
+  <elements>
+    <!-- Nodes -->
+    <element identifier="id-tnode-dataverse" type="Node">
+      <name>Dataverse Environment</name>
+      <documentation>Microsoft-managed cloud node hosting Dataverse. EU region (West Europe / France Central). 99.9% SLA.</documentation>
+    </element>
+    <element identifier="id-tnode-sharepoint" type="Node">
+      <name>SharePoint Online</name>
+      <documentation>Cloud-hosted document management. EU region. Auto-provisioned deal folders.</documentation>
+    </element>
+    <element identifier="id-tnode-powerbi" type="Node">
+      <name>Power BI Service</name>
+      <documentation>Cloud-hosted analytics. EU region. Regional and country dashboards.</documentation>
+    </element>
+    <element identifier="id-tnode-d365f" type="Node">
+      <name>D365 Finance Environment</name>
+      <documentation>ERP cloud node. EU region. Receives 9 integration flows from Dataverse.</documentation>
+    </element>
+    <element identifier="id-tnode-office365" type="Node">
+      <name>Microsoft 365</name>
+      <documentation>Productivity suite: Outlook, Teams, SharePoint. EU tenant.</documentation>
+    </element>
+    <element identifier="id-tnode-entra" type="Node">
+      <name>Microsoft Entra ID</name>
+      <documentation>Identity and access management. MFA, Conditional Access, service principals for integrations.</documentation>
+    </element>
+    <element identifier="id-tnode-loqate" type="Node">
+      <name>Loqate Service</name>
+      <documentation>Third-party address validation SaaS. Type-ahead lookup API.</documentation>
+    </element>
+    <element identifier="id-tnode-ecs" type="Node">
+      <name>ECS Platform</name>
+      <documentation>Knight Frank Enterprise Connectivity Services. Internal message bus for change notifications.</documentation>
+    </element>
+    <element identifier="id-tnode-azure-monitor" type="Node">
+      <name>Azure Monitor</name>
+      <documentation>Integration flow monitoring, Dataverse analytics, Power Platform Admin Centre.</documentation>
+    </element>
+
+    <!-- System Software -->
+    <element identifier="id-tss-windows" type="SystemSoftware">
+      <name>Azure Cloud (EU)</name>
+      <documentation>Microsoft Azure EU regions: West Europe, France Central. All customer data in EU.</documentation>
+    </element>
+    <element identifier="id-tss-entra-id" type="SystemSoftware">
+      <name>Entra ID Tenant</name>
+      <documentation>Knight Frank Entra ID tenant with MFA and Conditional Access policies.</documentation>
+    </element>
+
+    <!-- Devices (logical) -->
+    <element identifier="id-tdev-desktop" type="Device">
+      <name>Desktop Browser</name>
+      <documentation>Power Apps model-driven app access via desktop browser.</documentation>
+    </element>
+    <element identifier="id-tdev-mobile" type="Device">
+      <name>Mobile Device</name>
+      <documentation>Power Apps Mobile for field broker access with offline capability.</documentation>
+    </element>
+
+    <!-- Communication Network -->
+    <element identifier="id-tcomm-internet" type="CommunicationNetwork">
+      <name>Internet / VPN</name>
+      <documentation>HTTPS connectivity to Microsoft 365 and Power Platform services.</documentation>
+    </element>
+
+    <!-- Technology Services -->
+    <element identifier="id-tsvc-auth" type="TechnologyService">
+      <name>Authentication Service</name>
+      <documentation>Entra ID authentication: OAuth 2.0, MFA, Conditional Access, service principals.</documentation>
+    </element>
+    <element identifier="id-tsvc-dataverse-storage" type="TechnologyService">
+      <name>Dataverse Storage</name>
+      <documentation>Managed relational data storage: AES-256 at rest, TLS 1.2+ in transit. 7-year audit retention.</documentation>
+    </element>
+    <element identifier="id-tsvc-compute" type="TechnologyService">
+      <name>Platform Compute</name>
+      <documentation>Power Platform managed compute: Dataverse plugins, Power Automate flows, API gateway.</documentation>
+    </element>
+
+    <!-- Artifact -->
+    <element identifier="id-tart-solution" type="Artifact">
+      <name>Managed Solution Packages</name>
+      <documentation>12 managed solutions (L2-L7) deployed across DEV, TEST, UAT, PROD environments.</documentation>
+    </element>
+
+    <!-- Deployment / Plateau -->
+    <element identifier="id-plateau-prod" type="Plateau">
+      <name>Production Environment</name>
+      <documentation>PROD: managed solutions only, no unmanaged customisations, Dataverse audit enabled.</documentation>
+    </element>
+    <element identifier="id-plateau-uat" type="Plateau">
+      <name>UAT Environment</name>
+      <documentation>User acceptance testing with anonymised production data.</documentation>
+    </element>
+    <element identifier="id-plateau-test" type="Plateau">
+      <name>TEST Environment</name>
+      <documentation>Integration testing with synthetic data.</documentation>
+    </element>
+    <element identifier="id-plateau-dev" type="Plateau">
+      <name>DEV Environment</name>
+      <documentation>Development with unmanaged solutions (L2-L6).</documentation>
+    </element>
+  </elements>
+
+  <relationships>
+    <!-- Nodes run on system software -->
+    <relationship identifier="id-rel-t10" type="Realization" source="id-tnode-dataverse" target="id-tss-windows"/>
+    <relationship identifier="id-rel-t11" type="Realization" source="id-tnode-sharepoint" target="id-tss-windows"/>
+    <relationship identifier="id-rel-t12" type="Realization" source="id-tnode-powerbi" target="id-tss-windows"/>
+    <relationship identifier="id-rel-t13" type="Realization" source="id-tnode-d365f" target="id-tss-windows"/>
+
+    <!-- Auth -->
+    <relationship identifier="id-rel-t20" type="Serving" source="id-tss-entra-id" target="id-tsvc-auth"/>
+    <relationship identifier="id-rel-t21" type="Assignment" source="id-tnode-entra" target="id-tss-entra-id"/>
+
+    <!-- Storage -->
+    <relationship identifier="id-rel-t30" type="Serving" source="id-tnode-dataverse" target="id-tsvc-dataverse-storage"/>
+    <relationship identifier="id-rel-t31" type="Serving" source="id-tnode-dataverse" target="id-tsvc-compute"/>
+
+    <!-- Devices connect via network -->
+    <relationship identifier="id-rel-t40" type="Access" source="id-tdev-desktop" target="id-tcomm-internet"/>
+    <relationship identifier="id-rel-t41" type="Access" source="id-tdev-mobile" target="id-tcomm-internet"/>
+    <relationship identifier="id-rel-t42" type="Flow" source="id-tcomm-internet" target="id-tnode-dataverse"/>
+
+    <!-- Solutions deployed to environments -->
+    <relationship identifier="id-rel-t50" type="Deployment" source="id-tart-solution" target="id-plateau-dev"/>
+    <relationship identifier="id-rel-t51" type="Deployment" source="id-tart-solution" target="id-plateau-test"/>
+    <relationship identifier="id-rel-t52" type="Deployment" source="id-tart-solution" target="id-plateau-uat"/>
+    <relationship identifier="id-rel-t53" type="Deployment" source="id-tart-solution" target="id-plateau-prod"/>
+
+    <!-- Environments chain -->
+    <relationship identifier="id-rel-t60" type="Flow" source="id-plateau-dev" target="id-plateau-test"/>
+    <relationship identifier="id-rel-t61" type="Flow" source="id-plateau-test" target="id-plateau-uat"/>
+    <relationship identifier="id-rel-t62" type="Flow" source="id-plateau-uat" target="id-plateau-prod"/>
+
+    <!-- Monitoring -->
+    <relationship identifier="id-rel-t70" type="Serving" source="id-tnode-azure-monitor" target="id-tnode-dataverse"/>
+    <relationship identifier="id-rel-t71" type="Serving" source="id-tnode-azure-monitor" target="id-tnode-d365f"/>
+  </relationships>
+
+  <organizations>
+    <item identifier="id-org-tech" type="Technology">
+      <label xml:lang="en">Technology</label>
+      <item identifier="id-org-tech-nodes" type="Node">
+        <label xml:lang="en">Nodes</label>
+        <ref identifier="id-tnode-dataverse"/>
+        <ref identifier="id-tnode-sharepoint"/>
+        <ref identifier="id-tnode-powerbi"/>
+        <ref identifier="id-tnode-d365f"/>
+        <ref identifier="id-tnode-office365"/>
+        <ref identifier="id-tnode-entra"/>
+        <ref identifier="id-tnode-loqate"/>
+        <ref identifier="id-tnode-ecs"/>
+        <ref identifier="id-tnode-azure-monitor"/>
+      </item>
+      <item identifier="id-org-tech-sw" type="SystemSoftware">
+        <label xml:lang="en">System Software</label>
+        <ref identifier="id-tss-windows"/>
+        <ref identifier="id-tss-entra-id"/>
+      </item>
+      <item identifier="id-org-tech-devices" type="Device">
+        <label xml:lang="en">Devices</label>
+        <ref identifier="id-tdev-desktop"/>
+        <ref identifier="id-tdev-mobile"/>
+      </item>
+      <item identifier="id-org-tech-network" type="CommunicationNetwork">
+        <label xml:lang="en">Networks</label>
+        <ref identifier="id-tcomm-internet"/>
+      </item>
+      <item identifier="id-org-tech-services" type="TechnologyService">
+        <label xml:lang="en">Services</label>
+        <ref identifier="id-tsvc-auth"/>
+        <ref identifier="id-tsvc-dataverse-storage"/>
+        <ref identifier="id-tsvc-compute"/>
+      </item>
+      <item identifier="id-org-tech-artifacts" type="Artifact">
+        <label xml:lang="en">Artifacts</label>
+        <ref identifier="id-tart-solution"/>
+      </item>
+    </item>
+    <item identifier="id-org-impl" type="ImplementationMigration">
+      <label xml:lang="en">Implementation &amp; Migration</label>
+      <item identifier="id-org-plateaus" type="Plateau">
+        <label xml:lang="en">Environments</label>
+        <ref identifier="id-plateau-dev"/>
+        <ref identifier="id-plateau-test"/>
+        <ref identifier="id-plateau-uat"/>
+        <ref identifier="id-plateau-prod"/>
+      </item>
+    </item>
+  </organizations>
+
+  <views>
+    <view identifier="view-tech-infra" type="Technology" viewpoint="Infrastructure">
+      <name>Technology Infrastructure</name>
+      <documentation>Microsoft Cloud EU hosting, security, environments, and deployment pipeline.</documentation>
+      <!-- Cloud -->
+      <node identifier="node-ts-azure" elementRef="id-tss-windows" x="300" y="30" w="300" h="55">
+        <style><fillColor color="#0078D4"/></style>
+      </node>
+      <node identifier="node-ts-entra" elementRef="id-tss-entra-id" x="680" y="30" w="200" h="55"/>
+      <!-- Nodes -->
+      <node identifier="node-tn-dv" elementRef="id-tnode-dataverse" x="100" y="130" w="200" h="55"/>
+      <node identifier="node-tn-sp" elementRef="id-tnode-sharepoint" x="340" y="130" w="200" h="55"/>
+      <node identifier="node-tn-pbi" elementRef="id-tnode-powerbi" x="580" y="130" w="200" h="55"/>
+      <node identifier="node-tn-d365f" elementRef="id-tnode-d365f" x="100" y="220" w="220" h="55"/>
+      <node identifier="node-tn-o365" elementRef="id-tnode-office365" x="360" y="220" w="200" h="55"/>
+      <node identifier="node-tn-entra" elementRef="id-tnode-entra" x="620" y="220" w="200" h="55"/>
+      <node identifier="node-tn-loqate" elementRef="id-tnode-loqate" x="100" y="310" w="160" h="45"/>
+      <node identifier="node-tn-ecs" elementRef="id-tnode-ecs" x="300" y="310" w="220" h="45"/>
+      <node identifier="node-tn-monitor" elementRef="id-tnode-azure-monitor" x="560" y="310" w="200" h="45"/>
+      <!-- Devices -->
+      <node identifier="node-td-desktop" elementRef="id-tdev-desktop" x="100" y="400" w="160" h="45"/>
+      <node identifier="node-td-mobile" elementRef="id-tdev-mobile" x="300" y="400" w="160" h="45"/>
+      <node identifier="node-tc-net" elementRef="id-tcomm-internet" x="500" y="400" w="200" h="45"/>
+      <!-- Environments -->
+      <node identifier="node-env-dev" elementRef="id-plateau-dev" x="100" y="490" w="140" h="40">
+        <style><fillColor color="#70AD47"/></style>
+      </node>
+      <node identifier="node-env-test" elementRef="id-plateau-test" x="280" y="490" w="140" h="40">
+        <style><fillColor color="#5B9BD5"/></style>
+      </node>
+      <node identifier="node-env-uat" elementRef="id-plateau-uat" x="460" y="490" w="140" h="40">
+        <style><fillColor color="#ED7D31"/></style>
+      </node>
+      <node identifier="node-env-prod" elementRef="id-plateau-prod" x="640" y="490" w="140" h="40">
+        <style><fillColor color="#BF4040"/></style>
+      </node>
+      <node identifier="node-art-sol" elementRef="id-tart-solution" x="100" y="560" w="240" h="40"/>
+      <!-- Connections -->
+      <connection identifier="conn-t1" source="node-tn-dv" target="node-ts-azure" type="Realization"/>
+      <connection identifier="conn-t2" source="node-tn-sp" target="node-ts-azure" type="Realization"/>
+      <connection identifier="conn-t3" source="node-tn-pbi" target="node-ts-azure" type="Realization"/>
+      <connection identifier="conn-t4" source="node-tn-d365f" target="node-ts-azure" type="Realization"/>
+      <connection identifier="conn-t5" source="node-tn-dv" target="node-tn-loqate" type="Flow"/>
+      <connection identifier="conn-t6" source="node-tn-dv" target="node-tn-ecs" type="Flow"/>
+      <connection identifier="conn-t7" source="node-td-desktop" target="node-tc-net" type="Access"/>
+      <connection identifier="conn-t8" source="node-td-mobile" target="node-tc-net" type="Access"/>
+      <connection identifier="conn-t9" source="node-tc-net" target="node-tn-dv" type="Flow"/>
+      <connection identifier="conn-t10" source="node-env-dev" target="node-env-test" type="Flow"/>
+      <connection identifier="conn-t11" source="node-env-test" target="node-env-uat" type="Flow"/>
+      <connection identifier="conn-t12" source="node-env-uat" target="node-env-prod" type="Flow"/>
+      <connection identifier="conn-t13" source="node-art-sol" target="node-env-dev" type="Deployment"/>
+    </view>
+  </views>
+</model>

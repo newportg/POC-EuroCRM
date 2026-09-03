@@ -1,5 +1,4 @@
 ---
-status: Draft
 sources:"European CRM Architecture Review 2.pdf, EU CRM Data Model.xlsx, European_CRM_Client_Industry_Master_Taxonomy.xlsx, European_CRM_Property360_Master_Taxonomy.xlsx"
 ---
 

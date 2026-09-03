@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.0/archimate3_Diagram.xsd"
+       identifier="id-model-eurocrm-application">
+
+  <metadata>
+    <name>EuroCRM - Application Architecture</name>
+    <documentation>Application layer architecture showing Power Platform components, managed solutions, data objects, and integration services.</documentation>
+  </metadata>
+
+  <elements>
+    <!-- Application Components -->
+    <element identifier="id-acomp-dataverse" type="ApplicationComponent">
+      <name>Dataverse</name>
+      <documentation>Microsoft Dataverse - relational data store with custom tables, security framework, audit trail, and OData/Custom API access.</documentation>
+    </element>
+    <element identifier="id-acomp-powerapps" type="ApplicationComponent">
+      <name>Power Apps Model-Driven</name>
+      <documentation>Model-driven app framework providing UI, forms, views, dashboards, and mobile access.</documentation>
+    </element>
+    <element identifier="id-acomp-powerautomate" type="ApplicationComponent">
+      <name>Power Automate</name>
+      <documentation>Workflow engine for approvals, integrations, email sync, document provisioning, and marketing handoff.</documentation>
+    </element>
+    <element identifier="id-acomp-powerbi" type="ApplicationComponent">
+      <name>Power BI</name>
+      <documentation>Reporting and analytics platform. Regional, country, and service-line dashboards.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-core" type="ApplicationComponent">
+      <name>KF_Core (L2)</name>
+      <documentation>Global core managed solution: 40+ table shells, option sets, BU hierarchy, base security, integration base.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-europe" type="ApplicationComponent">
+      <name>KF_Europe (L3)</name>
+      <documentation>Regional layer: EUR default currency, GDPR baseline, regional Power BI dashboard, cross-border data sharing.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-france" type="ApplicationComponent">
+      <name>KF_France (L4)</name>
+      <documentation>France country layer: kf_fr_* columns, CNIL compliance, notarial requirements.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-spain" type="ApplicationComponent">
+      <name>KF_Spain (L4)</name>
+      <documentation>Spain country layer: kf_es_* columns, right-of-refusal rules.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-germany" type="ApplicationComponent">
+      <name>KF_Germany (L4)</name>
+      <documentation>Germany country layer: kf_de_* columns, BDSG compliance.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-poland" type="ApplicationComponent">
+      <name>KF_Poland (L4)</name>
+      <documentation>Poland country layer: kf_pl_* columns.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-cm-core" type="ApplicationComponent">
+      <name>KF_CapitalMarkets_Core (L5)</name>
+      <documentation>Capital Markets service line: 8-stage BPF, deal lifecycle entities, pitch/NDA/bid/DD management.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-cm-france" type="ApplicationComponent">
+      <name>KF_CM_France (L6)</name>
+      <documentation>France CM extension: city pre-emption, notarial process, notarial deed signing gates.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-cm-spain" type="ApplicationComponent">
+      <name>KF_CM_Spain (L6)</name>
+      <documentation>Spain CM extension: right-of-refusal regulatory gate.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-eit" type="ApplicationComponent">
+      <name>KF_EIT (L7)</name>
+      <documentation>Cross-border overlay: multi-jurisdiction KYC, conflict check, intercompany billing.</documentation>
+    </element>
+    <element identifier="id-acomp-kf-finance" type="ApplicationComponent">
+      <name>KF_Finance_Integration (L5)</name>
+      <documentation>Finance bridge: 9 integration flows mapping deal stage to D365 Finance % complete, WIP, invoicing.</documentation>
+    </element>
+    <element identifier="id-acomp-copilot" type="ApplicationComponent">
+      <name>Copilot for Sales</name>
+      <documentation>AI-powered client matching and intelligence.</documentation>
+    </element>
+
+    <!-- External Application Components -->
+    <element identifier="id-acomp-outlook" type="ApplicationComponent">
+      <name>Microsoft Outlook</name>
+      <documentation>Email client with add-in for CRM activity tracking and email sync.</documentation>
+    </element>
+    <element identifier="id-acomp-sharepoint" type="ApplicationComponent">
+      <name>SharePoint Online</name>
+      <documentation>Document management: auto-provisioned deal folders, NDA storage.</documentation>
+    </element>
+    <element identifier="id-acomp-d365-finance" type="ApplicationComponent">
+      <name>D365 Finance</name>
+      <documentation>ERP system receiving 9 integration flows: project creation, % complete, invoicing, WIP, reconciliation.</documentation>
+    </element>
+    <element identifier="id-acomp-ci-journeys" type="ApplicationComponent">
+      <name>D365 CI-Journeys</name>
+      <documentation>Customer Insights - Journeys: marketing handoff, lead nurture. Same environment as Dataverse.</documentation>
+    </element>
+    <element identifier="id-acomp-ecs" type="ApplicationComponent">
+      <name>ECS (Enterprise Connectivity Services)</name>
+      <documentation>Knight Frank internal notification/message bus. Receives Major entity change events from Dataverse.</documentation>
+    </element>
+    <element identifier="id-acomp-loqate" type="ApplicationComponent">
+      <name>Loqate</name>
+      <documentation>Address validation service. Type-ahead lookup, auto-creates/matches kf_Site records.</documentation>
+    </element>
+
+    <!-- Application Services -->
+    <element identifier="id-asvc-crm" type="ApplicationService">
+      <name>CRM Application Service</name>
+      <documentation>Unified client, property, deal management through model-driven apps.</documentation>
+    </element>
+    <element identifier="id-asvc-dataverse-api" type="ApplicationService">
+      <name>Dataverse OData / Custom API</name>
+      <documentation>Real-time data queries (OData) and triggered operations (Custom API) for external system integration.</documentation>
+    </element>
+    <element identifier="id-asvc-workflow" type="ApplicationService">
+      <name>Workflow Automation Service</name>
+      <documentation>Power Automate flows for email sync, document provisioning, marketing handoff, approvals.</documentation>
+    </element>
+    <element identifier="id-asvc-reporting" type="ApplicationService">
+      <name>Reporting Service</name>
+      <documentation>Power BI dashboards and analytics across regional, country, and service-line views.</documentation>
+    </element>
+    <element identifier="id-asvc-integration" type="ApplicationService">
+      <name>Integration Service</name>
+      <documentation>Finance bridge (9 flows), ECS change notification, Loqate address validation.</documentation>
+    </element>
+
+    <!-- Data Objects -->
+    <element identifier="id-dobj-account" type="DataObject">
+      <name>Account</name>
+      <documentation>Organisation, brand, legal entity, fund, SPV. Two-tier hierarchy.</documentation>
+    </element>
+    <element identifier="id-dobj-contact" type="DataObject">
+      <name>Contact</name>
+      <documentation>Individual person linked to Account. GDPR consent, activity history.</documentation>
+    </element>
+    <element identifier="id-dobj-site" type="DataObject">
+      <name>kf_Site</name>
+      <documentation>Canonical physical building or land parcel. Created by Loqate auto-lookup.</documentation>
+    </element>
+    <element identifier="id-dobj-property" type="DataObject">
+      <name>kf_Property</name>
+      <documentation>Commercial asset register: sector, type, status, tenure, areas, ESG.</documentation>
+    </element>
+    <element identifier="id-dobj-deal" type="DataObject">
+      <name>kf_Deal</name>
+      <documentation>Core deal record with 8-stage BPF. Links to properties via kf_DealProperty.</documentation>
+    </element>
+    <element identifier="id-dobj-deal-property" type="DataObject">
+      <name>kf_DealProperty</name>
+      <documentation>Junction record: deal to property. Holds deal-specific measures.</documentation>
+    </element>
+    <element identifier="id-dobj-investor-profile" type="DataObject">
+      <name>kf_InvestorProfile</name>
+      <documentation>Investment strategy per Brand/Group: target sectors, geographies, ticket size.</documentation>
+    </element>
+    <element identifier="id-dobj-pitch" type="DataObject">
+      <name>kf_Pitch</name>
+      <documentation>Competitive pitch tracking for deal origination.</documentation>
+    </element>
+    <element identifier="id-dobj-nda" type="DataObject">
+      <name>kf_NDA</name>
+      <documentation>NDA counterparty management at legal entity level.</documentation>
+    </element>
+    <element identifier="id-dobj-bid" type="DataObject">
+      <name>kf_Bid</name>
+      <documentation>Multi-round bid management with investor profiles.</documentation>
+    </element>
+    <element identifier="id-dobj-dd-milestone" type="DataObject">
+      <name>kf_DDMilestone</name>
+      <documentation>Due diligence milestone tracking.</documentation>
+    </element>
+    <element identifier="id-dobj-red-flag" type="DataObject">
+      <name>kf_RedFlag</name>
+      <documentation>Risk and red flag tracking per deal.</documentation>
+    </element>
+    <element identifier="id-dobj-kyc" type="DataObject">
+      <name>kf_KYCRecord</name>
+      <documentation>KYC/AML checks at legal entity level, multi-jurisdiction.</documentation>
+    </element>
+    <element identifier="id-dobj-gdpr" type="DataObject">
+      <name>kf_GDPRRequest</name>
+      <documentation>GDPR data subject requests.</documentation>
+    </element>
+    <element identifier="id-dobj-fee-schedule" type="DataObject">
+      <name>kf_FeeSchedule</name>
+      <documentation>Fee structure per deal with billing schedule.</documentation>
+    </element>
+    <element identifier="id-dobj-wip" type="DataObject">
+      <name>kf_WIP</name>
+      <documentation>Work in progress tracking from deal creation to fee earned.</documentation>
+    </element>
+    <element identifier="id-dobj-txn-report" type="DataObject">
+      <name>kf_TransactionReport</name>
+      <documentation>Auto-generated post-close transaction reports.</documentation>
+    </element>
+    <element identifier="id-dobj-integration-log" type="DataObject">
+      <name>kf_IntegrationLog</name>
+      <documentation>Integration transaction logging for all flows.</documentation>
+    </element>
+    <element identifier="id-dobj-sic-code" type="DataObject">
+      <name>kf_SICCode</name>
+      <documentation>SIC code reference: 21 sections, 66 KF sectors.</documentation>
+    </element>
+    <element identifier="id-dobj-hilucs" type="DataObject">
+      <name>kf_HILUCSCode</name>
+      <documentation>HILUCS reference: 43 KF asset classes.</documentation>
+    </element>
+  </elements>
+
+  <relationships>
+    <!-- Component layering -->
+    <relationship identifier="id-rel-a10" type="Flow" source="id-acomp-kf-core" target="id-acomp-dataverse"/>
+    <relationship identifier="id-rel-a11" type="Flow" source="id-acomp-kf-europe" target="id-acomp-kf-core"/>
+    <relationship identifier="id-rel-a12" type="Flow" source="id-acomp-kf-france" target="id-acomp-kf-europe"/>
+    <relationship identifier="id-rel-a13" type="Flow" source="id-acomp-kf-spain" target="id-acomp-kf-europe"/>
+    <relationship identifier="id-rel-a14" type="Flow" source="id-acomp-kf-germany" target="id-acomp-kf-europe"/>
+    <relationship identifier="id-rel-a15" type="Flow" source="id-acomp-kf-poland" target="id-acomp-kf-europe"/>
+    <relationship identifier="id-rel-a16" type="Flow" source="id-acomp-kf-cm-core" target="id-acomp-kf-core"/>
+    <relationship identifier="id-rel-a17" type="Flow" source="id-acomp-kf-cm-france" target="id-acomp-kf-cm-core"/>
+    <relationship identifier="id-rel-a18" type="Flow" source="id-acomp-kf-cm-france" target="id-acomp-kf-france"/>
+    <relationship identifier="id-rel-a19" type="Flow" source="id-acomp-kf-cm-spain" target="id-acomp-kf-cm-core"/>
+    <relationship identifier="id-rel-a20" type="Flow" source="id-acomp-kf-cm-spain" target="id-acomp-kf-spain"/>
+    <relationship identifier="id-rel-a21" type="Flow" source="id-acomp-kf-eit" target="id-acomp-kf-europe"/>
+    <relationship identifier="id-rel-a22" type="Flow" source="id-acomp-kf-eit" target="id-acomp-kf-cm-core"/>
+    <relationship identifier="id-rel-a23" type="Flow" source="id-acomp-kf-finance" target="id-acomp-kf-core"/>
+
+    <!-- App services served by components -->
+    <relationship identifier="id-rel-a30" type="Serving" source="id-acomp-powerapps" target="id-asvc-crm"/>
+    <relationship identifier="id-rel-a31" type="Serving" source="id-acomp-dataverse" target="id-asvc-dataverse-api"/>
+    <relationship identifier="id-rel-a32" type="Serving" source="id-acomp-powerautomate" target="id-asvc-workflow"/>
+    <relationship identifier="id-rel-a33" type="Serving" source="id-acomp-powerbi" target="id-asvc-reporting"/>
+    <relationship identifier="id-rel-a34" type="Serving" source="id-acomp-powerautomate" target="id-asvc-integration"/>
+
+    <!-- Services use data objects -->
+    <relationship identifier="id-rel-a40" type="Access" source="id-asvc-crm" target="id-dobj-account" write="true"/>
+    <relationship identifier="id-rel-a41" type="Access" source="id-asvc-crm" target="id-dobj-contact" write="true"/>
+    <relationship identifier="id-rel-a42" type="Access" source="id-asvc-crm" target="id-dobj-site" write="true"/>
+    <relationship identifier="id-rel-a43" type="Access" source="id-asvc-crm" target="id-dobj-property" write="true"/>
+    <relationship identifier="id-rel-a44" type="Access" source="id-asvc-crm" target="id-dobj-deal" write="true"/>
+    <relationship identifier="id-rel-a45" type="Access" source="id-asvc-crm" target="id-dobj-deal-property" write="true"/>
+    <relationship identifier="id-rel-a46" type="Access" source="id-asvc-crm" target="id-dobj-investor-profile" write="true"/>
+    <relationship identifier="id-rel-a47" type="Access" source="id-asvc-crm" target="id-dobj-pitch" write="true"/>
+    <relationship identifier="id-rel-a48" type="Access" source="id-asvc-crm" target="id-dobj-nda" write="true"/>
+    <relationship identifier="id-rel-a49" type="Access" source="id-asvc-crm" target="id-dobj-bid" write="true"/>
+    <relationship identifier="id-rel-a50" type="Access" source="id-asvc-crm" target="id-dobj-dd-milestone" write="true"/>
+    <relationship identifier="id-rel-a51" type="Access" source="id-asvc-crm" target="id-dobj-red-flag" write="true"/>
+    <relationship identifier="id-rel-a52" type="Access" source="id-asvc-crm" target="id-dobj-kyc" write="true"/>
+    <relationship identifier="id-rel-a53" type="Access" source="id-asvc-crm" target="id-dobj-gdpr" write="true"/>
+    <relationship identifier="id-rel-a54" type="Access" source="id-asvc-crm" target="id-dobj-fee-schedule" write="true"/>
+    <relationship identifier="id-rel-a55" type="Access" source="id-asvc-crm" target="id-dobj-wip" write="true"/>
+    <relationship identifier="id-rel-a56" type="Access" source="id-asvc-crm" target="id-dobj-txn-report" write="true"/>
+
+    <!-- Integration flows -->
+    <relationship identifier="id-rel-a60" type="Flow" source="id-acomp-powerautomate" target="id-acomp-outlook"/>
+    <relationship identifier="id-rel-a61" type="Flow" source="id-acomp-powerautomate" target="id-acomp-sharepoint"/>
+    <relationship identifier="id-rel-a62" type="Flow" source="id-acomp-powerautomate" target="id-acomp-ci-journeys"/>
+    <relationship identifier="id-rel-a63" type="Flow" source="id-acomp-kf-finance" target="id-acomp-d365-finance"/>
+    <relationship identifier="id-rel-a64" type="Flow" source="id-acomp-loqate" target="id-acomp-dataverse"/>
+    <relationship identifier="id-rel-a65" type="Flow" source="id-acomp-dataverse" target="id-acomp-ecs"/>
+
+    <!-- Copilot -->
+    <relationship identifier="id-rel-a70" type="Serving" source="id-acomp-copilot" target="id-asvc-crm"/>
+  </relationships>
+
+  <organizations>
+    <item identifier="id-org-app" type="Application">
+      <label xml:lang="en">Application</label>
+      <item identifier="id-org-app-components" type="ApplicationComponent">
+        <label xml:lang="en">Components</label>
+        <ref identifier="id-acomp-dataverse"/>
+        <ref identifier="id-acomp-powerapps"/>
+        <ref identifier="id-acomp-powerautomate"/>
+        <ref identifier="id-acomp-powerbi"/>
+        <ref identifier="id-acomp-copilot"/>
+      </item>
+      <item identifier="id-org-app-solutions" type="ApplicationComponent">
+        <label xml:lang="en">Managed Solutions</label>
+        <ref identifier="id-acomp-kf-core"/>
+        <ref identifier="id-acomp-kf-europe"/>
+        <ref identifier="id-acomp-kf-france"/>
+        <ref identifier="id-acomp-kf-spain"/>
+        <ref identifier="id-acomp-kf-germany"/>
+        <ref identifier="id-acomp-kf-poland"/>
+        <ref identifier="id-acomp-kf-cm-core"/>
+        <ref identifier="id-acomp-kf-cm-france"/>
+        <ref identifier="id-acomp-kf-cm-spain"/>
+        <ref identifier="id-acomp-kf-eit"/>
+        <ref identifier="id-acomp-kf-finance"/>
+      </item>
+      <item identifier="id-org-app-external" type="ApplicationComponent">
+        <label xml:lang="en">External Systems</label>
+        <ref identifier="id-acomp-outlook"/>
+        <ref identifier="id-acomp-sharepoint"/>
+        <ref identifier="id-acomp-d365-finance"/>
+        <ref identifier="id-acomp-ci-journeys"/>
+        <ref identifier="id-acomp-ecs"/>
+        <ref identifier="id-acomp-loqate"/>
+      </item>
+      <item identifier="id-org-app-services" type="ApplicationService">
+        <label xml:lang="en">Services</label>
+        <ref identifier="id-asvc-crm"/>
+        <ref identifier="id-asvc-dataverse-api"/>
+        <ref identifier="id-asvc-workflow"/>
+        <ref identifier="id-asvc-reporting"/>
+        <ref identifier="id-asvc-integration"/>
+      </item>
+      <item identifier="id-org-app-data" type="DataObject">
+        <label xml:lang="en">Data Objects</label>
+        <ref identifier="id-dobj-account"/>
+        <ref identifier="id-dobj-contact"/>
+        <ref identifier="id-dobj-site"/>
+        <ref identifier="id-dobj-property"/>
+        <ref identifier="id-dobj-deal"/>
+        <ref identifier="id-dobj-deal-property"/>
+        <ref identifier="id-dobj-investor-profile"/>
+        <ref identifier="id-dobj-pitch"/>
+        <ref identifier="id-dobj-nda"/>
+        <ref identifier="id-dobj-bid"/>
+        <ref identifier="id-dobj-dd-milestone"/>
+        <ref identifier="id-dobj-red-flag"/>
+        <ref identifier="id-dobj-kyc"/>
+        <ref identifier="id-dobj-gdpr"/>
+        <ref identifier="id-dobj-fee-schedule"/>
+        <ref identifier="id-dobj-wip"/>
+        <ref identifier="id-dobj-txn-report"/>
+        <ref identifier="id-dobj-integration-log"/>
+        <ref identifier="id-dobj-sic-code"/>
+        <ref identifier="id-dobj-hilucs"/>
+      </item>
+    </item>
+  </organizations>
+
+  <views>
+    <view identifier="view-app-components" type="ApplicationComponent" viewpoint="Application Usage">
+      <name>Application Component Architecture</name>
+      <documentation>Power Platform components, managed solution layers, and external system integrations.</documentation>
+      <!-- Platform layer -->
+      <node identifier="node-ac-dataverse" elementRef="id-acomp-dataverse" x="340" y="40" w="200" h="55"/>
+      <node identifier="node-ac-powerapps" elementRef="id-acomp-powerapps" x="100" y="40" w="200" h="55"/>
+      <node identifier="node-ac-pa" elementRef="id-acomp-powerautomate" x="100" y="130" w="200" h="55"/>
+      <node identifier="node-ac-pbi" elementRef="id-acomp-powerbi" x="580" y="40" w="200" h="55"/>
+      <node identifier="node-ac-copilot" elementRef="id-acomp-copilot" x="580" y="130" w="200" h="55"/>
+      <!-- Solution layers -->
+      <node identifier="node-ac-l2" elementRef="id-acomp-kf-core" x="100" y="250" w="180" h="50">
+        <style><fillColor color="#4472C4"/></style>
+      </node>
+      <node identifier="node-ac-l3" elementRef="id-acomp-kf-europe" x="320" y="250" w="180" h="50">
+        <style><fillColor color="#5B9BD5"/></style>
+      </node>
+      <node identifier="node-ac-l5-cm" elementRef="id-acomp-kf-cm-core" x="540" y="250" w="220" h="50">
+        <style><fillColor color="#ED7D31"/></style>
+      </node>
+      <node identifier="node-ac-l5-fin" elementRef="id-acomp-kf-finance" x="800" y="250" w="220" h="50">
+        <style><fillColor color="#ED7D31"/></style>
+      </node>
+      <node identifier="node-ac-l4-fr" elementRef="id-acomp-kf-france" x="200" y="340" w="160" h="45">
+        <style><fillColor color="#70AD47"/></style>
+      </node>
+      <node identifier="node-ac-l4-es" elementRef="id-acomp-kf-spain" x="400" y="340" w="160" h="45">
+        <style><fillColor color="#70AD47"/></style>
+      </node>
+      <node identifier="node-ac-l4-de" elementRef="id-acomp-kf-germany" x="600" y="340" w="160" h="45">
+        <style><fillColor color="#70AD47"/></style>
+      </node>
+      <node identifier="node-ac-l4-pl" elementRef="id-acomp-kf-poland" x="800" y="340" w="160" h="45">
+        <style><fillColor color="#70AD47"/></style>
+      </node>
+      <node identifier="node-ac-l6-fr" elementRef="id-acomp-kf-cm-france" x="200" y="420" w="180" h="45">
+        <style><fillColor color="#FFC000"/></style>
+      </node>
+      <node identifier="node-ac-l6-es" elementRef="id-acomp-kf-cm-spain" x="420" y="420" w="180" h="45">
+        <style><fillColor color="#FFC000"/></style>
+      </node>
+      <node identifier="node-ac-l7-eit" elementRef="id-acomp-kf-eit" x="640" y="420" w="180" h="45">
+        <style><fillColor color="#BF4040"/></style>
+      </node>
+      <!-- External -->
+      <node identifier="node-ac-outlook" elementRef="id-acomp-outlook" x="60" y="530" w="160" h="45"/>
+      <node identifier="node-ac-sp" elementRef="id-acomp-sharepoint" x="260" y="530" w="160" h="45"/>
+      <node identifier="node-ac-d365f" elementRef="id-acomp-d365-finance" x="460" y="530" w="180" h="45"/>
+      <node identifier="node-ac-cij" elementRef="id-acomp-ci-journeys" x="680" y="530" w="180" h="45"/>
+      <node identifier="node-ac-loqate" elementRef="id-acomp-loqate" x="60" y="610" w="160" h="45"/>
+      <node identifier="node-ac-ecs" elementRef="id-acomp-ecs" x="260" y="610" w="220" h="45"/>
+      <!-- Connections -->
+      <connection identifier="conn-ac1" source="node-ac-powerapps" target="node-ac-dataverse" type="Serving"/>
+      <connection identifier="conn-ac2" source="node-ac-l2" target="node-ac-dataverse" type="Flow"/>
+      <connection identifier="conn-ac3" source="node-ac-l3" target="node-ac-l2" type="Flow"/>
+      <connection identifier="conn-ac4" source="node-ac-l4-fr" target="node-ac-l3" type="Flow"/>
+      <connection identifier="conn-ac5" source="node-ac-l4-es" target="node-ac-l3" type="Flow"/>
+      <connection identifier="conn-ac6" source="node-ac-l4-de" target="node-ac-l3" type="Flow"/>
+      <connection identifier="conn-ac7" source="node-ac-l4-pl" target="node-ac-l3" type="Flow"/>
+      <connection identifier="conn-ac8" source="node-ac-l5-cm" target="node-ac-l2" type="Flow"/>
+      <connection identifier="conn-ac9" source="node-ac-l6-fr" target="node-ac-l5-cm" type="Flow"/>
+      <connection identifier="conn-ac10" source="node-ac-l6-fr" target="node-ac-l4-fr" type="Flow"/>
+      <connection identifier="conn-ac11" source="node-ac-l6-es" target="node-ac-l5-cm" type="Flow"/>
+      <connection identifier="conn-ac12" source="node-ac-l6-es" target="node-ac-l4-es" type="Flow"/>
+      <connection identifier="conn-ac13" source="node-ac-l7-eit" target="node-ac-l3" type="Flow"/>
+      <connection identifier="conn-ac14" source="node-ac-l7-eit" target="node-ac-l5-cm" type="Flow"/>
+      <connection identifier="conn-ac15" source="node-ac-l5-fin" target="node-ac-l2" type="Flow"/>
+      <connection identifier="conn-ac16" source="node-ac-pa" target="node-ac-outlook" type="Flow"/>
+      <connection identifier="conn-ac17" source="node-ac-pa" target="node-ac-sp" type="Flow"/>
+      <connection identifier="conn-ac18" source="node-ac-pa" target="node-ac-cij" type="Flow"/>
+      <connection identifier="conn-ac19" source="node-ac-l5-fin" target="node-ac-d365f" type="Flow"/>
+      <connection identifier="conn-ac20" source="node-ac-loqate" target="node-ac-dataverse" type="Flow"/>
+      <connection identifier="conn-ac21" source="node-ac-dataverse" target="node-ac-ecs" type="Flow"/>
+    </view>
+
+    <view identifier="view-app-data-objects" type="DataObject" viewpoint="Data">
+      <name>Data Object Landscape</name>
+      <documentation>All Dataverse custom tables grouped by domain.</documentation>
+      <node identifier="node-do-client" elementRef="id-dobj-account" x="60" y="40" w="160" h="45"/>
+      <node identifier="node-do-contact" elementRef="id-dobj-contact" x="60" y="110" w="160" h="45"/>
+      <node identifier="node-do-ip" elementRef="id-dobj-investor-profile" x="60" y="180" w="180" h="45"/>
+      <node identifier="node-do-sic" elementRef="id-dobj-sic-code" x="60" y="250" w="160" h="45"/>
+      <node identifier="node-do-site" elementRef="id-dobj-site" x="320" y="40" w="160" h="45"/>
+      <node identifier="node-do-prop" elementRef="id-dobj-property" x="320" y="110" w="160" h="45"/>
+      <node identifier="node-do-hilucs" elementRef="id-dobj-hilucs" x="320" y="180" w="160" h="45"/>
+      <node identifier="node-do-deal" elementRef="id-dobj-deal" x="580" y="40" w="160" h="45"/>
+      <node identifier="node-do-dp" elementRef="id-dobj-deal-property" x="580" y="110" w="180" h="45"/>
+      <node identifier="node-do-pitch" elementRef="id-dobj-pitch" x="580" y="180" w="160" h="45"/>
+      <node identifier="node-do-nda" elementRef="id-dobj-nda" x="580" y="250" w="160" h="45"/>
+      <node identifier="node-do-bid" elementRef="id-dobj-bid" x="580" y="320" w="160" h="45"/>
+      <node identifier="node-do-dd" elementRef="id-dobj-dd-milestone" x="580" y="390" w="180" h="45"/>
+      <node identifier="node-do-rf" elementRef="id-dobj-red-flag" x="580" y="460" w="160" h="45"/>
+      <node identifier="node-do-kyc" elementRef="id-dobj-kyc" x="840" y="40" w="160" h="45"/>
+      <node identifier="node-do-gdpr" elementRef="id-dobj-gdpr" x="840" y="110" w="160" h="45"/>
+      <node identifier="node-do-fee" elementRef="id-dobj-fee-schedule" x="840" y="200" w="180" h="45"/>
+      <node identifier="node-do-wip" elementRef="id-dobj-wip" x="840" y="270" w="160" h="45"/>
+      <node identifier="node-do-txn" elementRef="id-dobj-txn-report" x="840" y="340" w="180" h="45"/>
+      <node identifier="node-do-log" elementRef="id-dobj-integration-log" x="840" y="410" w="180" h="45"/>
+      <connection identifier="conn-do1" source="node-do-deal" target="node-do-dp" type="Access"/>
+      <connection identifier="conn-do2" source="node-do-dp" target="node-do-prop" type="Access"/>
+      <connection identifier="conn-do3" source="node-do-client" target="node-do-contact" type="Composition"/>
+      <connection identifier="conn-do4" source="node-do-client" target="node-do-ip" type="Composition"/>
+    </view>
+  </views>
+</model>
