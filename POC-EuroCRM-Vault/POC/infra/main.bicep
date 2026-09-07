@@ -103,7 +103,7 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
   properties: {
     collation: 'SQL_Latin1_General_CP1_CI_AS'
     maxSizeBytes: 34359738368 // 32 GB — plenty for the POC
-    minCapacity: 0.5
+    minCapacity: json('0.5') // 0.5 vCore floor — Bicep has no float literals
     autoPauseDelay: autoPauseDelay
   }
 }
@@ -113,6 +113,6 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
 output sqlServerName string = sqlServer.name
 output sqlServerFqdn string = sqlServer.properties.fullyQualifiedDomainName
 output sqlDatabaseName string = sqlDatabase.name
-output sqlAdminLogin string = sqlAdminLogin
+output sqlAdminLoginName string = sqlAdminLogin
 @description('Connection string template — replace CHANGE_ME with the admin password.')
 output sqlConnectionString string = 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Initial Catalog=${databaseName};Persist Security Info=False;User ID=${sqlAdminLogin};Password=CHANGE_ME;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
