@@ -251,3 +251,44 @@ For a POC, the layered model simplifies to:
 - [ ] Verify security roles restrict cross-BU access
 - [ ] Verify WIP values roll up per stage %
 - [ ] Ready demo script for POC walkthrough
+
+---
+
+## 6. Minimum Technology Stack
+
+### Required
+
+| Layer | Minimum | Notes |
+| ----- | ------- | ----- |
+| Tenant | One Microsoft 365 tenant | Free M365 Developer tenant works for POC |
+| Licensing | Power Apps Developer Plan (free) | Upgrade to per-user licenses only when moving to prod |
+| Environment | 1x Dataverse environment | Provisioned via Power Platform admin center |
+| Database | Dataverse | This is the SQL database. A model-driven app cannot be pointed at a standalone SQL Server / Azure SQL — it requires Dataverse as its backing store. Only a canvas app could use Azure SQL via connector, which changes the architecture. |
+| Build tool | make.powerapps.com | All tables, forms, views, BPF created here |
+| Admin rights | One account: System Administrator + Environment Maker | Same account is enough for POC |
+| Solutions | 2 unmanaged: `KF_Core_POC`, `KF_CapitalMarkets_POC` | Unmanaged is fine in dev — managed-only rule applies to TEST/UAT/PROD |
+
+### Not Needed for the POC
+
+- Azure subscription — nothing in this stack consumes Azure directly
+- Production Power Apps/Dataverse licenses
+- Managed environments, DLP policies, ALM pipelines
+- Power Automate or Power BI licenses — integrations and dashboards deferred
+- Data gateway — only needed for on-prem data
+- All integrations: Loqate, Outlook, SharePoint, ECS, Finance bridge
+
+### Minimal Build Footprint
+
+**Keep (essential):**
+
+- Phase A — environment + 2 solutions
+- Phases B-D — tables, trimmed to: `account`, `contact`, `kf_site`, `kf_property`, `kf_deal`, `kf_dealproperty` (+ `kf_investorprofile`, `kf_bid` for the bidding demo)
+- Phase F — the 8-stage BPF (demo centrepiece)
+- Phase G — app with 4-6 forms + one pipeline view
+- Phase H — seeded demo data
+
+**Drop for first iteration:**
+
+- Phase E — single Business Unit + one role instead of 4 BU / 4 roles
+- WIP table, supporting tables, compliance tables
+- Dashboards
