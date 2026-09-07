@@ -237,7 +237,7 @@ For a POC, the layered model simplifies to:
 
 - [ ] Create model-driven app `EuroCRM POC`
 - [ ] Build forms: Account, Contact, kf_Site, kf_Property, kf_Deal (BPF header), kf_DealProperty (quick create), kf_Pitch, kf_NDA, kf_Bid, kf_InvestorProfile
-- [ ] Add kf_DealProperty sub-grid on kf_Deal form
+- [ ] Add kf_DealProperty sub-grid on kf_Deal form (**Option A only** — Option B: N:1 lookup on kf_DealProperty + filtered view instead; virtual tables cannot be the 1 side of a 1:N)
 - [ ] Build views: Active Deals Pipeline, Client 360, WIP Report, Investor Registry, KYC Status
 - [ ] Build dashboard (embedded Power BI or system dashboard)
 - [ ] Set app sitemap: Clients, Properties, Deals, Compliance, Reports
@@ -315,3 +315,69 @@ Two variants. **Option A** is the simplest ("Dataverse is the database"). **Opti
 - Phase E — single Business Unit + one role instead of 4 BU / 4 roles
 - WIP table, supporting tables, compliance tables
 - Dashboards
+
+---
+
+## 7. Option B — Deficiency Fixes
+
+### 1. No BPF on virtual tables
+
+| Strategy | How | Effort |
+| -------- | --- | ------ |
+| **Stage machine in SQL** (recommended) | `kf_deal.stage` (int) + SQL trigger/constraint enforcing legal transitions + `kf_stagehistory` table. The DB owns the lifecycle; the app just edits a stage field. Audit comes free via the history table. | Medium |
+| **Power Automate validation** | Cloud flow on update validates the transition. Works against virtual tables via the connector. | Low |
+| **Form-level mimics** | Conditional tabs + business rules driven by the stage field give a BPF-like experience; legal transitions still enforced in SQL. | Low |
+| **Hybrid (last resort)** | Keep only `kf_deal` native in Dataverse for the BPF; mirror to SQL for reporting. Breaks "SQL owns all data" — only if BPF is non-negotiable. | Medium |
+
+The 8-stage CM lifecycle maps to a stage enum + stage-gate rule table (`kf_stagegaterule` already in the model) — nothing functionally lost.
+
+### 2. No audit / calculated fields / duplicate detection
+
+| Gap | SQL-side fix |
+| --- | ------------ |
+| **Audit** (7-year retention) | SQL system-versioned temporal tables + `kf_audit` table; optionally expose a read-only view for an audit screen |
+| **Calculated/rollup** (WIP %, deal totals) | Compute in SQL views and expose as virtual-table columns; maintained columns or indexed views for heavy rollups |
+| **Option set display** | Enum columns surface as plain numbers unless mapped to choices — verify mapping in spike; label via a `kf_label` reference view if needed |
+| **Duplicate detection** | SQL unique indexes (hard prevention) + fuzzy-match stored proc (SIREN/KRS/name) called from a button/flow |
+
+**Platform constraints to inherit:** 1:N relationship queries cap at 1,000 rows (filter early); negative filters (Does Not Equal) break paging — avoid them in views.
+
+### 3. `bigint` → decimal mapping
+
+Rule: **never expose `bigint` to Dataverse.**
+
+- GUID primary keys on every exposed table (required anyway)
+- `int` for enumerations and small magnitudes
+- `nvarchar` for long external references (SIREN, KRS, UPRN) to avoid decimal display
+- Keep `bigint` only in backing columns the app never maps, or `CAST` to `nvarchar` in the view
+
+### 4. Relationship constraints
+
+| Strategy | How |
+| -------- | --- |
+| **One connection, one database** | All domain tables in a single Azure SQL DB through one connection — virtual-to-virtual relationships are supported within the same provider |
+| **Model N:1 lookups on the child** | Contact carries the Account lookup; kf_DealProperty carries Deal + Property lookups. Parent-side subgrids are unsupported for virtual parents — build filtered views ("Client 360": contacts where account = X) instead |
+| **ExternalName discipline** | Lookup External Name must exactly match the FK column; unique per attribute; identical text formatting (CAST) on PK and FK |
+| **Standard-table lookups** | Resolve via PK (GUID) or an **Alternate Key** on the standard table |
+
+**Spike before Phase D (half day):** build the Account → Contact → Deal → DealProperty chain in a scratch environment and confirm lookups and subgrid behaviour.
+
+### 5. Live connector reads
+
+| Strategy | How |
+| -------- | --- |
+| **Azure SQL, not on-prem** | Avoids the gateway hop |
+| **Read-optimised views** | Point virtual tables at views that pre-join/denormalise what forms display |
+| **Index what the app filters on** | Cover indexes on filtered columns; no functions in filter predicates |
+| **Read replica for reporting** | Reporting queries don't touch the app-facing connection |
+| **Map only used columns** | Skip ntext/blob/geometry/geography/datetime2/time/rowversion — these SQL types can't map (or only partially) |
+
+At POC scale performance is a non-issue; park read-replica work until load exists.
+
+### Recommended POC Combination
+
+1. **Schema conventions:** GUID PKs, `int`/`nvarchar` only, text-consistent lookups, one Azure SQL DB, one connection
+2. **Stage lifecycle in SQL** (trigger + `kf_stagehistory` + `kf_stagegaterule`) — no BPF, no hybrid
+3. **Temporal tables for audit**, views for computed values, unique indexes for dedup
+4. **N:1 lookups + filtered views** instead of parent subgrids
+5. **Spike first** (half day): relationship chain, choice-column mapping, business-rule support on virtual tables
