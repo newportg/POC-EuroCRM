@@ -38,6 +38,13 @@ cd "C:\Source\Obsidian\Projects\POC-EuroCRM\POC-EuroCRM-Vault\POC\infra"
 .\deploy.ps1 -SqlAdminPassword '<STRONG_PASSWORD>'
 ```
 
+**Sign-in account:** the script logs in as `gary.newport@devknightfrank.onmicrosoft.com` (override with `-LoginUsername`). The account has MFA, so expect **two interactive sign-ins**, both completed in the browser:
+
+1. **Azure CLI** — `az login` prompt (falls back to device-code flow if the username prompt is rejected for MFA)
+2. **Power Platform** — `Connect-PowerAppsAccount` sign-in dialog
+
+The script verifies the signed-in Azure user matches the expected account and aborts with instructions if it doesn't.
+
 The script walks through:
 
 1. `az login` (interactive) and optionally `az account set`

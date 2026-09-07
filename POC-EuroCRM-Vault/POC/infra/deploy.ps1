@@ -26,6 +26,12 @@
 .PARAMETER SqlAdminPassword
     SQL admin password (mandatory). POC only - Key Vault for prod.
 
+.PARAMETER LoginUsername
+    Account used to sign in to Azure CLI and Power Platform.
+    Default gary.newport@devknightfrank.onmicrosoft.com. MFA-enabled: authentication is
+    interactive (browser / device code) and must be completed TWICE - once for Azure CLI,
+    once for Power Platform.
+
 .PARAMETER DataverseDisplayName
     Dataverse environment display name. Default "EuroCRM POC".
 
@@ -51,6 +57,7 @@ param(
     [string]$SqlAdminLogin = 'sqladmin',
     [Parameter(Mandatory = $true)]
     [string]$SqlAdminPassword,
+    [string]$LoginUsername = 'gary.newport@devknightfrank.onmicrosoft.com',
     [string]$DataverseDisplayName = 'EuroCRM POC',
     [string]$DataverseLocation = 'europe',
     [ValidateSet('Trial', 'Developer', 'Sandbox', 'Production')]
@@ -63,12 +70,25 @@ $scriptDir = $PSScriptRoot
 Write-Host '== EuroCRM POC - Phase 0 provisioning ==' -ForegroundColor Cyan
 
 # 1. Azure CLI sign-in -----------------------------------------------------
+# Target account: $LoginUsername (MFA-enabled — authentication is interactive).
 az account show *> $null
 if ($LASTEXITCODE -ne 0) {
-    Write-Host 'Azure CLI not signed in - launching login...'
-    az login
+    Write-Host "Signing in as $LoginUsername - complete the sign-in in the browser (MFA required)."
+    az login --username $LoginUsername
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host 'Username-prompt login failed (expected for some MFA setups). Signing in interactively - choose the account in the browser.'
+        az login --use-device-code
+    }
     if ($LASTEXITCODE -ne 0) { throw 'az login failed.' }
 }
+
+# Verify the signed-in account is the intended one (MFA accounts are easy to mix up).
+$currentUser = (az account show --query "user.name" -o tsv)
+if ($currentUser -and $currentUser -ne $LoginUsername) {
+    throw "Signed in as $currentUser, expected $LoginUsername. Run 'az login --use-device-code' manually, pick the right account, then re-run this script."
+}
+Write-Host "Azure CLI signed in as: $currentUser"
+
 if ($SubscriptionId) {
     az account set --subscription $SubscriptionId
     if ($LASTEXITCODE -ne 0) { throw "Failed to set subscription $SubscriptionId" }
@@ -103,7 +123,8 @@ Import-Module Microsoft.PowerApps.Administration.PowerShell -ErrorAction Stop
 if (-not (Get-Command Get-AdminPowerAppEnvironment -ErrorAction SilentlyContinue)) {
     throw 'Power Platform admin module not installed. Run: Install-Module Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser'
 }
-Connect-PowerAppsAccount
+Write-Host "Signing in to Power Platform as $LoginUsername - complete the prompt (MFA required)."
+Connect-PowerAppsAccount -Username $LoginUsername
 
 $env = Get-AdminPowerAppEnvironment | Where-Object { $_.DisplayName -eq $DataverseDisplayName }
 if ($env) {
