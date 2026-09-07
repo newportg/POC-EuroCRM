@@ -256,26 +256,49 @@ For a POC, the layered model simplifies to:
 
 ## 6. Minimum Technology Stack
 
-### Required
+Two variants. **Option A** is the simplest ("Dataverse is the database"). **Option B** satisfies the enterprise requirement that data is stored in a real SQL database, using Dataverse virtual tables — SQL becomes the system of record, Dataverse stores only the app/metadata.
+
+### Shared Requirements (both options)
 
 | Layer | Minimum | Notes |
 | ----- | ------- | ----- |
 | Tenant | One Microsoft 365 tenant | Free M365 Developer tenant works for POC |
 | Licensing | Power Apps Developer Plan (free) | Upgrade to per-user licenses only when moving to prod |
 | Environment | 1x Dataverse environment | Provisioned via Power Platform admin center |
-| Database | Dataverse | This is the SQL database. A model-driven app cannot be pointed at a standalone SQL Server / Azure SQL — it requires Dataverse as its backing store. Only a canvas app could use Azure SQL via connector, which changes the architecture. |
-| Build tool | make.powerapps.com | All tables, forms, views, BPF created here |
+| Build tool | make.powerapps.com | All tables, forms, views created here |
 | Admin rights | One account: System Administrator + Environment Maker | Same account is enough for POC |
 | Solutions | 2 unmanaged: `KF_Core_POC`, `KF_CapitalMarkets_POC` | Unmanaged is fine in dev — managed-only rule applies to TEST/UAT/PROD |
 
+### Option A — Dataverse as Database
+
+| Layer | Minimum | Notes |
+| ----- | ------- | ----- |
+| Database | Dataverse | Native tables; simplest option, full feature set (BPF, auditing, calculated fields) |
+
+### Option B — SQL as Source of Truth (Virtual Tables)
+
+| Layer | Minimum | Notes |
+| ----- | ------- | ----- |
+| Database | Azure SQL (preferred) or SQL Server + on-prem data gateway | Hosts all ~18 `kf_*` tables as the system of record |
+| Schema rule | GUID (or integer) primary key + one string primary-name field per table | Required for full CRUD through virtual tables; views are read-only |
+| Dataverse link | Virtual tables via Virtual Connector Provider (SQL Server connector) | GA; created from the Entity Catalog in make.powerapps.com; SQL connection may use SQL auth or Entra ID |
+| Security | Row-level security enforced in SQL (RLS / views) | The connector uses one shared credential set — app security roles do not filter rows |
+
+**Trade-offs in Option B:**
+
+- **No Business Process Flow on virtual tables** — the 8-stage Capital Markets lifecycle becomes a `kf_stage` option-set field + views, not a BPF
+- No Dataverse auditing, calculated/rollup fields, or duplicate detection — audit and computed values live in SQL
+- `bigint` columns map to decimal in Dataverse — design SQL types accordingly
+- Lookups between virtual and native tables work but with constraints — test the Account → Deal → Property chain early
+- Every read is a live connector call to SQL — fine for POC, no caching
+
 ### Not Needed for the POC
 
-- Azure subscription — nothing in this stack consumes Azure directly
 - Production Power Apps/Dataverse licenses
 - Managed environments, DLP policies, ALM pipelines
 - Power Automate or Power BI licenses — integrations and dashboards deferred
-- Data gateway — only needed for on-prem data
 - All integrations: Loqate, Outlook, SharePoint, ECS, Finance bridge
+- Data gateway — only if Option B uses on-prem SQL Server instead of Azure SQL
 
 ### Minimal Build Footprint
 
@@ -283,7 +306,7 @@ For a POC, the layered model simplifies to:
 
 - Phase A — environment + 2 solutions
 - Phases B-D — tables, trimmed to: `account`, `contact`, `kf_site`, `kf_property`, `kf_deal`, `kf_dealproperty` (+ `kf_investorprofile`, `kf_bid` for the bidding demo)
-- Phase F — the 8-stage BPF (demo centrepiece)
+- Phase F — the 8-stage BPF (**Option A only**; Option B replaces it with a stage field + stage views)
 - Phase G — app with 4-6 forms + one pipeline view
 - Phase H — seeded demo data
 
