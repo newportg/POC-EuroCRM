@@ -1,0 +1,197 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.46.1.21595",
+      "templateHash": "7394481839366467386"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Azure region for the POC resources. Defaults to the resource group location."
+      }
+    },
+    "environmentName": {
+      "type": "string",
+      "defaultValue": "eurpoc",
+      "metadata": {
+        "description": "Short prefix used in resource names, e.g. eurpoc -> eurpoc-sql."
+      }
+    },
+    "sqlAdminLogin": {
+      "type": "string",
+      "defaultValue": "sqladmin",
+      "metadata": {
+        "description": "SQL server administrator login."
+      }
+    },
+    "sqlAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "SQL server administrator password. POC only — move to Key Vault for anything longer-lived."
+      }
+    },
+    "databaseName": {
+      "type": "string",
+      "defaultValue": "EuroCRMPOC",
+      "metadata": {
+        "description": "SQL database name (system of record)."
+      }
+    },
+    "databaseSku": {
+      "type": "string",
+      "defaultValue": "GP_S_Gen5",
+      "metadata": {
+        "description": "SKU — General Purpose Serverless (pausable, low cost for POC)."
+      }
+    },
+    "databaseCapacity": {
+      "type": "int",
+      "defaultValue": 1,
+      "minValue": 1,
+      "maxValue": 80,
+      "metadata": {
+        "description": "vCores for the serverless database."
+      }
+    },
+    "autoPauseDelay": {
+      "type": "int",
+      "defaultValue": 60,
+      "metadata": {
+        "description": "Minutes of inactivity before the serverless database auto-pauses. 60 = pause after 1 hour."
+      }
+    },
+    "clientIpRules": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "Optional client firewall rules, e.g. [ { name, startIpAddress, endIpAddress } ]. Empty by default."
+      }
+    },
+    "sqlEntraAdminLogin": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Entra ID principal login to set as SQL Entra admin (user or group). Empty to skip."
+      }
+    },
+    "sqlEntraAdminObjectId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Entra ID object ID of the principal above. Empty to skip."
+      }
+    }
+  },
+  "variables": {
+    "sqlServerName": "[format('{0}-sql', parameters('environmentName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2022-05-01-preview",
+      "name": "[variables('sqlServerName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "administratorLogin": "[parameters('sqlAdminLogin')]",
+        "administratorLoginPassword": "[parameters('sqlAdminPassword')]",
+        "minimalTlsVersion": "1.2",
+        "publicNetworkAccess": "Enabled"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2022-05-01-preview",
+      "name": "[format('{0}/{1}', variables('sqlServerName'), 'AllowAllWindowsAzureIps')]",
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "0.0.0.0"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
+    },
+    {
+      "copy": {
+        "name": "clientRules",
+        "count": "[length(parameters('clientIpRules'))]"
+      },
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2022-05-01-preview",
+      "name": "[format('{0}/{1}', variables('sqlServerName'), format('ClientRule_{0}_{1}', copyIndex(), parameters('clientIpRules')[copyIndex()].name))]",
+      "properties": {
+        "startIpAddress": "[parameters('clientIpRules')[copyIndex()].startIpAddress]",
+        "endIpAddress": "[parameters('clientIpRules')[copyIndex()].endIpAddress]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
+    },
+    {
+      "condition": "[not(equals(parameters('sqlEntraAdminObjectId'), ''))]",
+      "type": "Microsoft.Sql/servers/administrators",
+      "apiVersion": "2022-05-01-preview",
+      "name": "[format('{0}/{1}', variables('sqlServerName'), 'ActiveDirectory')]",
+      "properties": {
+        "administratorType": "ActiveDirectory",
+        "login": "[parameters('sqlEntraAdminLogin')]",
+        "sid": "[parameters('sqlEntraAdminObjectId')]",
+        "tenantId": "[subscription().tenantId]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases",
+      "apiVersion": "2022-05-01-preview",
+      "name": "[format('{0}/{1}', variables('sqlServerName'), parameters('databaseName'))]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('databaseSku')]",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": "[parameters('databaseCapacity')]"
+      },
+      "properties": {
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "maxSizeBytes": 34359738368,
+        "minCapacity": "[json('0.5')]",
+        "autoPauseDelay": "[parameters('autoPauseDelay')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "sqlServerName": {
+      "type": "string",
+      "value": "[variables('sqlServerName')]"
+    },
+    "sqlServerFqdn": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName')), '2022-05-01-preview').fullyQualifiedDomainName]"
+    },
+    "sqlDatabaseName": {
+      "type": "string",
+      "value": "[parameters('databaseName')]"
+    },
+    "sqlAdminLoginName": {
+      "type": "string",
+      "value": "[parameters('sqlAdminLogin')]"
+    },
+    "sqlConnectionString": {
+      "type": "string",
+      "metadata": {
+        "description": "Connection string template — replace CHANGE_ME with the admin password."
+      },
+      "value": "[format('Server=tcp:{0},1433;Initial Catalog={1};Persist Security Info=False;User ID={2};Password=CHANGE_ME;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;', reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName')), '2022-05-01-preview').fullyQualifiedDomainName, parameters('databaseName'), parameters('sqlAdminLogin'))]"
+    }
+  }
+}
