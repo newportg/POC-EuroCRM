@@ -190,6 +190,8 @@ See [[solution-options]].
 
 Options analysis to be completed with vendor evaluation and architecture assessment.
 
+**Alternative design:** An alternative to the current Dataverse/Power Platform architecture — a traditional stack built on the firm's existing C#/.NET and PostgreSQL tooling — is set out in [[alternative-architecture-traditional-csharp]]. It delivers the same business capabilities and is presented for TDA review alongside the platform decision in [[power-apps-rationale]].
+
 ## Implementation Roadmap
 
 ### Phases
