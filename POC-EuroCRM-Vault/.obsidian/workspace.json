@@ -216,8 +216,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "ee0a182013e28de6",
+  "active": "f2fd30c2509f0345",
   "lastOpenFiles": [
+    "raw/~$roCRM - Dynamics365AndPowerPlatformGuidelines (AutoRecovered).docx",
     "POC/POC.md",
     "POC/infra/README.md",
     "POC/infra/main.json",
@@ -253,7 +254,6 @@
     "dashboard.md",
     "wiki/solution-scope-in-scope.md",
     "wiki/solution-scope-out-of-scope.md",
-    "wiki/architecture-target-state.md",
     "Untitled.canvas"
   ]
 }
