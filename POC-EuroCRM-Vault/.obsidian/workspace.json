@@ -11,10 +11,14 @@
             "id": "e91f778dd1ff7d90",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "wiki/outlook-email-interception-engagement-history.md",
+                "mode": "preview",
+                "source": true
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "outlook-email-interception-engagement-history"
             }
           }
         ]
@@ -197,7 +201,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "597aa953c2405097",
+  "active": "e91f778dd1ff7d90",
   "lastOpenFiles": [
     "wiki/outlook-email-intercept-to-engagement-history.png",
     "wiki/Outlook Email to CRM Engagement History.png",

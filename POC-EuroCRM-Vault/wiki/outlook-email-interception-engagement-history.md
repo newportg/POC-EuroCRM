@@ -47,7 +47,7 @@ In the Dataverse design this maps to a Dataverse **Email activity** entity linke
 
 There are three ways to intercept Outlook email. They can be combined — automatic capture as the baseline, with an add-in for user-triggered actions.
 
-![[outlook-email-intercept-to-engagement-history]]
+![[outlook-email-intercept-to-engagement-history.png]]
 
 ### Path A — Outlook Add-in (user-triggered)
 
