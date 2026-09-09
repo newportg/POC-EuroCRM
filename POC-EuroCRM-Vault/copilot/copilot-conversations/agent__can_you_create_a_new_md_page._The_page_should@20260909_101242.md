@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_f7a9343a0ffe1SDHS1pruGk6Xz"
 agentLabel: "ECS Message Bus to Golden Source DB diagrams"
-usage: '{"usedTokens":30018,"contextWindow":200000,"updatedAt":1788945664730}'
+usage: '{"usedTokens":40467,"contextWindow":200000,"updatedAt":1788946995033}'
 tags:
   - copilot-conversation
 ---
@@ -38,3 +38,38 @@ The markdown page includes a comparison table covering sync mechanism, data fres
 
 They're embedded in [[architecture-patterns-comparison]] via `![[...]]` wikilinks, so they'll render inline when you open the note in Obsidian. Open it and let me know if any of the diagrams need adjusting — layout, labels, or missing components.
 [Timestamp: 2026/09/09 10:17:38]
+
+**user**: can you create a page detailing how we can intercept outlook email and update the crm with the engagement history
+[Timestamp: 2026/09/09 10:40:27]
+
+**ai**: Let me read the relevant existing notes to understand the context (engagement tracking, Outlook integration, email sync) before drafting the page.
+
+Let me check the data model notes for engagement/activity tracking entities to reference correctly.
+
+I have enough context. Note the user asked broadly about "the CRM" and "engagement history". The existing wiki covers two architectural options: the Dataverse/Power Platform design and the traditional C#/PostgreSQL alternative. I'll write the page covering how Outlook email can be intercepted and written into CRM engagement history, covering both the Dataverse path and the C#/Graph API path, since this is a design wiki. Let me build it with a companion PlantUML diagram to match the wiki convention (diagrams use PlantUML).
+
+Let me create one PlantUML diagram for the interception flow and the markdown page.
+
+Now let me render the PlantUML diagram to match the wiki's convention.
+
+The PNG rendered with the title filename. Let me rename it to match the wikilink in the page.
+
+Done. I created the page and rendered its diagram.
+
+**Page:** [[outlook-email-interception-engagement-history]]
+
+It covers how Outlook email gets intercepted and written back to the CRM as engagement history:
+
+**Interception paths** (with a PlantUML diagram `outlook-email-intercept-to-engagement-history`):
+- **Path A — Outlook Add-in:** user clicks "Log to CRM" on a message; explicit, low noise
+- **Path B — Microsoft Graph webhook:** automatic subscription to message changes; catches everything but needs filtering
+- **Path C — Mailbox worker:** Power Automate (Dataverse design) or Hangfire/.NET worker (C#/PostgreSQL design) polls via Graph
+
+**Engagement history store** — email logged as an *activity* (metadata + link to source message, not the full body), resolved against Account/Contact/Deal.
+
+**Correlation pipeline** — participant resolution → deal thread matching → dedup via thread ID / Graph `messageId`.
+
+**GDPR & retention** — legitimate-interest basis per message, 7-year retention, no full-body duplication, audit trail.
+
+I mapped the content onto both designs in the wiki — the Dataverse path (`Outlook → Dataverse` Power Automate) from [[architecture-application]] and the C#/Graph API path from [[alternative-architecture-traditional-csharp]] — since both are two viable ways to answer the same question depending on which design wins at TDA review.
+[Timestamp: 2026/09/09 10:40:27]

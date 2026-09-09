@@ -197,8 +197,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e91f778dd1ff7d90",
+  "active": "597aa953c2405097",
   "lastOpenFiles": [
+    "wiki/outlook-email-intercept-to-engagement-history.png",
+    "wiki/Outlook Email to CRM Engagement History.png",
+    "wiki/outlook-email-interception-engagement-history.md",
+    "wiki/outlook-email-intercept-to-engagement-history.puml",
     "wiki/architecture-patterns-comparison.md",
     "dynamics-export-to-golden-source.md",
     "wiki/dynamics-export-to-golden-source.png",
@@ -225,7 +229,6 @@
     "POC/infra/sql/spike-schema.sql",
     "POC/infra/sql",
     "POC/infra/deploy.ps1",
-    "POC/infra/main.parameters.json",
     "copilot/copilot-conversations/agent__I_need_to_create_a_simple_POC_of_this_application,@20260907_111943.md",
     "wiki/business-context.md",
     "copilot/skills/openartifacts-publish/SKILL.md",
@@ -239,7 +242,6 @@
     "copilot/copilot-conversations/agent__can_you_move,_for_all_wiki_files,_the_lines_Status,@20260903_094401.md",
     "wiki/architecture-business.md",
     "wiki/solution-package-model.md",
-    "wiki/key-stakeholders.md",
     "Untitled.canvas"
   ]
 }
