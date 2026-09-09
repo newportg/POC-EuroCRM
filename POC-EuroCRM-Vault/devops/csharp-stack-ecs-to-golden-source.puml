@@ -1,0 +1,81 @@
+@startuml CSharp Stack ECS Message Bus to Golden Source
+title C# / ASP.NET Core Stack — ECS Message Bus to Golden Source DB
+
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 12
+skinparam backgroundColor #FEFEFE
+
+package "Application Tier" as APP #E3F2FD {
+  component "ASP.NET Core\nWeb Application\n(Blazor / Razor Pages)" as WEB
+  component "REST API /\nMinimal API" as API
+  component "Background\nWorkers\n(Hangfire)" as WRK
+  rectangle "EF Core\n(Npgsql)" as EF
+
+  rectangle "Outbox Pattern\n(Aggregate Commit\n+ Outbox Event)" as OUTBOX
+}
+
+package "ECS Message Bus" as ECSB #FCE4EC {
+  rectangle "Enterprise\nConnectivity\nServices" as ECS
+  rectangle "Topic: Entity\nChange Events" as TOPIC
+  rectangle "Subscriptions" as SUB
+  rectangle "Dead Letter\nQueue" as DLQ
+}
+
+package "Cross-Cutting" as XC #FFF3E0 {
+  rectangle "Microsoft\nEntra ID\n(Auth)" as ENTRA
+  rectangle "Object Storage\n(EU)" as STO
+  rectangle "Email / Calendar\n(Graph API)" as GRAPH
+  rectangle "Loqate\nAddress Validation" as LOQATE
+}
+
+package "Golden Source" as GS #E8F5E9 {
+  database "Golden Source\nDatabase\n(PostgreSQL 16)" as DB
+  rectangle "Master Data\nStore" as MDS
+}
+
+' Application connections
+WEB -down-> API
+API -right-> EF
+WRK -right-> EF
+EF -down-> DB : "Read / Write"
+
+' Outbox pattern
+API -down-> OUTBOX : "Aggregate\nCommit"
+WRK -down-> OUTBOX
+OUTBOX -right-> ECS : "Dispatcher\nPublishes\nOutbox Events"
+
+' ECS
+ECS -down-> TOPIC
+TOPIC -down-> SUB
+SUB -down-> DLQ : "Failed\nMessages"
+
+' Cross-cutting
+WEB -right-> ENTRA
+WEB -right-> STO
+API -right-> LOQATE
+WRK -right-> GRAPH
+
+' Downstream consumers
+SUB -down-> WRK : "External\nConsumers"
+
+' Golden Source
+DB -right-> MDS
+
+note bottom of APP
+  First-party code on .NET
+  No Dynamics / Dataverse dependency
+  ECS publish via Outbox Pattern
+end note
+
+note left of OUTBOX
+  Outbox Pattern:
+  Each aggregate commit writes
+  an outbox event in the same DB
+  transaction. A background dispatcher
+  publishes to ECS and marks sent.
+  Guarantees exactly-once delivery.
+end note
+
+@enduml

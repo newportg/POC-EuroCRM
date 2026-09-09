@@ -1,0 +1,150 @@
+@startuml EuroCRM Client Data Model
+
+title Knight Frank EuroCRM — Client Data Model Schema
+
+'skinparam backgroundColor #FEFEFE
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 12
+skinparam classAttributeIconSize 0
+
+' ===== Brand/Group Hierarchy =====
+rectangle "Brand / Group Hierarchy" as HIERARCHY {
+  class "Account" as ACCT {
+    accountid : GUID ++
+    --
+    name : Text
+    accounttype : OptionSet (Investor/Vendor/Occupier)
+    kf_accountclassification : OptionSet
+    kf_entitytype : OptionSet
+    kf_industry : Lookup → kf_SICCode
+    kf_registrationnumber : Text
+    kf_nationalregister : OptionSet
+    --
+    address1_line1 : Text
+    address1_city : Text
+    address1_postalcode : Text
+    address1_country : OptionSet
+    telephone1 : Phone
+    emailaddress1 : Email
+    --
+    parentaccountid : Lookup → Account
+    owningbusinessunit : Lookup → BU
+    createdon : DateTime
+    modifiedon : DateTime
+  }
+
+  class "Contact" as CONTACT {
+    contactid : GUID ++
+    --
+    firstname : Text
+    lastname : Text
+    jobtitle : Text
+    emailaddress1 : Email
+    telephone1 : Phone
+    --
+    parentcustomerid : Lookup → Account
+    kf_processingconsent : OptionSet
+    kf_consentdate : DateTime
+    kf_subscription : OptionSet
+    --
+    owningbusinessunit : Lookup → BU
+    createdon : DateTime
+    modifiedon : DateTime
+  }
+}
+
+' ===== Classification =====
+rectangle "Classification" as CLASS {
+  class "kf_SICCode" as SIC {
+    kf_siccodeid : GUID ++
+    --
+    kf_code : Text
+    kf_name : Text
+    kf_section : Text
+    kf_kfsector : Text
+    --
+    statuscode : OptionSet
+  }
+
+  class "kf_EntityType" as ENTITYTYPE {
+    (Enum: Fund, SPV, JV, HoldCo, OpCo, Trust)
+  }
+}
+
+' ===== Related Entities =====
+rectangle "Related Entities" as RELATED {
+  class "kf_InvestorProfile" as PROFILE {
+    kf_investorprofileid : GUID ++
+    --
+    kf_accountid : Lookup → Account
+    kf_strategy : OptionSet
+    kf_targetsectors : MultiSelect
+    kf_targetgeographies : MultiSelect
+    kf_ticketsizemin : Currency
+    kf_ticketsizemax : Currency
+    kf_targetyield : Decimal
+    kf_esgmandatory : Boolean
+    kf_status : OptionSet
+    --
+    kf_lastcontactdate : Date
+    createdon : DateTime
+  }
+
+  class "kf_KYCRecord" as KYC {
+    kf_kycrecordid : GUID ++
+    --
+    kf_accountid : Lookup → Account
+    kf_kycstatus : OptionSet
+    kf_checkdate : Date
+    kf_expirydate : Date
+    --
+    createdon : DateTime
+  }
+
+  class "kf_NDA" as NDA {
+    kf_ndaid : GUID ++
+    --
+    kf_accountid : Lookup → Account
+    kf_contactid : Lookup → Contact
+    kf_ndadate : Date
+    kf_expirydate : Date
+    kf_status : OptionSet
+    --
+    createdon : DateTime
+  }
+}
+
+' ===== Relationships =====
+ACCT "1" --> "*" CONTACT : "parentcustomerid"
+ACCT "1" --> "*" ACCT : "parentaccountid"
+ACCT "1" --> "*" PROFILE : "accountid"
+ACCT "1" --> "*" KYC : "accountid"
+ACCT "1" --> "*" NDA : "accountid"
+CONTACT "1" --> "*" NDA : "contactid"
+ACCT "*" --> "1" SIC : "kf_industry"
+
+' ===== Notes =====
+note bottom of ACCT
+  Two-tier hierarchy:
+  Brand/Group (relationship, reporting)
+  Legal Entity (KYC, NDA, billing)
+  
+  kf_accountclassification:
+  • Brand/Group
+  • Legal Entity
+  • Individual
+end note
+
+note bottom of CONTACT
+  Always linked to Account.
+  Carries GDPR consent and
+  subscription data (Layer 3 EU).
+end note
+
+note right of PROFILE
+  Investment strategy sits on
+  Brand/Group account. One group
+  can hold several profiles.
+end note
+
+@enduml
