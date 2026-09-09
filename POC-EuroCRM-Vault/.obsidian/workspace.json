@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "4dc123ac03015c8c",
+        "id": "bd8de03dce1c4199",
         "type": "tabs",
         "children": [
           {
-            "id": "04de98dcf411282b",
+            "id": "e91f778dd1ff7d90",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "wiki/alternative-architecture-traditional-csharp.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "alternative-architecture-traditional-csharp"
+              "title": "New tab"
             }
           }
         ]
@@ -201,10 +197,26 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "04de98dcf411282b",
+  "active": "e91f778dd1ff7d90",
   "lastOpenFiles": [
-    "wiki/solution-overview.md",
+    "wiki/architecture-patterns-comparison.md",
+    "dynamics-export-to-golden-source.md",
+    "wiki/dynamics-export-to-golden-source.png",
     "wiki/alternative-architecture-traditional-csharp.md",
+    "wiki/architecture-overview-diagrams.md",
+    "wiki/csharp-stack-ecs-to-golden-source.png",
+    "wiki/dynamics-ecs-messagebus-to-golden-source.png",
+    "wiki/CSharp Stack ECS Message Bus to Golden Source.png",
+    "wiki/Dynamics ECS Message Bus to Golden Source.png",
+    "wiki/Dynamics Export to Golden Source.png",
+    "wiki/dynamics-ecs-messagebus-to-golden-source.puml",
+    "wiki/data-model-core-tables-schema.puml",
+    "csharp-stack-ecs-to-golden-source.md",
+    "dynamics-ecs-messagebus-to-golden-source.md",
+    "wiki/csharp-stack-ecs-to-golden-source.puml",
+    "wiki/dynamics-export-to-golden-source.puml",
+    "copilot/copilot-conversations/agent__can_you_create_a_new_md_page._The_page_should@20260909_101242.md",
+    "wiki/solution-overview.md",
     "copilot/copilot-conversations/agent__can_you_look_at_the_wiki_and_create_a_single@20260908_151441.md",
     "POC/infra/README.md",
     "raw/~$roCRM - Dynamics365AndPowerPlatformGuidelines (AutoRecovered).docx",
@@ -214,13 +226,9 @@
     "POC/infra/sql",
     "POC/infra/deploy.ps1",
     "POC/infra/main.parameters.json",
-    "POC/infra/main.bicep",
-    "POC/infra",
-    "POC",
     "copilot/copilot-conversations/agent__I_need_to_create_a_simple_POC_of_this_application,@20260907_111943.md",
     "wiki/business-context.md",
     "copilot/skills/openartifacts-publish/SKILL.md",
-    "copilot/skills/openartifacts-publish/openartifacts-publish.ps1",
     "copilot/skills/openartifacts-publish/themes/research-memo.md",
     "wiki/problem-statement.md",
     "wiki/wip-data-model.md",
@@ -232,13 +240,6 @@
     "wiki/architecture-business.md",
     "wiki/solution-package-model.md",
     "wiki/key-stakeholders.md",
-    "copilot/copilot-conversations/agent__can_you_regenerate_the_output_document_without_the_Status_Draft@20260902_161116.md",
-    "wiki/architecture-overview-diagrams.md",
-    "copilot/copilot-conversations/agent__using_the_wibble_word_document_as_a_template_can_you@20260902_102310.md",
-    "wiki/architecture-key-components.md",
-    "wiki/architecture-data.md",
-    "dashboard.md",
-    "wiki/solution-scope-in-scope.md",
     "Untitled.canvas"
   ]
 }

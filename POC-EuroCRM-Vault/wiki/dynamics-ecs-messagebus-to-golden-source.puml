@@ -1,0 +1,84 @@
+@startuml Dynamics ECS Message Bus to Golden Source
+title Dynamics 365 — ECS Message Bus to Golden Source DB
+
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam defaultFontName Segoe UI
+skinparam defaultFontSize 12
+skinparam backgroundColor #FEFEFE
+
+package "Microsoft 365 & Dynamics Platform" as DYN #E3F2FD {
+  component "Outlook\n/ Teams" as OL
+  component "SharePoint" as SP
+  component "Power BI" as PBI
+  component "Copilot\nfor Sales" as CP
+
+  rectangle "Dynamics 365 Sales\n+ Dataverse" as D365 {
+    rectangle "Core Entities\nClient, Property,\nDeal, WIP" as ENTITIES
+    rectangle "Business Process\nFlows (BPFs)" as BPF
+    rectangle "Security Model\nRBAC + BU\nHierarchy" as SEC
+  }
+}
+
+package "Power Platform Integration" as PPINT #FFF3E0 {
+  rectangle "Dataverse Plugin /\nChange Tracking" as PLUGIN
+  rectangle "Power Automate\nFlows" as PA
+  rectangle "ECS Publisher\n(Major Entity\nChange Events)" as ECSPUB
+}
+
+package "ECS Message Bus" as ECSB #FCE4EC {
+  rectangle "Enterprise\nConnectivity\nServices" as ECS
+  rectangle "Topic: Entity\nChange Events" as TOPIC
+  rectangle "Subscriptions" as SUB
+  rectangle "Dead Letter\nQueue" as DLQ
+}
+
+package "Consumer Tier" as CONS #E0F7FA {
+  rectangle "Change Event\nConsumer\nWorker Service" as WORKER
+  rectangle "Event\nProcessing &\nTransform" as PROC
+}
+
+package "Golden Source" as GS #E8F5E9 {
+  database "Golden Source\nDatabase\n(PostgreSQL / SQL Server)" as DB
+  rectangle "Master Data\nStore" as MDS
+}
+
+' Platform connections
+OL -down-> D365
+SP -down-> D365
+CP -down-> ENTITIES
+BPF -right-> ENTITIES : "Orchestrates"
+
+' Change capture
+ENTITIES -down-> PLUGIN : "Entity\nChange\nNotification"
+PLUGIN -down-> PA
+PA -down-> ECSPUB
+ECSPUB -down-> ECS : "Publishes\nChange Events"
+
+' Message bus
+ECS -down-> TOPIC
+TOPIC -down-> SUB
+SUB -down-> DLQ : "Failed\nMessages"
+
+' Consumer
+SUB -down-> WORKER : "Subscribes"
+WORKER -down-> PROC
+PROC -down-> DB : "Upsert\nEntity Changes"
+
+' Golden Source
+DB -right-> MDS
+
+note bottom of ECSB
+  ECS = Enterprise Connectivity Services
+  Decouples Dynamics from downstream
+  Event-driven, near-real-time sync
+end note
+
+note right of WORKER
+  Consumer runs as a hosted
+  background service (.NET Worker)
+  Polls or push-subscribes to ECS
+  Applies transform + upsert logic
+end note
+
+@enduml
