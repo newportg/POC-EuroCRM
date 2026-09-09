@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_f7a9343a0ffe1SDHS1pruGk6Xz"
 agentLabel: "ECS Message Bus to Golden Source DB diagrams"
-usage: '{"usedTokens":40467,"contextWindow":200000,"updatedAt":1788946995033}'
+usage: '{"usedTokens":51664,"contextWindow":200000,"updatedAt":1788949695252}'
 tags:
   - copilot-conversation
 ---
@@ -73,3 +73,65 @@ It covers how Outlook email gets intercepted and written back to the CRM as enga
 
 I mapped the content onto both designs in the wiki — the Dataverse path (`Outlook → Dataverse` Power Automate) from [[architecture-application]] and the C#/Graph API path from [[alternative-architecture-traditional-csharp]] — since both are two viable ways to answer the same question depending on which design wins at TDA review.
 [Timestamp: 2026/09/09 10:40:27]
+
+**user**: I need a page which highlights the Plus/minuses of the different architectural approaches for a C level meeting
+[Timestamp: 2026/09/09 11:24:47]
+
+**ai**: I have a clear picture of the two main architectural approaches: the Power Platform/Dataverse design (current) and the traditional C#/PostgreSQL stack (alternative), and the integration patterns. Let me create a C-level oriented decision page. This should be concise, executive-styled, focused on business value, risk, cost, timeline, and trade-offs — not engineering detail.
+
+Let me create the page.
+
+Now I have everything I need. Let me write the executive-level decision page.
+
+Created the page: [[architecture-approach-executive-summary]]
+
+It's tailored for a C-level read:
+- **One-page framing** — both options deliver the same core outcome; the difference is business operating model, not capability
+- **An at-a-glance table** for the key differences (cost, build effort, lock-in, skills, compliance)
+- **Option A (Power Platform / Dataverse)** — pluses and minuses
+- **Option B (C# / PostgreSQL)** — pluses and minuses
+- **The key tension** — licensing/build cost, low-code velocity vs code discipline, buying vs owning
+- **A commercial/integration angle** linking to the three Golden Source patterns, noting the ECS bus is a shared dependency either way
+- **A comparison table** across dimensions
+- **Recommendation framing** — explicitly reframed as a business operating-model decision (buy vs build) for TDA review, not a purely technical one
+
+It pulls from [[alternative-architecture-traditional-csharp]], [[power-apps-rationale]], [[business-capabilities]], and [[architecture-patterns-comparison]] and links back to each.
+[Timestamp: 2026/09/09 11:24:47]
+
+**user**: can you create a index page which correctly links all of the wiki pages under appropiate headings
+[Timestamp: 2026/09/09 11:26:35]
+
+**ai**: I need to understand the structure of these notes to categorize them correctly. Let me look at several to understand their purpose and any parent/status metadata.
+
+The solution-overview is essentially the index/SOD already. But the user wants a dedicated index page linking all wiki pages under appropriate headings. The solution-overview itself references most notes, so the natural structure is to organize the wiki by the SOD's own sections plus the architectural-approach notes I've created.
+
+Let me gather the frontmatter (parent/status/tags/heading) of the notes I don't yet know clearly to categorize them accurately. Let me batch-read the first lines of the remaining notes.
+
+I now have a full map of all 48 wiki notes and their relationships. Let me create an index page that organizes them under meaningful headings matching the SOD structure, applying Closed-Status the notes I created (architecture-approach-executive-summary, outlook-email-interception) under appropriate headings.
+
+Let me create the index page covering all pages.
+
+I noticed I listed [[expected-benefits]] twice (once under Business Case and once under Cost & Benefits). Let me remove the duplicate from Cost & Benefits since it logically belongs under Business Case, keeping each note once.
+
+Now let me verify the index covers all 48 notes (so nothing is missing). Let me cross-check the list of notes against those I linked.
+
+The only note not linked is `index` itself (the page I just created), which is expected — it shouldn't self-reference. All 48 other wiki notes are covered.
+
+The index page is complete: [[index]].
+
+It organizes all 48 wiki notes under these headings:
+
+- **Overview & Entry** — [[solution-overview]], [[problem-statement]], [[business-context]], [[glossary]]
+- **Business Case** — goals, capabilities, benefits, stakeholders, KPIs
+- **Scope** — in/out of scope, CRM Lite MVP, implementation phases
+- **Requirements** — functional/non-functional, dependencies, risks
+- **Solution Architecture** (Overview / Data Model / Taxonomies) — all `architecture-*`, `data-model-*`, and `taxonomy-*` notes
+- **Enterprise Alignment** — target state, principles compliance
+- **Approach & Decision Material** — including the C-level summary, platform rationale, alternative C# stack, Golden Source patterns, and Outlook interception (the pages I added)
+- **Compliance & Governance** — compliance, approval, oversight
+- **Implementation Roadmap** — phases, timelines, dependencies
+- **Cost & Benefits** — cost estimates (with a pointer back to benefits)
+- A short **maintenance note** describing how new notes should slot into the index, following the `AGENTS.md` conventions
+
+The index uses wikilinks everywhere, validates that all 49 files are accounted for (the only non-linked one being the index itself, which self-linking would be redundant), and is set with `parent: [[solution-overview]]`.
+[Timestamp: 2026/09/09 11:26:35]
