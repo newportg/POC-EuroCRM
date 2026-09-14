@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/architecture-patterns-comparison.md",
+                "file": "wiki/business-context.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "architecture-patterns-comparison"
+              "title": "business-context"
             }
           },
           {
@@ -49,8 +49,7 @@
               "title": "index"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -230,8 +229,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "edb446235674712b",
+  "active": "e91f778dd1ff7d90",
   "lastOpenFiles": [
+    "wiki/business-capabilities.md",
+    "wiki/architecture-patterns-comparison.md",
+    "wiki/index.md",
     "devops/solution-scope-out-of-scope.md",
     "devops/wip-data-model.md",
     "devops/taxonomy-sic-kf.md",
@@ -259,9 +261,6 @@
     "devops/key-stakeholders.md",
     "devops/implementation-phases.md",
     "devops/governance-approval.md",
-    "devops/crm-lite-mvp-scope.md",
-    "devops/governance-oversight.md",
-    "devops/functional-non-functional-requirements.md",
     "devops/dynamics-export-to-golden-source.puml",
     "devops/dynamics-export-to-golden-source.png",
     "devops/dynamics-ecs-messagebus-to-golden-source.puml",
