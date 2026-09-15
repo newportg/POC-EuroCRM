@@ -90,7 +90,7 @@ The master index for the European CRM solution wiki. This page links every note 
 
 | Note | Purpose |
 | ---- | ------- |
-| [[architecture-approach-executive-summary]] | Plus/minus of the approaches for a C-level read |
+| [[architecture-approach-executive-summary]] | Plus/minus of the three architectural approaches without preference |
 | [[power-apps-rationale]] | Platform decision — Power Apps / Dataverse rationale |
 | [[alternative-architecture-traditional-csharp]] | Alternative — traditional C# / PostgreSQL stack |
 | [[solution-options]] | Solution options and trade-offs analysis |

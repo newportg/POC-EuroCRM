@@ -13,7 +13,7 @@ tags:
 
 # Architectural Approach Comparison — Executive Summary
 
-A one-page read for a C-level audience to weigh the three architectural approaches for the European CRM programme. All three deliver the same core outcome — a shared client, contact, property and engagement foundation across service lines and countries (see [[business-capabilities]]) — but with very different cost, risk, and operating profiles.
+This document proposes three architectural approaches for the European CRM programme. All three deliver the same core outcome — a shared client, contact, property and engagement foundation across service lines and countries (see [[business-capabilities]]) — but with different cost, risk, and operating profiles. The pluses and minuses of each are set out below without preference; the choice is a business decision to be weighed by the programme stakeholders.
 
 The three options are the current **Microsoft Power Platform / Dataverse** design, a hybrid **Power Platform with a SQL/PostgreSQL relational database**, and the alternative **traditional C# / PostgreSQL** stack.
 
@@ -85,16 +85,16 @@ An alternative to the same outcome using the firm's existing engineering stack �
 
 ## The key tension
 
-- Platform licensing cost **now** vs. build and operating effort **now**.
-- Velocity of low-code change **vs.** the discipline of a first-party codebase.
-- Buying a managed capability **vs.** owning the full stack ourselves.
-- The hybrid option (B) sits in the middle: lower platform cost than Dataverse, but with the complexity of running two platforms and working around feature gaps.
+- Platform licensing cost vs. build and operating effort.
+- Velocity of low-code change vs. the discipline of a first-party codebase.
+- Buying a managed capability vs. owning the full stack.
+- Option B sits between the two: it avoids Dataverse data licensing but requires running two platforms and working around feature limits.
 
 The eight-entity fit gap that argues for a *custom* model applies to all three options — the real question is whether that custom model is built **on** Dataverse (A), on a **relational database behind Power Apps** (B), or as **our own code** (C).
 
 ## Commercial / integration angle
 
-For the C-suite, the integration future also matters. Three patterns exist for getting entity data to the Golden Source (compared in [[architecture-patterns-comparison]]):
+Integration to the Golden Source also varies by option, and three patterns exist for getting entity data there (compared in [[architecture-patterns-comparison]]):
 
 - **Direct batch export** — simplest, near-daily freshness
 - **Dynamics + ECS message bus** — near-real-time, decouples consumers
@@ -117,13 +117,13 @@ Option C does not eliminate the need for the enterprise ECS bus — it changes w
 | Native Microsoft integrations | Out of the box | Partial — some require workarounds | Rebuilt |
 | Operating model | Lease the platform | Lease UI, own data layer | Own the stack |
 
-## Recommendation framing
+## Decision framing
 
 This is a **business operating-model decision**, not purely technical. It comes down to:
 
-- **Do we prefer to buy a managed platform** (Option A) for speed and lower current spend on people, accepting licence cost and lock-in?
-- **Or take the middle path** (Option B) — keeping the Power Apps UI but moving data to a relational database we control, accepting hybrid complexity and feature gaps in exchange for lower platform cost and data portability?
-- **Or invest engineering effort** (Option C) to reuse what we already have, eliminate per-seat licensing, and keep full control?
+- **Buy a managed platform** (Option A) for speed and lower current spend on people, accepting licence cost and lock-in.
+- **Take the middle path** (Option B) — keeping the Power Apps UI but moving data to a relational database the firm controls, accepting hybrid complexity and feature gaps in exchange for lower platform cost and data portability.
+- **Invest engineering effort** (Option C) to reuse existing capability, eliminate per-seat licensing, and keep full control.
 
 The decision should be made at TDA review weighing these pluses and minuses against the programme's cost envelope, delivery timeline, and appetite for long-term platform commitment.
 
