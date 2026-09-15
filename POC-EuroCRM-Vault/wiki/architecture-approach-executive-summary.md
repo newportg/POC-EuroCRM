@@ -13,22 +13,22 @@ tags:
 
 # Architectural Approach Comparison — Executive Summary
 
-A one-page read for a C-level audience to weigh the two architectural approaches for the European CRM programme. Both deliver the same core outcome — a shared client, contact, property and engagement foundation across service lines and countries (see [[business-capabilities]]) — but with very different cost, risk, and operating profiles.
+A one-page read for a C-level audience to weigh the three architectural approaches for the European CRM programme. All three deliver the same core outcome — a shared client, contact, property and engagement foundation across service lines and countries (see [[business-capabilities]]) — but with very different cost, risk, and operating profiles.
 
-The two options are the current **Microsoft Power Platform / Dataverse** design and the alternative **traditional C# / PostgreSQL** stack.
+The three options are the current **Microsoft Power Platform / Dataverse** design, a hybrid **Power Platform with a SQL/PostgreSQL relational database**, and the alternative **traditional C# / PostgreSQL** stack.
 
 ## The choice at a glance
 
-| | Option A — Power Platform / Dataverse | Option B — C# / PostgreSQL |
-| --- | ------------------------------------- | -------------------------- |
-| **What it is** | Build the custom CRM model on Microsoft's low-code platform (Dataverse + Power Apps) | Build the same custom model as first-party code on the firm's existing .NET stack and PostgreSQL |
-| **Cost profile** | Ongoing per-user / per-app licensing | Infrastructure cost only; no per-user platform license |
-| **Build effort** | Lower-code, faster to stand up | Full build/test/deploy cycle |
-| **Vendor lock-in** | High — Microsoft platform | Low — first-party, portable code |
-| **Using existing skills** | New Power Platform skill set | Existing in-house C# / .NET / database team |
-| **Compliance posture** | EU data centres, platform-managed | EU data centres, fully self-controlled |
+| | Option A — Power Platform / Dataverse | Option B — Power Platform + SQL Database | Option C — C# / PostgreSQL |
+| --- | ------------------------------------- | --------------------------------------- | -------------------------- |
+| **What it is** | Build the custom CRM model on Microsoft's low-code platform (Dataverse + Power Apps) | Build the UI on Power Apps but store data in a relational database (SQL Server or PostgreSQL) via virtual tables or direct connectors | Build the same custom model as first-party code on the firm's existing .NET stack and PostgreSQL |
+| **Cost profile** | Ongoing per-user / per-app licensing for Dataverse + Power Platform | No Dataverse data licensing; database hosting cost + Power Apps per-user for UI only | Infrastructure cost only; no per-user platform license |
+| **Build effort** | Lower-code, faster to stand up | Medium — UI is low-code, database schema and integration layer require engineering | Full build/test/deploy cycle |
+| **Vendor lock-in** | High — Microsoft platform | Medium — Power Apps UI layer is Microsoft-owned, but data is portable | Low — first-party, portable code |
+| **Using existing skills** | New Power Platform skill set | Mixed — Power Platform for UI, existing DBA/.NET for database and integration | Existing in-house C# / .NET / database team |
+| **Compliance posture** | EU data centres, platform-managed | EU database hosting, self-controlled data; platform layer Microsoft-managed | EU data centres, fully self-controlled |
 
-Both options keep all data in EU regions to satisfy GDPR, CNIL, and BDSG.
+All three options keep all data in EU regions to satisfy GDPR, CNIL, and BDSG.
 
 ## Option A — Microsoft Power Platform / Dataverse
 
@@ -48,7 +48,25 @@ The current design. The custom EuroCRM data model is built on Dataverse with Pow
 - **Fit gap** — 8 of 11 core entities have no packaged equivalent, so a large part of the model is custom regardless
 - **Platform constraints** — capacity and governance limits on what can be built, tuned, and debugged
 
-## Option B — Traditional C# / PostgreSQL
+## Option B — Power Platform + SQL/PostgreSQL Database
+
+A hybrid approach: the Power Apps model-driven UI remains the front-end, but data is stored in a relational database (SQL Server or PostgreSQL) instead of Dataverse, connected via virtual tables, direct connectors, or a custom API layer.
+
+**Pluses:**
+- **No Dataverse data licensing** — eliminates the per-entity / per-user data storage cost while keeping the Power Apps UI
+- **Data portability** — the relational database is fully portable and under the firm's control
+- **Reuse existing DBA skills** — the database team manages schema, indexing, and performance directly
+- **Lower platform cost than Option A** — Power Apps per-user licensing only; no Dataverse tier charges
+- **Faster UI than Option C** — model-driven apps and forms ship without a full code build
+
+**Minuses:**
+- **Hybrid complexity** — two platforms to integrate: Power Platform UI layer + a separate database with its own hosting, backup, and DR
+- **Feature gaps** — virtual tables and direct connectors do not support all Dataverse features (Business Process Flows, certain rollups, native audit, complex calculated fields may require workarounds)
+- **Power Automate limitations** — Dataverse-specific triggers and actions do not fire against a SQL backend; flows must use SQL polling or custom connectors instead
+- **Mixed skill requirement** — the team needs both Power Platform capability and database/integration engineering
+- **Partial lock-in** — the UI layer remains Microsoft-owned; the data layer does not
+
+## Option C — Traditional C# / PostgreSQL
 
 An alternative to the same outcome using the firm's existing engineering stack — ASP.NET Core, PostgreSQL 16, and standard integration practices.
 
@@ -70,8 +88,9 @@ An alternative to the same outcome using the firm's existing engineering stack �
 - Platform licensing cost **now** vs. build and operating effort **now**.
 - Velocity of low-code change **vs.** the discipline of a first-party codebase.
 - Buying a managed capability **vs.** owning the full stack ourselves.
+- The hybrid option (B) sits in the middle: lower platform cost than Dataverse, but with the complexity of running two platforms and working around feature gaps.
 
-The eight-entity fit gap that argues for a *custom* model applies to both options — the real question is whether that custom model is built **on** Dataverse or as **our own code**.
+The eight-entity fit gap that argues for a *custom* model applies to all three options — the real question is whether that custom model is built **on** Dataverse (A), on a **relational database behind Power Apps** (B), or as **our own code** (C).
 
 ## Commercial / integration angle
 
@@ -79,38 +98,39 @@ For the C-suite, the integration future also matters. Three patterns exist for g
 
 - **Direct batch export** — simplest, near-daily freshness
 - **Dynamics + ECS message bus** — near-real-time, decouples consumers
-- **C# + ECS message bus** — the native fit for Option B; Outbox Pattern guarantees delivery
+- **C# + ECS message bus** — the native fit for Option C; Outbox Pattern guarantees delivery
 
-Option B does not eliminate the need for the enterprise ECS bus — it changes who publishes to it (a background worker instead of a platform plugin). This is a shared dependency either way and should be confirmed early (see the [[alternative-architecture-traditional-csharp|open questions]]).
+Option C does not eliminate the need for the enterprise ECS bus — it changes who publishes to it (a background worker instead of a platform plugin). This is a shared dependency either way and should be confirmed early (see the [[alternative-architecture-traditional-csharp|open questions]]).
 
 ## Comparison table
 
-| Dimension | Option A — Power Platform | Option B — C# / PostgreSQL |
-| --------- | ------------------------- | -------------------------- |
-| Core outcome | Same | Same |
-| Time to first value | Faster | Slower |
-| Recurring cost | Per-user / per-app licenses | Infrastructure only |
-| Upfront effort | Low-code config | Full engineering |
-| Skill availability | New Microsoft skills | Existing in-house team |
-| Vendor lock-in | High | Low |
-| Data residency | EU (platform-allocated) | EU (self-controlled) |
-| Control & debuggability | Platform-limited | Full |
-| Native Microsoft integrations | Out of the box | Rebuilt |
-| Operating model | Lease the platform | Own the stack |
+| Dimension | Option A — Power Platform | Option B — Power Platform + SQL | Option C — C# / PostgreSQL |
+| --------- | ------------------------- | ------------------------------- | -------------------------- |
+| Core outcome | Same | Same | Same |
+| Time to first value | Fastest | Medium | Slowest |
+| Recurring cost | Per-user / per-app licenses + Dataverse | Power Apps per-user + database hosting | Infrastructure only |
+| Upfront effort | Low-code config | UI config + DB schema & integration | Full engineering |
+| Skill availability | New Microsoft skills | Mixed: Power Platform + existing DBA | Existing in-house team |
+| Vendor lock-in | High | Medium | Low |
+| Data residency | EU (platform-allocated) | EU (self-controlled DB, platform layer MS) | EU (self-controlled) |
+| Control & debuggability | Platform-limited | Partial — DB full, UI platform-limited | Full |
+| Native Microsoft integrations | Out of the box | Partial — some require workarounds | Rebuilt |
+| Operating model | Lease the platform | Lease UI, own data layer | Own the stack |
 
 ## Recommendation framing
 
 This is a **business operating-model decision**, not purely technical. It comes down to:
 
 - **Do we prefer to buy a managed platform** (Option A) for speed and lower current spend on people, accepting licence cost and lock-in?
-- **Or invest engineering effort** (Option B) to reuse what we already have, eliminate per-seat licensing, and keep full control?
+- **Or take the middle path** (Option B) — keeping the Power Apps UI but moving data to a relational database we control, accepting hybrid complexity and feature gaps in exchange for lower platform cost and data portability?
+- **Or invest engineering effort** (Option C) to reuse what we already have, eliminate per-seat licensing, and keep full control?
 
 The decision should be made at TDA review weighing these pluses and minuses against the programme's cost envelope, delivery timeline, and appetite for long-term platform commitment.
 
 ## Related
 
 - [[solution-overview]] — Parent document; current (Dataverse) design
-- [[alternative-architecture-traditional-csharp]] — Full Option B design with cost/operability detail
+- [[alternative-architecture-traditional-csharp]] — Full Option C design with cost/operability detail
 - [[power-apps-rationale]] — The platform decision Option A is based on
-- [[business-capabilities]] — The capability model both options must satisfy
-- [[architecture-patterns-comparison]] — Integration to Golden Source, shared by both options
+- [[business-capabilities]] — The capability model all three options must satisfy
+- [[architecture-patterns-comparison]] — Integration to Golden Source, shared by all options
