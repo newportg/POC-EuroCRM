@@ -40,5 +40,5 @@ This option is introduced (at a high level) in the [[architecture-approach-execu
 
 ## Related
 
-- [[architecture-approach-executive-summary]] — Three-way option comparison (parent decision material)
+- [[architecture-approach-executive-summary]] — Four-way option comparison (parent decision material)
 - [[solution-overview]] — Parent document; current (Dataverse) design

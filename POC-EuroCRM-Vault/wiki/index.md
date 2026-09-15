@@ -12,6 +12,7 @@ The master index for the European CRM solution wiki. The wiki is split between *
 - `wiki/power-platform-dataverse/` — Option A: Power Platform / Dataverse (the current design)
 - `wiki/power-platform-sql/` — Option B: Power Platform + SQL/PostgreSQL database (hybrid)
 - `wiki/csharp-postgresql/` — Option C: Traditional C# / PostgreSQL (alternative)
+- `wiki/dynamics-365-sales/` — Option D: Packaged Dynamics 365 Sales (considered, detailed design TBD)
 
 The authoritative parent document is [[solution-overview]]; this index is the navigation surface for that body of work.
 
@@ -107,12 +108,20 @@ Alternative stack, detailed in `wiki/csharp-postgresql/`.
 | ---- | ------- |
 | [[csharp-postgresql/alternative-architecture-traditional-csharp]] | Full Option C design with cost/operability detail |
 
+### Option D — Dynamics 365 Sales
+
+Packaged product, tracked in `wiki/dynamics-365-sales/`.
+
+| Note | Purpose |
+| ---- | ------- |
+| [[dynamics-365-sales/option-d-dynamics-365-sales]] | Option D overview, trade-offs, and open questions (detailed design TBD) |
+
 ## Approach & Decision Material
 
 | Note | Purpose |
 | ---- | ------- |
-| [[architecture-approach-executive-summary]] | Plus/minus of the three architectural approaches without preference |
-| [[architecture-approach-executive-summary-one-page]] | One-page A4 summary of the three approaches for decision review |
+| [[architecture-approach-executive-summary]] | Plus/minus of the four architectural approaches without preference |
+| [[architecture-approach-executive-summary-one-page]] | One-page A4 summary of the four approaches for decision review |
 | [[architecture-patterns-comparison]] | Integration patterns to Golden Source |
 | [[solution-options]] | Solution options and trade-offs analysis |
 
