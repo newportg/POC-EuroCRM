@@ -21,20 +21,20 @@ pie title Task Completion
 ### PDF Processing — Completed
 
 - [x] Create [[wiki/problem-statement]] from PDF Section I #task
-- [x] Create [[wiki/solution-package-model]] from PDF layered architecture #task
+- [x] Create [[wiki/power-platform-dataverse/solution-package-model]] from PDF layered architecture #task
 - [x] Create [[wiki/crm-lite-mvp-scope]] from PDF MVP scope #task
 - [x] Create [[wiki/client-data-model]] from PDF Section II #task
 - [x] Create [[wiki/property-data-model]] from PDF Section II #task
 - [x] Create [[wiki/wip-data-model]] from PDF Section II #task
 - [x] Create [[wiki/capital-markets-data-model]] from PDF Section III #task
-- [x] Create [[wiki/power-apps-rationale]] from PDF architecture overview #task
+- [x] Create [[wiki/power-platform-dataverse/power-apps-rationale]] from PDF architecture overview #task
 - [x] Create [[wiki/taxonomy-mappings]] from PDF appendices #task
 - [x] Create [[wiki/taxonomy-sic-kf]] — full SIC mapping #task
 - [x] Create [[wiki/taxonomy-hilucs-kf]] — full HILUCS mapping #task
 - [x] Update [[wiki/business-context]] with problem statement #task
 - [x] Update [[wiki/business-goals]] with MVP success criteria #task
-- [x] Update [[wiki/architecture-key-components]] with layer model #task
-- [x] Update [[wiki/architecture-data]] with data domains #task
+- [x] Update [[wiki/power-platform-dataverse/architecture-key-components]] with layer model #task
+- [x] Update [[wiki/power-platform-dataverse/architecture-data]] with data domains #task
 - [x] Move raw/European CRM Architecture Review 2.pdf to archive #task
 
 ### Excel Processing — Completed
@@ -47,7 +47,7 @@ pie title Task Completion
 
 ### Architecture Diagrams — Completed
 
-- [x] Create [[wiki/architecture-overview-diagrams]] with PlantUML diagrams #task
+- [x] Create [[wiki/power-platform-dataverse/architecture-overview-diagrams]] with PlantUML diagrams #task
 
 ### Architecture Sections — Completed
 
@@ -75,8 +75,8 @@ pie title Task Completion
 
 ### Architecture Compliance — Completed
 
-- [x] Populate [[wiki/architecture-principles-compliance]] with principles mapping #task
-- [x] Populate [[wiki/architecture-target-state]] with target state architecture #task
+- [x] Populate [[wiki/power-platform-dataverse/architecture-principles-compliance]] with principles mapping #task
+- [x] Populate [[wiki/power-platform-dataverse/architecture-target-state]] with target state architecture #task
 
 ### Solution Overview Document — Completed
 

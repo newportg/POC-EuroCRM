@@ -311,7 +311,7 @@ def extract_section(content: str, heading: str) -> str:
 def render_diagrams(output_dir: Path) -> dict[str, Path]:
     if not PLANTUML_JAR.exists():
         raise FileNotFoundError(f"PlantUML jar not found: {PLANTUML_JAR}")
-    puml_files = sorted(WIKI_DIR.glob("*.puml"))
+    puml_files = sorted(WIKI_DIR.rglob("*.puml"))
     if not puml_files:
         return {}
     subprocess.run(
@@ -376,7 +376,11 @@ def strip_metadata_lines(content: str) -> str:
 def add_source(doc: Document, filename: str, image_dir: Path, suppress_heading: str | None = None) -> None:
     source_path = WIKI_DIR / filename
     if not source_path.exists():
-        return
+        # Notes may live in approach sub-folders; resolve by filename across the wiki tree
+        matches = list(WIKI_DIR.rglob(filename))
+        if not matches:
+            return
+        source_path = matches[0]
     content = source_path.read_text(encoding="utf-8")
     content = strip_metadata_lines(content)
     if suppress_heading:
@@ -422,7 +426,7 @@ def create_document(image_dir: Path) -> Path:
         list_style = "List Paragraph" if any(item.name == "List Paragraph" for item in doc.styles) else "Normal"
         doc.add_paragraph(f"• {filename}", style=list_style)
 
-    remaining = sorted(path.name for path in WIKI_DIR.glob("*.md") if path.name not in used)
+    remaining = sorted(path.name for path in WIKI_DIR.rglob("*.md") if path.name not in used)
     if remaining:
         doc.add_heading("Appendix: Additional Wiki Notes", level=1)
         for filename in remaining:

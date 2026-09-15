@@ -26,9 +26,9 @@ Shows how data flows through the system and external integrations.
 
 ## Diagram Sources
 
-- `wiki/architecture-diagram.puml` — Full solution architecture
-- `wiki/architecture-layers.puml` — Layered model
-- `wiki/architecture-dataflow.puml` — Data flow and integrations
+- `wiki/power-platform-dataverse/architecture-diagram.puml` — Full solution architecture
+- `wiki/power-platform-dataverse/architecture-layers.puml` — Layered model
+- `wiki/power-platform-dataverse/architecture-dataflow.puml` — Data flow and integrations
 
 ## Status
 

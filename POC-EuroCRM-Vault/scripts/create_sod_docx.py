@@ -21,10 +21,14 @@ OUTPUT_FILE = VAULT_ROOT / "archive" / "EuroCRM_Solution_Overview_Document_v2.do
 def read_wiki_file(filename):
     """Read a wiki file and return its content."""
     filepath = WIKI_DIR / filename
-    if filepath.exists():
-        with open(filepath, "r", encoding="utf-8") as f:
-            return f.read()
-    return ""
+    if not filepath.exists():
+        # Notes may live in approach sub-folders; resolve by filename across the wiki tree
+        matches = list(WIKI_DIR.rglob(filename))
+        if not matches:
+            return ""
+        filepath = matches[0]
+    with open(filepath, "r", encoding="utf-8") as f:
+        return f.read()
 
 
 def parse_markdown_table(content, table_name):

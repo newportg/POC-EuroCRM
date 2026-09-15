@@ -2,12 +2,18 @@
 parent:"[[solution-overview]]"
 status: Index
 author: Gary Newport
-date: 09/09/2026
+date: 15/09/2026
 ---
 
 # EuroCRM Wiki Index
 
-The master index for the European CRM solution wiki. This page links every note in `/wiki` under the appropriate topic heading. The authoritative parent document is [[solution-overview]]; this index is the navigation surface for that body of work.
+The master index for the European CRM solution wiki. The wiki is split between **general business material** (business case, scope, requirements, governance, roadmap, and the shared data models) at the top level, and **three architecture-implementation sub-folders** — one per approach proposed in the [[architecture-approach-executive-summary]].
+
+- `wiki/power-platform-dataverse/` — Option A: Power Platform / Dataverse (the current design)
+- `wiki/power-platform-sql/` — Option B: Power Platform + SQL/PostgreSQL database (hybrid)
+- `wiki/csharp-postgresql/` — Option C: Traditional C# / PostgreSQL (alternative)
+
+The authoritative parent document is [[solution-overview]]; this index is the navigation surface for that body of work.
 
 ## Overview & Entry
 
@@ -46,21 +52,13 @@ The master index for the European CRM solution wiki. This page links every note 
 | [[dependencies-and-constraints]] | Dependencies and constraints |
 | [[risks-and-issues]] | Risk register and issues log |
 
-## Solution Architecture
-
-### Overview
+## Business Architecture
 
 | Note | Purpose |
 | ---- | ------- |
-| [[architecture-overview-diagrams]] | High-level architecture diagrams |
-| [[architecture-key-components]] | Component inventory |
-| [[solution-package-model]] | L0–L7 layered package model |
-| [[architecture-business]] | Business architecture |
-| [[architecture-application]] | Application architecture and integrations |
-| [[architecture-data]] | Data architecture overview |
-| [[architecture-technology]] | Technology, hosting, and security |
+| [[architecture-business]] | Business architecture — shared foundation and service-line builds |
 
-### Data Model
+## Shared Data Model
 
 | Note | Purpose |
 | ---- | ------- |
@@ -70,32 +68,52 @@ The master index for the European CRM solution wiki. This page links every note 
 | [[property-data-model]] | Property — site, property, deal |
 | [[capital-markets-data-model]] | Capital Markets deal lifecycle (8-stage) |
 | [[wip-data-model]] | Work in progress and revenue tracking |
-
-### Taxonomies
-
-| Note | Purpose |
-| ---- | ------- |
 | [[taxonomy-mappings]] | Taxonomy mappings overview |
 | [[taxonomy-sic-kf]] | SIC to KF client sector mapping |
 | [[taxonomy-hilucs-kf]] | HILUCS to KF asset class mapping |
 
-## Enterprise Alignment
+## Architecture Approaches
+
+### Option A — Power Platform / Dataverse
+
+The current design, detailed in `wiki/power-platform-dataverse/`.
 
 | Note | Purpose |
 | ---- | ------- |
-| [[architecture-target-state]] | Target state alignment to standards/PADs |
-| [[architecture-principles-compliance]] | Mapping to CTO architecture principles |
+| [[power-platform-dataverse/architecture-overview-diagrams]] | High-level architecture diagrams |
+| [[power-platform-dataverse/architecture-key-components]] | Component inventory |
+| [[power-platform-dataverse/solution-package-model]] | L0–L7 layered package model |
+| [[power-platform-dataverse/architecture-application]] | Application architecture and integrations |
+| [[power-platform-dataverse/architecture-data]] | Data architecture overview |
+| [[power-platform-dataverse/architecture-technology]] | Technology, hosting, and security |
+| [[power-platform-dataverse/architecture-target-state]] | Target state alignment to standards/PADs |
+| [[power-platform-dataverse/architecture-principles-compliance]] | Mapping to CTO architecture principles |
+| [[power-platform-dataverse/power-apps-rationale]] | Platform decision — Power Apps / Dataverse rationale |
+| [[power-platform-dataverse/outlook-email-interception-engagement-history]] | Outlook email interception → engagement history |
+
+### Option B — Power Platform + SQL Database
+
+Hybrid approach, tracked in `wiki/power-platform-sql/`.
+
+| Note | Purpose |
+| ---- | ------- |
+| [[power-platform-sql/option-b-power-platform-sql]] | Option B overview and open questions (detailed design TBD) |
+
+### Option C — C# / PostgreSQL
+
+Alternative stack, detailed in `wiki/csharp-postgresql/`.
+
+| Note | Purpose |
+| ---- | ------- |
+| [[csharp-postgresql/alternative-architecture-traditional-csharp]] | Full Option C design with cost/operability detail |
 
 ## Approach & Decision Material
 
 | Note | Purpose |
 | ---- | ------- |
 | [[architecture-approach-executive-summary]] | Plus/minus of the three architectural approaches without preference |
-| [[power-apps-rationale]] | Platform decision — Power Apps / Dataverse rationale |
-| [[alternative-architecture-traditional-csharp]] | Alternative — traditional C# / PostgreSQL stack |
-| [[solution-options]] | Solution options and trade-offs analysis |
 | [[architecture-patterns-comparison]] | Integration patterns to Golden Source |
-| [[outlook-email-interception-engagement-history]] | Outlook email interception → engagement history |
+| [[solution-options]] | Solution options and trade-offs analysis |
 
 ## Compliance & Governance
 
