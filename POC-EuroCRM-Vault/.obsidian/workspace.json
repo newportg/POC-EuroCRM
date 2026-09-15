@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/architecture-approach-executive-summary.md",
+                "file": "wiki/csharp-postgresql/alternative-architecture-traditional-csharp.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "architecture-approach-executive-summary"
+              "title": "alternative-architecture-traditional-csharp"
             }
           },
           {
@@ -27,29 +27,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/index.md",
+                "file": "POC/POC.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "index"
-            }
-          },
-          {
-            "id": "60d690e0b9a3c777",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "wiki/index.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "index"
+              "title": "POC"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -229,8 +216,38 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e91f778dd1ff7d90",
+  "active": "edb446235674712b",
   "lastOpenFiles": [
+    "POC/infra/README.md",
+    "dashboard.md",
+    "wiki/index.md",
+    "wiki/csharp-postgresql/alternative-architecture-traditional-csharp.md",
+    "wiki/architecture-approach-executive-summary.md",
+    "wiki/power-platform-sql/option-b-power-platform-sql.md",
+    "wiki/csharp-postgresql/csharp-stack-ecs-to-golden-source.png",
+    "wiki/csharp-postgresql/csharp-stack-ecs-to-golden-source.puml",
+    "wiki/power-platform-dataverse/dynamics-ecs-messagebus-to-golden-source.png",
+    "wiki/power-platform-dataverse/dynamics-ecs-messagebus-to-golden-source.puml",
+    "wiki/power-platform-dataverse/dynamics-export-to-golden-source.png",
+    "wiki/power-platform-dataverse/dynamics-export-to-golden-source.puml",
+    "wiki/power-platform-dataverse/outlook-email-intercept-to-engagement-history.png",
+    "wiki/power-platform-dataverse/outlook-email-intercept-to-engagement-history.puml",
+    "wiki/power-platform-dataverse/outlook-email-interception-engagement-history.md",
+    "wiki/power-platform-dataverse/power-apps-rationale.md",
+    "wiki/power-platform-dataverse/solution-package-model.md",
+    "wiki/power-platform-dataverse/architecture-dataflow.puml",
+    "wiki/power-platform-dataverse/architecture-layers.puml",
+    "wiki/power-platform-dataverse/architecture-diagram.puml",
+    "wiki/power-platform-dataverse/architecture-overview-diagrams.md",
+    "wiki/power-platform-dataverse/architecture-principles-compliance.md",
+    "wiki/power-platform-dataverse/architecture-target-state.md",
+    "wiki/power-platform-dataverse/architecture-key-components.md",
+    "wiki/power-platform-dataverse/architecture-technology.md",
+    "wiki/power-platform-dataverse/architecture-data.md",
+    "wiki/power-platform-dataverse/architecture-application.md",
+    "wiki/csharp-postgresql",
+    "wiki/power-platform-sql",
+    "wiki/power-platform-dataverse",
     "wiki/alternative-architecture-traditional-csharp.md",
     "copilot/copilot-conversations/agent__can_you_switch_to_the_csuite_document@20260915_091558.md",
     "wiki/business-capabilities.md",
@@ -241,42 +258,12 @@
     "wiki/solution-options.md",
     "wiki/solution-overview.md",
     "wiki/roadmap-timelines.md",
-    "wiki/roadmap-phases.md",
-    "wiki/roadmap-dependencies.md",
-    "wiki/risks-and-issues.md",
-    "wiki/property-data-model-schema.puml",
-    "wiki/property-data-model.md",
-    "wiki/problem-statement.md",
-    "wiki/power-apps-rationale.md",
-    "wiki/outlook-email-interception-engagement-history.md",
     "wiki/outlook-email-intercept-to-engagement-history.png",
-    "wiki/outlook-email-intercept-to-engagement-history.puml",
-    "wiki/kpis-and-success.md",
-    "wiki/key-stakeholders.md",
-    "wiki/index.md",
-    "wiki/implementation-phases.md",
-    "wiki/governance-oversight.md",
-    "wiki/governance-approval.md",
-    "wiki/glossary.md",
-    "wiki/functional-requirements.md",
-    "wiki/functional-non-functional-requirements.md",
-    "wiki/dynamics-export-to-golden-source.puml",
     "wiki/dynamics-export-to-golden-source.png",
-    "wiki/dynamics-ecs-messagebus-to-golden-source.puml",
     "wiki/dynamics-ecs-messagebus-to-golden-source.png",
-    "wiki/data-model-core-tables-schema.puml",
-    "wiki/csharp-stack-ecs-to-golden-source.puml",
     "wiki/csharp-stack-ecs-to-golden-source.png",
-    "wiki/client-data-model-schema.puml",
-    "wiki/capital-markets-data-model-schema.puml",
-    "devops/wip-data-model-schema.puml",
-    "devops/property-data-model-schema.puml",
     "devops/outlook-email-intercept-to-engagement-history.png",
     "devops/dynamics-export-to-golden-source.png",
-    "devops/dynamics-ecs-messagebus-to-golden-source.png",
-    "devops/csharp-stack-ecs-to-golden-source.png",
-    "wiki - Copy/outlook-email-intercept-to-engagement-history.png",
-    "wiki - Copy/dynamics-export-to-golden-source.png",
     "Untitled.canvas"
   ]
 }

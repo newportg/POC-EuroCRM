@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_f5bdd2b75ffeVnV8N13nDT8nnX"
 agentLabel: "Switch to csuite document"
-usage: '{"usedTokens":55731,"contextWindow":200000,"updatedAt":1789460627634}'
+usage: '{"usedTokens":107440,"contextWindow":200000,"updatedAt":1789461923153}'
 tags:
   - copilot-conversation
 ---
@@ -83,3 +83,65 @@ The document now reads as a straight business proposal: three options, plusses a
 
 One thing worth confirming: the title still says "Executive Summary". Fine to keep, or would you prefer something like "Architectural Approach Options — Business Comparison" to reinforce the neutral framing?
 [Timestamp: 2026/09/15 09:22:23]
+
+**user**: the wiki is now a little confused, there is some general Business document/ requirements etc and several different architectural / implementation approaches. can you separate out these different aspects, the top level is wiki is general, and three sub folders, one for each of the different archtecture implmentations
+[Timestamp: 2026/09/15 09:34:41]
+
+**ai**: This is a substantial reorganization. Let me plan it out and understand the current state first.
+
+Before moving anything, I need to classify the ambiguous notes. Let me read the architecture/data-model notes to determine which belong to which approach vs. are general:Let me check the remaining image/puml files and how the generator resolves embedded diagrams:I now have a full picture. Let me classify and confirm the plan:
+
+**General (kept in `wiki/` root)** — business docs, requirements, scope, governance, roadmap, cost, shared data models, taxonomies, the shared integration patterns comparison, and the executive-summary comparison doc itself.
+
+**Move to `wiki/power-platform-dataverse/` (Option A)** — `architecture-application`, `architecture-data`, `architecture-technology`, `architecture-key-components`, `architecture-target-state`, `architecture-principles-compliance`, `architecture-overview-diagrams`, `solution-package-model`, `power-apps-rationale`, `outlook-email-interception-engagement-history`, plus their `.puml`/`.png` diagrams.
+
+**Move to `wiki/csharp-postgresql/` (Option C)** — `alternative-architecture-traditional-csharp` + its puml/png.
+
+**Create `wiki/power-platform-sql/` (Option B)** — no detailed note exists yet; I'll add a folder index pointing at the exec summary.
+
+Let me execute the moves:Let me check for png files and any other artifacts in wiki before moving:The plan is clear. Now let me move the files with `git mv` to preserve history:Now update the SOD generator to search the wiki recursively (files moved into subfolders):Now I'll update the generator to search recursively (files moved into subfolders):
+
+Now let me check the legacy `create_sod_docx.py` script which reads wiki files by direct path:The legacy `create_sod_docx.py` also needs the same recursive fix:
+
+Now let me create a stub note for the Option B sub-folder (it would otherwise be empty and invisible in Obsidian/git), grounded strictly in what the executive summary already says:Now update the wiki index to reflect the new structure. Let me check the outputs legacy script too:`outputs/create_sod.py` is a legacy script using fixed text — not affected. Now let me rewrite the wiki index to reflect the new structure:Let me check the moved notes for internal path references that need fixing:The image embeds (`![[...]]`) resolve by basename so they're fine. The "Diagram Sources" list has hardcoded paths — let me fix those to reflect the new location:Now let me scan the whole wiki for any remaining hardcoded `wiki/` path references that would now be wrong:Now verify no duplicate basenames across folders (Obsidian link resolution depends on it):No duplicates. Now let me verify the SOD generator still works end-to-end:
+
+Generator works — 12 PlantUML and 6 Mermaid diagrams embedded. Now let me check for any other references to moved note paths across the vault:The copilot-conversations are historical transcripts (don't touch). Let me check `dashboard.md` and what the `devops/` folder is:The `devops/` folder is a stale mirror (last touched by an automated backup) — I'll flag it at the end rather than touch it. Now let me update the dashboard links to the new paths:Now the compliance section entries and target-state in dashboard:Let me check for any wiki-internal links that use the `[[wiki/...]]` path form pointing to moved notes (those would break):
+
+No wiki-internal links use the old path form. Let me verify what the `devops/` folder is and check the vault root README:The `devops/` folder is a stale mirror from an automated backup commit (no scripts reference it). Let me run the final checks — the generator's appendix logic and git status:Let me check `architecture-patterns-comparison.md` — it references the moved dynamics/csharp diagram files:
+
+All embeds resolve by basename — fine. Let me update the todos and commit:Done — committed as `e950f8b`. The wiki is now split by concern:
+
+## New structure
+
+**`wiki/` — general business material (stays flat)**
+- Overview & entry: [[solution-overview]], [[problem-statement]], [[business-context]], [[glossary]]
+- Business case, scope, requirements, compliance & governance, roadmap, cost & benefits
+- **Shared data model** (Client, Property, Capital Markets, WIP, taxonomies) — these are approach-neutral, referenced by all three options
+- Business architecture and [[architecture-patterns-comparison]] (shared integration patterns)
+- Decision material: [[architecture-approach-executive-summary]], [[solution-options]]
+
+**`wiki/power-platform-dataverse/` — Option A (current design)**
+- All 10 architecture/application/data/technology notes, [[power-platform-dataverse/power-apps-rationale]], solution package model, Outlook interception design, plus their puml/png diagrams
+
+**`wiki/power-platform-sql/` — Option B (hybrid)**
+- New [[power-platform-sql/option-b-power-platform-sql]] note capturing the option from the exec summary, with TDA open questions (engine choice, connectivity approach, finance bridge / ECS mapping, RLS). A full detailed design is still TBD.
+
+**`wiki/csharp-postgresql/` — Option C (alternative)**
+- [[csharp-postgresql/alternative-architecture-traditional-csharp]] + its ECS diagram
+
+## What else changed
+- **[[index]]** rewritten to mirror the structure, with folder-qualified links
+- **SOD generator** (`generate_sod_from_wiki.py`) now resolves notes and `.puml` diagrams recursively, so the regenerated DOCX still embeds 12 PlantUML + 6 Mermaid diagrams — verified by running it
+- Legacy `create_sod_docx.py` patched the same way; dashboard task links repointed
+- All wikilinks intact (Obsidian resolves by basename; no duplicate filenames across folders)
+
+Two things to be aware of:
+- `devops/` is a **stale mirror** of the old flat wiki from an automated backup (commit `e84ee08`) — nothing references it. Want me to refresh it, or would you rather remove it?
+- I noticed an untracked `wiki.zip` sitting in the vault root — likely an accidental export. Leave it or delete it?
+[Timestamp: 2026/09/15 09:34:41]
+
+**user**: remove devops
+[Timestamp: 2026/09/15 09:48:27]
+
+**ai**: 
+[Timestamp: 2026/09/15 09:48:27]
