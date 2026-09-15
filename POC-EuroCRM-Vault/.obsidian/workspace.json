@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/alternative-architecture-traditional-csharp.md",
+                "file": "wiki/architecture-approach-executive-summary.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "alternative-architecture-traditional-csharp"
+              "title": "architecture-approach-executive-summary"
             }
           },
           {
@@ -231,6 +231,8 @@
   },
   "active": "e91f778dd1ff7d90",
   "lastOpenFiles": [
+    "wiki/alternative-architecture-traditional-csharp.md",
+    "copilot/copilot-conversations/agent__can_you_switch_to_the_csuite_document@20260915_091558.md",
     "wiki/business-capabilities.md",
     "wiki/architecture-technology.md",
     "wiki/architecture-target-state.md",
@@ -258,12 +260,10 @@
     "wiki/glossary.md",
     "wiki/functional-requirements.md",
     "wiki/functional-non-functional-requirements.md",
-    "wiki/expected-benefits.md",
     "wiki/dynamics-export-to-golden-source.puml",
     "wiki/dynamics-export-to-golden-source.png",
     "wiki/dynamics-ecs-messagebus-to-golden-source.puml",
     "wiki/dynamics-ecs-messagebus-to-golden-source.png",
-    "wiki/dependencies-and-constraints.md",
     "wiki/data-model-core-tables-schema.puml",
     "wiki/csharp-stack-ecs-to-golden-source.puml",
     "wiki/csharp-stack-ecs-to-golden-source.png",
