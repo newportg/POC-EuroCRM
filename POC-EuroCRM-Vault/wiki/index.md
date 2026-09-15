@@ -112,6 +112,7 @@ Alternative stack, detailed in `wiki/csharp-postgresql/`.
 | Note | Purpose |
 | ---- | ------- |
 | [[architecture-approach-executive-summary]] | Plus/minus of the three architectural approaches without preference |
+| [[architecture-approach-executive-summary-one-page]] | One-page A4 summary of the three approaches for decision review |
 | [[architecture-patterns-comparison]] | Integration patterns to Golden Source |
 | [[solution-options]] | Solution options and trade-offs analysis |
 

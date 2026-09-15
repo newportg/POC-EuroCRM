@@ -13,6 +13,8 @@ tags:
 
 # Architectural Approach Comparison — Executive Summary
 
+> One-page version: [[architecture-approach-executive-summary-one-page]]
+
 This document proposes three architectural approaches for the European CRM programme. All three deliver the same core outcome — a shared client, contact, property and engagement foundation across service lines and countries (see [[business-capabilities]]) — but with different cost, risk, and operating profiles. The pluses and minuses of each are set out below without preference; the choice is a business decision to be weighed by the programme stakeholders.
 
 The three options are the current **Microsoft Power Platform / Dataverse** design, a hybrid **Power Platform with a SQL/PostgreSQL relational database**, and the alternative **traditional C# / PostgreSQL** stack.
