@@ -4,7 +4,7 @@ mode: agent
 backendId: opencode
 sessionId: "ses_f5bdd2b75ffeVnV8N13nDT8nnX"
 agentLabel: "Switch to csuite document"
-usage: '{"usedTokens":107440,"contextWindow":200000,"updatedAt":1789461923153}'
+usage: '{"usedTokens":132321,"contextWindow":200000,"updatedAt":1789467455291}'
 tags:
   - copilot-conversation
 ---
@@ -143,5 +143,110 @@ Two things to be aware of:
 **user**: remove devops
 [Timestamp: 2026/09/15 09:48:27]
 
-**ai**: 
+**ai**: Done. The stale `devops/` mirror is removed and committed as `006f550`.
+
+Quick summary of the current state:
+- `devops/` folder deleted from the repo and working tree — the wiki now lives solely in `wiki/` (general docs + the three approach sub-folders)
+- Nothing referenced it, so nothing broke
+
+For what it's worth: there's an automated "vault backup" commit system running (a backup commit landed between your last message and my removal). That's expected behavior per the vault setup — just so you know file history is being snapshotted regularly.
 [Timestamp: 2026/09/15 09:48:27]
+
+**user**: hmm.... The exec summary was reviewed and they its too long can you produce a consise exec summary which is no more then 1 page of A4 . create a new page with the concise version in
+[Timestamp: 2026/09/15 11:06:45]
+
+**ai**: Let me re-read the current exec summary to condense it accurately:I'll create a new one-page note alongside the full version.
+
+Now let me link the two documents and update the index:Done — created [[architecture-approach-executive-summary-one-page]], committed as `e09f5cd`.
+
+## What's in the one-pager
+
+The concise version fits a single A4 page by cutting the per-option plus/minus sections down to a **single comparison table** (8 dimensions × 3 options) plus a few tight sections:
+
+- **Intro** — one paragraph: same core outcome, all EU-hosted, all three need a custom model (the 8-of-11 fit gap)
+- **Comparison table** — what it is, cost, build effort, lock-in, skills, integration, control, operating model
+- **Key trade-offs** — five bullets covering the essential tensions (cost now vs. later, speed vs. control, lock-in, Golden Source integration, tenant isolation)
+- **Decision** — three-line framing of the operating-model choice
+- **Related** — links to the full doc and approach details
+
+## Kept and dropped
+
+- Kept the neutral, no-preference framing you asked for earlier
+- Kept the technical anchor points (PostgreSQL 16, virtual tables, RLS, ECS bus) but at one-line depth
+- Dropped: the full plus/minus lists, the separate "at a glance" + "comparison" duplicate tables, and the integration-pattern detail (now just a pointer to [[architecture-patterns-comparison]])
+
+The original [[architecture-approach-executive-summary]] is untouched and now cross-links to the one-pager at the top. The index lists both, so reviewers can pick the depth they want.
+[Timestamp: 2026/09/15 11:06:45]
+
+**user**: what would be the impact of using dyanmics crm instead of building a crm on dataverse
+[Timestamp: 2026/09/15 11:10:48]
+
+**ai**: This is a core question in your own wiki — let me pull the relevant analysis from [[power-platform-dataverse/power-apps-rationale]] and the related notes.
+
+Let me pull the rest of the D365 analysis from architecture-application:Based on your wiki's own analysis ([[power-platform-dataverse/power-apps-rationale]] and [[power-platform-dataverse/architecture-application]]), the impact of using Dynamics CRM (D365 Sales) instead of building a custom model on Dataverse comes down to one core issue:
+
+## The packaged lifecycle doesn't match the business
+
+D365 Sales assumes **Lead → Opportunity → Quote → Order → Invoice**. Knight Frank's Capital Markets reality is: **pitching → NDA → multi-round bidding → due diligence with milestones → regulatory gates per jurisdiction** (e.g. France city pre-emption, Spain right-of-refusal, EIT conflict checks).
+
+You'd be forcing a bespoke advisory lifecycle through a sales-transaction pipeline — the workflow would fight the platform at every stage.
+
+## Entity fit: 8 of 11 core entities have no equivalent
+
+| D365 OOB | KF entities |
+| -------- | ----------- |
+| Opportunity, Quote, Product/Price List (3) | Poor fit — advisory services, not products |
+| — (8) | `kf_Pitch`, `kf_NDA`, `kf_Bid`, `kf_DDMilestone`, `kf_RedFlag`, `kf_InvestorProfile`, `kf_DataRoomAccess`, `kf_KYCRecord` — no equivalent |
+
+So most of the model would be **custom regardless** — you'd pay for a packaged product and then build the core of it yourself anyway. That's the same eight-entity fit gap that applies to all three options in [[architecture-approach-executive-summary-one-page]]; D365 Sales doesn't close it, it just adds a packaged layer on top.
+
+## What you'd gain vs. lose
+
+**Gains (if it fit):**
+- Packaged Lead/Opportunity/Quote pipeline, Product Catalogue, LinkedIn Sales Navigator integration — none of which match your model
+- Mature OOB sales features for a transactional sales team — not your use case
+
+**Loses vs. custom-on-Dataverse:**
+- Full control of the deal state machine (8-stage BPF with country gates) — would be forced into the Opportunity pipeline instead
+- Clean mapping of Business Units → country/service-line isolation — D365 Sales adds its own sales-team hierarchy on top
+- Fit of natively integrated components: your custom `kf_*` tables, WIP-to-finance bridge (9 flows), deal-property junctions sit on Dataverse's generic model, which D365 Sales *also* uses — so the custom part wouldn't disappear, it would coexist with unused packaged machinery
+
+## Bottom line
+
+The wiki's position is that **the value sits in the custom Knight Frank data model, not in a packaged sales process**. D365 Sales doesn't change that — it would add licensing cost, unwanted features, and a pipeline model you'd have to fight, while the custom entities still need building on the same Dataverse underneath. There's a reason the recorded decision is "Power Apps model-driven apps on Dataverse" rather than "D365 Sales".
+
+One nuance worth noting: the exec summary's three options all make this same choice implicitly — Option A (Dataverse), Option B (SQL behind Power Apps), and Option C (C#/PostgreSQL) all assume a *custom* model. So the D365 Sales question is really a fourth path your decision material deliberately doesn't include. If you want, I can add a short "Why not D365 Sales?" section to the one-pager so reviewers see the question was considered — or keep it in the detail doc where it already lives.
+[Timestamp: 2026/09/15 11:10:48]
+
+**user**: please d365 sales as a option
+[Timestamp: 2026/09/15 11:12:58]
+
+**ai**: Now add the Option D section after Option C:Now the comparison table and decision framing:Now update the key tension and comparison table sections:Let me re-read the current state of that section:The earlier edits are all in place. Let me fix the remaining stale references (link paths and "three options" count):Now let me update the one-page summary to include Option D:
+
+Now let me check the other notes that reference "three options" for consistency:Let me fix the index description and the option-b stub reference:For consistency with the Option B stub, let me also create an Option D folder + stub note:Now update the index to reference the new Option D folder:
+
+Now verify SOD generation still works and commit:Done — D365 Sales is now **Option D** throughout the decision material, committed as `8e498c8`.
+
+## What changed
+
+**[[architecture-approach-executive-summary]] (full version)**
+- New "Option D — Dynamics 365 Sales" section with pluses and minuses:
+  - **Pluses:** packaged sales process out of the box, mature sales features (pipeline, product catalogue, LinkedIn Sales Navigator, Copilot for Sales), native integrations, managed platform
+  - **Minuses:** lifecycle mismatch (Lead→Opportunity→Quote→Order→Invoice vs. pitch→NDA→bid→DD→regulatory gates), the 8-of-11 entity fit gap remains (those entities are custom on Dataverse either way), unwanted bundled features, per-user licensing, lock-in
+- "At a glance" and comparison tables extended to 4 columns
+- Key tension, integration angle, and decision framing updated to the four-way view
+
+**[[architecture-approach-executive-summary-one-page]]**
+- Same Option D column/coverage, keeping the A4 constraint tight
+
+**New folder + stub: [[dynamics-365-sales/option-d-dynamics-365-sales]]**
+- Matches the pattern of the Option B stub: overview, trade-offs, open questions for TDA, links to the fit analysis in [[power-platform-dataverse/power-apps-rationale]]
+
+**Index** updated with the fourth folder and descriptions.
+
+## The key message it preserves
+
+Option D doesn't escape the 8-entity fit gap — D365 Sales is *also* built on Dataverse, so all 8 custom entities (`kf_Pitch`, `kf_NDA`, `kf_Bid`, etc.) still need building on top of it. What you'd gain is the packaged *sales* process (which doesn't match the advisory lifecycle) at per-user licensing cost. That's now visible in the material rather than implied.
+
+One note: the option is called **Dynamics 365 Sales** in the docs (the packaged CRM app), which matches the "instead of building a CRM on Dataverse" question you asked. If you meant plain **Dynamics 365** (foundation licensing, which is essentially Dataverse + Power Platform with a different licence pack), that's a licensing nuance rather than a different architecture — say the word and I'll clarify that distinction in the notes.
+[Timestamp: 2026/09/15 11:12:58]

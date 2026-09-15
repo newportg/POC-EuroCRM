@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "POC/POC.md",
+                "file": "wiki/architecture-approach-executive-summary-one-page.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "POC"
+              "title": "architecture-approach-executive-summary-one-page"
             }
           }
         ],
@@ -216,13 +216,17 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "edb446235674712b",
+  "active": "597aa953c2405097",
   "lastOpenFiles": [
+    "wiki/dynamics-365-sales/option-d-dynamics-365-sales.md",
+    "wiki/dynamics-365-sales",
+    "wiki/architecture-approach-executive-summary.md",
+    "wiki/architecture-approach-executive-summary-one-page.md",
+    "POC/POC.md",
     "POC/infra/README.md",
     "dashboard.md",
     "wiki/index.md",
     "wiki/csharp-postgresql/alternative-architecture-traditional-csharp.md",
-    "wiki/architecture-approach-executive-summary.md",
     "wiki/power-platform-sql/option-b-power-platform-sql.md",
     "wiki/csharp-postgresql/csharp-stack-ecs-to-golden-source.png",
     "wiki/csharp-postgresql/csharp-stack-ecs-to-golden-source.puml",
@@ -247,7 +251,6 @@
     "wiki/power-platform-dataverse/architecture-application.md",
     "wiki/csharp-postgresql",
     "wiki/power-platform-sql",
-    "wiki/power-platform-dataverse",
     "wiki/alternative-architecture-traditional-csharp.md",
     "copilot/copilot-conversations/agent__can_you_switch_to_the_csuite_document@20260915_091558.md",
     "wiki/business-capabilities.md",
@@ -255,9 +258,6 @@
     "wiki/architecture-target-state.md",
     "wiki/architecture-principles-compliance.md",
     "wiki/architecture-patterns-comparison.md",
-    "wiki/solution-options.md",
-    "wiki/solution-overview.md",
-    "wiki/roadmap-timelines.md",
     "wiki/outlook-email-intercept-to-engagement-history.png",
     "wiki/dynamics-export-to-golden-source.png",
     "wiki/dynamics-ecs-messagebus-to-golden-source.png",
