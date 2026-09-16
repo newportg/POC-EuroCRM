@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/architecture-approach-executive-summary.md",
+                "file": "wiki/architecture-approach-executive-summary-one-page.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "architecture-approach-executive-summary"
+              "title": "architecture-approach-executive-summary-one-page"
             }
           }
         ]
@@ -179,9 +179,19 @@
               "icon": "copilot-agent",
               "title": "Copilot Agent"
             }
+          },
+          {
+            "id": "8889cfa6147bde81",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
         ],
-        "currentTab": 5
+        "currentTab": 6
       }
     ],
     "direction": "horizontal",
@@ -201,14 +211,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e91f778dd1ff7d90",
+  "active": "f2fd30c2509f0345",
   "lastOpenFiles": [
+    "archive/European CRM Architectural Options.docx",
+    "wiki/architecture-approach-executive-summary.md",
     "wiki/architecture-approach-executive-summary-one-page.md",
     "wiki/architecture-business.md",
     "wiki/architecture-patterns-comparison.md",
     "wiki/business-capabilities.md",
     "wiki/index.md",
-    "wiki/architecture-approach-executive-summary.md",
     "wiki/dynamics-365-sales/option-a-dynamics-365-sales.md",
     "archive/option-b-power-platform-sql-hybrid.md",
     "copilot/copilot-conversations/agent__can_you_format_this_document@20260916_093521.md",
@@ -242,7 +253,6 @@
     "wiki/power-platform-dataverse/architecture-application.md",
     "wiki/csharp-postgresql",
     "wiki/power-platform-sql",
-    "wiki/alternative-architecture-traditional-csharp.md",
     "wiki/outlook-email-intercept-to-engagement-history.png",
     "wiki/dynamics-export-to-golden-source.png",
     "wiki/dynamics-ecs-messagebus-to-golden-source.png",
