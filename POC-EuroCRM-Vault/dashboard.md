@@ -4,16 +4,16 @@
 
 ```mermaid
 pie title Task Completion
-    "Outstanding" : 8
-    "Completed" : 53
+    "Outstanding" : 7
+    "Completed" : 54
 ```
 
-**Overall progress: 87%** (53 / 61 tasks)
+**Overall progress: 89%** (54 / 61 tasks)
 
 | Section | Outstanding | Completed | Progress |
 | ------- | ----------- | --------- | -------- |
 | Next steps | 2 | 3 | 60% |
-| Document sections | 5 | 26 | 84% |
+| Document sections | 4 | 27 | 87% |
 | Wiki content | 0 | 25 | 100% |
 
 ## Completed tasks
@@ -115,6 +115,10 @@ pie title Task Completion
 ### Solution overview document — sections needing expansion
 
 - [ ] Functional and non-functional requirements — needs detailed requirements #task
-- [ ] Solution options and trade-offs — needs options analysis #task
 - [ ] Cost and benefits summary — estimated costs — needs cost modelling #task
 - [ ] Cost and benefits summary — expected benefits — needs quantification #task
+
+### Architecture approach decision — completed
+
+- [x] Solution options and trade-offs — analysis delivered via [[wiki/architecture-approach-executive-summary-one-page|one-page summary]] and [[wiki/solution-options|solution-options]] with recommended Board position #task
+- [x] Superseded Power Platform + SQL hybrid option archived (see `archive/option-b-power-platform-sql-hybrid.md`) #task

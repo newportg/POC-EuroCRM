@@ -7,12 +7,11 @@ date: 15/09/2026
 
 # EuroCRM Wiki Index
 
-The master index for the European CRM solution wiki. The wiki is split between **general business material** (business case, scope, requirements, governance, roadmap, and the shared data models) at the top level, and **three architecture-implementation sub-folders** — one per approach proposed in the [[architecture-approach-executive-summary]].
+The master index for the European CRM solution wiki. The wiki is split between **general business material** (business case, scope, requirements, governance, roadmap, and the shared data models) at the top level, and **three architecture-implementation sub-folders** — one per option in the [[architecture-approach-executive-summary-one-page]]:
 
-- `wiki/power-platform-dataverse/` — Option A: Power Platform / Dataverse (the current design)
-- `wiki/power-platform-sql/` — Option B: Power Platform + SQL/PostgreSQL database (hybrid)
-- `wiki/csharp-postgresql/` — Option C: Traditional C# / PostgreSQL (alternative)
-- `wiki/dynamics-365-sales/` — Option D: Packaged Dynamics 365 Sales (considered, detailed design TBD)
+- `wiki/dynamics-365-sales/` — Option A: Extend Dynamics 365 Sales (recommended baseline)
+- `wiki/power-platform-dataverse/` — Option B: Model-driven application on Dataverse (main comparator)
+- `wiki/csharp-postgresql/` — Option C: Knight Frank-built application (retained only if justified)
 
 The authoritative parent document is [[solution-overview]]; this index is the navigation surface for that body of work.
 
@@ -75,53 +74,45 @@ The authoritative parent document is [[solution-overview]]; this index is the na
 
 ## Architecture Approaches
 
-### Option A — Power Platform / Dataverse
+### Option A — Extend Dynamics 365 Sales
 
-The current design, detailed in `wiki/power-platform-dataverse/`.
+The recommended baseline, detailed in `wiki/dynamics-365-sales/`.
+
+| Note | Purpose |
+| ---- | ------- |
+| [[dynamics-365-sales/option-a-dynamics-365-sales]] | Option A overview, trade-offs, and open questions for the validation stage |
+
+### Option B — Model-driven Application on Dataverse
+
+The main comparator, detailed in `wiki/power-platform-dataverse/`.
 
 | Note | Purpose |
 | ---- | ------- |
 | [[power-platform-dataverse/architecture-overview-diagrams]] | High-level architecture diagrams |
-| [[power-platform-dataverse/architecture-key-components]] | Component inventory |
+| [[power-platform-dataverse/architecture-key-components]] | Component inventory (Dataverse L1, KF_Core L2, region/service-line layers) |
 | [[power-platform-dataverse/solution-package-model]] | L0–L7 layered package model |
 | [[power-platform-dataverse/architecture-application]] | Application architecture and integrations |
 | [[power-platform-dataverse/architecture-data]] | Data architecture overview |
 | [[power-platform-dataverse/architecture-technology]] | Technology, hosting, and security |
 | [[power-platform-dataverse/architecture-target-state]] | Target state alignment to standards/PADs |
 | [[power-platform-dataverse/architecture-principles-compliance]] | Mapping to CTO architecture principles |
-| [[power-platform-dataverse/power-apps-rationale]] | Platform decision — Power Apps / Dataverse rationale |
+| [[power-platform-dataverse/power-apps-rationale]] | Dataverse platform rationale underlying Option B |
 | [[power-platform-dataverse/outlook-email-interception-engagement-history]] | Outlook email interception → engagement history |
 
-### Option B — Power Platform + SQL Database
+### Option C — Knight Frank-built Application
 
-Hybrid approach, tracked in `wiki/power-platform-sql/`.
-
-| Note | Purpose |
-| ---- | ------- |
-| [[power-platform-sql/option-b-power-platform-sql]] | Option B overview and open questions (detailed design TBD) |
-
-### Option C — C# / PostgreSQL
-
-Alternative stack, detailed in `wiki/csharp-postgresql/`.
+Full product ownership on the enterprise engineering stack, detailed in `wiki/csharp-postgresql/`. Retained only where strategic, scale, performance or integration requirements justify it.
 
 | Note | Purpose |
 | ---- | ------- |
 | [[csharp-postgresql/alternative-architecture-traditional-csharp]] | Full Option C design with cost/operability detail |
 
-### Option D — Dynamics 365 Sales
-
-Packaged product, tracked in `wiki/dynamics-365-sales/`.
-
-| Note | Purpose |
-| ---- | ------- |
-| [[dynamics-365-sales/option-d-dynamics-365-sales]] | Option D overview, trade-offs, and open questions (detailed design TBD) |
-
 ## Approach & Decision Material
 
 | Note | Purpose |
 | ---- | ------- |
-| [[architecture-approach-executive-summary]] | Plus/minus of the four architectural approaches without preference |
-| [[architecture-approach-executive-summary-one-page]] | One-page A4 summary of the four approaches for decision review |
+| [[architecture-approach-executive-summary-one-page]] | One-page A4 summary of the three options with the recommended Board position |
+| [[architecture-approach-executive-summary]] | Full comparison of the three options and decision material |
 | [[architecture-patterns-comparison]] | Integration patterns to Golden Source |
 | [[solution-options]] | Solution options and trade-offs analysis |
 
@@ -148,5 +139,7 @@ Packaged product, tracked in `wiki/dynamics-365-sales/`.
 | [[cost-estimates]] | Cost modelling |
 
 > [[expected-benefits]] (covered under Business Case above) quantifies the benefits against the [[cost-estimates]].
+
+The superseded Power Platform + SQL hybrid option (formerly Option B) is preserved in the archive: `archive/option-b-power-platform-sql-hybrid.md`.
 
 This index follows the wiki structure defined in the repository's `AGENTS.md`: one topic per file, kebab-case filenames, and `parent:` frontmatter pointing back to [[solution-overview]] (or to a grouping note such as [[data-model-overview]] or [[taxonomy-mappings]]). When a new wiki note is added, it should be linked under the matching heading above.

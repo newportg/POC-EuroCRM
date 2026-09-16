@@ -63,6 +63,6 @@ No Dynamics or Dataverse dependency. A custom ASP.NET Core application writes di
 
 ## Related
 
-- [[alternative-architecture-traditional-csharp]] — Full alternative architecture using C# and PostgreSQL
-- [[solution-overview]] — Current (Dataverse) design
-- [[architecture-application]] — Current application and integration patterns
+- [[csharp-postgresql/alternative-architecture-traditional-csharp]] — Full Option C design using C# and PostgreSQL
+- [[solution-overview]] — Parent document
+- [[power-platform-dataverse/architecture-application]] — Option B application and integration patterns

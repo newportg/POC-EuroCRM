@@ -7,13 +7,14 @@ tags:
   - architecture
   - decisions
   - tda
+  - board
 ---
 
-# Option D — Dynamics 365 Sales
+# Option A — Extend Dynamics 365 Sales
 
-The packaged Microsoft sales CRM, run on Dataverse as-is rather than building a custom model. The standard sales lifecycle (Lead → Opportunity → Quote → Order → Invoice) applies directly.
+Use Dynamics 365 Sales as the CRM and relationship management application. Add Knight Frank domain extensions as custom tables for property, instruction, deal, bid, NDA, KYC, due diligence and reference data.
 
-This option is introduced (at a high level) in the [[architecture-approach-executive-summary]]. Detail is currently captured in the fit assessment within [[power-platform-dataverse/power-apps-rationale]]; a full design note is **TBD** if this option is pursued.
+This is the **recommended baseline** in the [[architecture-approach-executive-summary-one-page]]. Detail is currently captured in the fit assessment within [[power-platform-dataverse/power-apps-rationale]]; a full design note is **TBD** pending the validation stage.
 
 ## Known Trade-offs (from the executive summary)
 
@@ -22,6 +23,7 @@ This option is introduced (at a high level) in the [[architecture-approach-execu
 - Mature sales features — pipeline management, product catalogue, LinkedIn Sales Navigator, Copilot for Sales
 - Native integrations — Outlook, SharePoint, Teams, Power BI, audit trail ship with the product
 - Managed platform — security, infrastructure, and capacity are Microsoft's responsibility
+- Microsoft supplies and supports the standard application, entities and packaged CRM capabilities
 
 **Minuses:**
 - Lifecycle mismatch — the KF advisory lifecycle (pitch → NDA → multi-round bid → due diligence → regulatory gates) does not match the packaged sales pipeline
@@ -30,14 +32,21 @@ This option is introduced (at a high level) in the [[architecture-approach-execu
 - Ongoing licensing cost — per-user D365 Sales licenses on top of Dataverse
 - Vendor lock-in — data, model, and process sit on Microsoft's platform
 
+## What the validation stage must test
+
+- The fit between packaged Dynamics 365 Sales capabilities and the established requirements, mapped to reuse, configuration, extension or custom behaviour
+- Whether the licence cost is justified by the packaged capability that is actually retained
+- The total cost of ownership under Knight Frank enterprise licence terms
+
 ## Open Questions for TDA
 
 - Is the standard sales lifecycle acceptable for any service line, or is the lifecycle mismatch a blocker?
-- Do the 8 custom entities change the value proposition enough that a custom app (Option A) dominates this option on the same platform?
+- Do the 8 custom entities change the value proposition enough that a custom app (Option B) dominates this option on the same platform?
 - How does D365 Sales licensing compare against Power Apps per-user for the intended user base?
 
 ## Related
 
-- [[architecture-approach-executive-summary]] — Four-way option comparison (parent decision material)
+- [[architecture-approach-executive-summary-one-page|Architectural Approaches — One-Page Summary]] (recommended baseline)
+- [[architecture-approach-executive-summary]] — Full comparison and decision material
 - [[power-platform-dataverse/power-apps-rationale]] — Entity fit assessment (D365 Sales vs. custom model)
-- [[solution-overview]] — Parent document; current (Dataverse) design
+- [[solution-overview]] — Parent document

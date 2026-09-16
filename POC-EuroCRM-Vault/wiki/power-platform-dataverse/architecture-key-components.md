@@ -5,9 +5,9 @@ source:"European CRM Architecture Review 2.pdf, EU CRM Data Model.xlsx"
 
 # Architecture — Key Components
 
-## Platform Decision
+## Design Basis (Option B)
 
-**Current Hypothesis:** Power Apps model-driven apps on Dataverse are a better fit where the value sits in a custom Knight Frank data model rather than a packaged sales process.
+**Hypothesis:** Power Apps model-driven apps on Dataverse are a reasonable fit where the value sits in a custom Knight Frank data model rather than a packaged sales process. This design supports **Option B — Model-driven application on Dataverse**, the main comparator in the architecture approach decision (see [[architecture-approach-executive-summary-one-page]]).
 
 See [[power-apps-rationale]] for detailed analysis.
 

@@ -5,15 +5,15 @@ author: Gary Newport
 date: 08/09/2026
 ---
 
-# Alternative Architecture — Traditional C# & PostgreSQL Stack
+# Option C — Knight Frank-Built Application (C# & PostgreSQL Stack)
 
-This note sets out an alternative to the [[power-apps-rationale|Power Apps / Dataverse]] design in [[solution-overview]]. It delivers the same business capabilities from [[business-capabilities]] but avoids Dynamics, Dataverse and the Power Platform, using the firm's existing engineering stack: C# (ASP.NET Core), PostgreSQL, and standard integration practices.
+This note sets out **Option C** from the [[architecture-approach-executive-summary-one-page|architecture approach decision]]: a Knight Frank-built CRM application on the firm's existing engineering stack — C# (ASP.NET Core), PostgreSQL, and standard integration practices — rather than Dynamics 365 Sales or the Power Platform. It delivers the same business capabilities from [[business-capabilities]].
 
-It is written as a design alternative for review by the same stakeholders and the TDA — it does not supersede the current design.
+It is written as the full design behind Option C for review by the programme stakeholders and the TDA. It is retained only where strategic, scale, performance or integration requirements justify full product ownership.
 
 ## Objectives
 
-The alternative must satisfy the same success criteria as the current design:
+The Option C design must satisfy the same success criteria as the other options:
 
 - "Who is this client to Knight Frank across every service line, every country?"
 - "What does our EU pipeline look like?"
@@ -27,7 +27,7 @@ It must also:
 
 ## Why a Traditional Stack Fits
 
-The current [[power-apps-rationale]] reasons that D365 Sales is a poor fit because Knight Frank's advisory lifecycle (pitch, NDA, multi-round bid, due diligence, regulatory gates) does not match the packaged Lead → Opportunity → Quote → Order → Invoice model, and eight of the core entities have no packaged equivalent. That argument favours a *custom* model — but a custom model does not require Dataverse. The same custom schema, workflows and security model can be built as first-party code on PostgreSQL, which is more direct than forcing the model onto a platform layer.
+The [[power-apps-rationale]] reasoning that D365 Sales is a poor fit because Knight Frank's advisory lifecycle (pitch, NDA, multi-round bid, due diligence, regulatory gates) does not match the packaged Lead → Opportunity → Quote → Order → Invoice model, and eight of the core entities have no packaged equivalent, argues for a *custom* model — but a custom model does not require Dataverse. The same custom schema, workflows and security model can be built as first-party code on PostgreSQL, which is more direct than forcing the model onto a platform layer.
 
 ## High-Level Architecture
 
@@ -114,7 +114,7 @@ Transition rules are code, so per-country gates (France city pre-emption / notar
 
 ### Security & Multi-Tenancy
 
-- **Authentication:** Microsoft Entra ID (same requirements as the current design — MFA, conditional access, service principals).
+- **Authentication:** Microsoft Entra ID (same requirements across the options — MFA, conditional access, service principals).
 - **Authorisation:** ASP.NET Core policy-based claims + a `tenancy` dimension on every aggregate root.
 - **Row-level isolation:** PostgreSQL row-level security (RLS) keyed on country/team, mirroring the [[architecture-application|Business Unit hierarchy]] without a separate platform concept:
   - KF Global → KF_Europe → KF_France/Germany/Poland/Spain → KF_CM_France etc.
@@ -223,13 +223,13 @@ The 9-flow finance integration in [[wip-data-model]] maps to a `finance_bridge` 
 | Velocity for iteration | Rapid low-code changes | Requires build/test/deploy cycle |
 | Long-term lock-in | Microsoft platform | First-party code, portable database |
 
-## Trade-offs vs. the Dataverse Design
+## Trade-offs vs. the Dataverse Design (Option B)
 
-To be weighed at TDA review:
+To be weighed at the architecture approach decision:
 
 - **For the traditional stack:** no per-user platform licensing; reuses the existing engineering stack; first-party code is fully portable and debuggable; RLS gives precise tenancy isolation; no dependence on Dataverse capacity and governance limits.
 - **Against the traditional stack:** lower-code UI and simple workflows are faster to stand up on Power Apps; Dataverse ships native Outlook/SharePoint/Teams integration and an audit trail out of the box that must be rebuilt; fixed infrastructure must be provisioned, secured, and operated rather than leased; selling the build to leadership differs from buying seats.
-- The eight-entity fit gap in [[power-apps-rationale]] that argued for a *custom* model applies equally to both options — the difference is whether the custom model is built on Dataverse or on first-party code.
+- The eight-entity fit gap in [[power-apps-rationale]] that argued for a *custom* model applies equally to all options — the difference is whether the custom model is built on Dataverse under a packaged sales app, on Dataverse as a bespoke app, or on first-party code.
 
 ## Open Questions for TDA
 
@@ -240,12 +240,13 @@ To be weighed at TDA review:
 
 ## Related Documents
 
-- [[solution-overview]] — Parent document; current (Dataverse) design
-- [[power-apps-rationale]] — The platform decision this note challenges
-- [[business-capabilities]] — Capability model both designs must satisfy
+- [[solution-overview]] — Parent document
+- [[architecture-approach-executive-summary]] — The three-option comparison this note supports
+- [[power-apps-rationale]] — Dataverse platform rationale underlying Option B
+- [[business-capabilities]] — Capability model all options must satisfy
 - [[client-data-model]] — Client schema reused here
 - [[property-data-model]] — Property schema reused here
 - [[capital-markets-data-model]] — Capital Markets lifecycle reused here
 - [[wip-data-model]] — WIP / finance bridge reused here
-- [[architecture-application]] — Current application & integration patterns
-- [[architecture-technology]] — Current hosting & security model
+- [[power-platform-dataverse/architecture-application]] — Option B application & integration patterns (comparator)
+- [[power-platform-dataverse/architecture-technology]] — Option B hosting & security model (comparator)

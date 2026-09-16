@@ -16,7 +16,7 @@ Version: 0.1
 
 ## Executive Summary
 
-European CRM solution covering France, Germany, Spain, and Poland. This document defines the architecture approach for review and approval by the Technical Design Authority (TDA).
+European CRM solution covering France, Germany, Spain, and Poland. This document defines the architecture approach for review and approval. The Board is asked to compare three application options — extending Dynamics 365 Sales (Option A, recommended baseline), a model-driven application on Dataverse (Option B, main comparator), and a Knight Frank-built application (Option C) — and to fund a defined validation stage that will produce an investment-ready recommendation. See [[architecture-approach-executive-summary-one-page]].
 
 See [[problem-statement]] for the business case driving this initiative.
 
@@ -82,19 +82,17 @@ See [[solution-scope-out-of-scope]].
 
 ## Solution Architecture
 
-### Overview Diagrams
+### Architecture Overview Diagrams
 
-See [[architecture-overview-diagrams]].
-
-Architecture diagrams to be developed during design phase.
+See [[power-platform-dataverse/architecture-overview-diagrams]].
 
 ### Key Components
 
-See [[architecture-key-components]].
+See [[power-platform-dataverse/architecture-key-components]].
 
-**Platform Decision:** Power Apps model-driven apps on Dataverse — see [[power-apps-rationale]].
+**Design basis:** the architecture sections below describe the model-driven application on Dataverse (Option B), one of the three options under consideration. See [[power-platform-dataverse/power-apps-rationale]].
 
-**Layered Architecture:** See [[solution-package-model]] for L0-L7 model.
+**Layered Architecture:** See [[power-platform-dataverse/solution-package-model]] for L0-L7 model.
 
 Core components:
 - Dataverse platform (L1)
@@ -106,17 +104,13 @@ Core components:
 
 See [[architecture-business]].
 
-Business process models and capability mapping to be completed.
-
 ### Application Architecture
 
-See [[architecture-application]].
-
-Application component design and integration patterns to be defined.
+See [[power-platform-dataverse/architecture-application]].
 
 ### Data Architecture
 
-See [[architecture-data]].
+See [[power-platform-dataverse/architecture-data]].
 
 **Core Data Domains:**
 - [[client-data-model]] — One client, one view
@@ -130,9 +124,7 @@ See [[architecture-data]].
 
 ### Technology Architecture
 
-See [[architecture-technology]].
-
-Infrastructure, hosting, and technology stack decisions to be documented.
+See [[power-platform-dataverse/architecture-technology]].
 
 ## Alignment with Enterprise Architecture
 
@@ -140,11 +132,11 @@ Infrastructure, hosting, and technology stack decisions to be documented.
 
 The CTO Architecture Principles document is referenced as a dependency: "CTO Architecture Principles.pptx".
 
-See [[architecture-principles-compliance]] for mapping of solution design to enterprise standards.
+See [[power-platform-dataverse/architecture-principles-compliance]] for mapping of solution design to enterprise standards.
 
 ### Target State Alignment
 
-See [[architecture-target-state]].
+See [[power-platform-dataverse/architecture-target-state]].
 
 Standards, PADs, and Blueprints relevant to this SOD:
 
@@ -188,9 +180,9 @@ Risk register to be populated during design phase.
 
 See [[solution-options]].
 
-Options analysis to be completed with vendor evaluation and architecture assessment.
+The Board is asked to compare three application options. The recommended position asks for a defined validation stage with Option A (extend Dynamics 365 Sales) as the baseline and Option B (model-driven application on Dataverse) as the main comparator; Option C (Knight Frank-built application) is retained only where strategic or technical requirements justify full ownership. See [[architecture-approach-executive-summary-one-page]] and [[architecture-approach-executive-summary]].
 
-**Alternative design:** An alternative to the current Dataverse/Power Platform architecture — a traditional stack built on the firm's existing C#/.NET and PostgreSQL tooling — is set out in [[alternative-architecture-traditional-csharp]]. It delivers the same business capabilities and is presented for TDA review alongside the platform decision in [[power-apps-rationale]].
+**Option C detail:** the design for a Knight Frank-built application on the firm's existing C#/.NET and PostgreSQL tooling, delivering the same business capabilities, is set out in [[csharp-postgresql/alternative-architecture-traditional-csharp]].
 
 ## Implementation Roadmap
 
@@ -255,10 +247,10 @@ See [[glossary]].
 
 Outstanding work before formal approval:
 
-- Complete cost and roadmap sections — costs and benefits are placeholder (CAPEX/OPEX N/A) and roadmap phasing/timelines to be defined; risk register now carries risk-of-inaction entries in [[risks-and-issues]]
+- Approve funding for the architecture validation stage defined in [[architecture-approach-executive-summary-one-page]] — the recommended position asks for Option A as baseline, Option B as main comparator, and a total cost of ownership model
+- Complete cost and roadmap sections for the preferred option — costs and benefits are placeholder (CAPEX/OPEX N/A) and roadmap phasing/timelines to be defined; risk register now carries risk-of-inaction entries in [[risks-and-issues]]
 - Confirm the relevant enterprise standards, PADs, and blueprints — target state table lists CTO Architecture Principles as pending review and data residency/security baseline as TBD
 - Gather functional and non-functional requirements from stakeholders across all four regions
-- Complete solution options and trade-offs analysis (vendor evaluation and architecture assessment)
 - Quantify expected benefits for the business case
 
 ## References
@@ -269,14 +261,16 @@ Outstanding work before formal approval:
 - European_CRM_Client_Industry_Master_Taxonomy.xlsx
 - European_CRM_Property360_Master_Taxonomy.xlsx
 - [[problem-statement]]
-- [[solution-package-model]]
+- [[power-platform-dataverse/solution-package-model]]
 - [[crm-lite-mvp-scope]]
 - [[client-data-model]]
 - [[property-data-model]]
 - [[capital-markets-data-model]]
 - [[wip-data-model]]
 - [[taxonomy-mappings]]
-- [[power-apps-rationale]]
+- [[power-platform-dataverse/power-apps-rationale]]
 - [[data-model-overview]]
 - [[implementation-phases]]
 - [[data-model-core-tables]]
+- [[architecture-approach-executive-summary-one-page]]
+- [[architecture-approach-executive-summary]]
