@@ -1,0 +1,42 @@
+site_name: EuroCRM Wiki
+site_description: European CRM solution wiki (business case, architecture, data model)
+repo_url: https://github.com/newportg/POC-EuroCRM
+docs_dir: POC-EuroCRM-Vault/wiki
+site_dir: site
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - content.code.copy
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+# Resolves Obsidian-style [[wikilinks]] used throughout the vault into real relative links.
+plugins:
+  - search
+  - roamlinks
+
+markdown_extensions:
+  - meta
+  - tables
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+
+# No manual "nav" — mkdocs auto-builds it from the wiki's directory/file
+# structure so new notes show up without editing this file.
