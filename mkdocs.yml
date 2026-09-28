@@ -23,6 +23,11 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
 
+# Renders [[diagram.puml]] embeds to PNG (hooks run after plugins, so the
+# rewrite happens once roamlinks has already resolved the relative path).
+hooks:
+  - hooks/render_diagrams.py
+
 # Resolves Obsidian-style [[wikilinks]] used throughout the vault into real relative links.
 plugins:
   - search

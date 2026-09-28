@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/architecture-approach-executive-summary-one-page.md",
+                "file": "wiki/capital-markets-data-model.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "architecture-approach-executive-summary-one-page"
+              "title": "capital-markets-data-model"
             }
           }
         ]
@@ -211,11 +211,21 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "f2fd30c2509f0345",
+  "active": "e91f778dd1ff7d90",
   "lastOpenFiles": [
+    "wiki/wip-data-model-schema.png",
+    "wiki/property-data-model-schema.png",
+    "wiki/power-platform-dataverse/architecture-layers.png",
+    "wiki/power-platform-dataverse/architecture-diagram.png",
+    "wiki/power-platform-dataverse/architecture-dataflow.png",
+    "wiki/data-model-core-tables-schema.png",
+    "wiki/client-data-model-schema.png",
+    "wiki/capital-markets-data-model-schema.png",
+    "wiki/capital-markets-data-model-schema.puml",
+    "wiki/capital-markets-data-model.md",
+    "wiki/architecture-approach-executive-summary-one-page.md",
     "archive/European CRM Architectural Options.docx",
     "wiki/architecture-approach-executive-summary.md",
-    "wiki/architecture-approach-executive-summary-one-page.md",
     "wiki/architecture-business.md",
     "wiki/architecture-patterns-comparison.md",
     "wiki/business-capabilities.md",
@@ -236,7 +246,6 @@
     "wiki/power-platform-dataverse/dynamics-ecs-messagebus-to-golden-source.puml",
     "wiki/power-platform-dataverse/dynamics-export-to-golden-source.png",
     "wiki/power-platform-dataverse/dynamics-export-to-golden-source.puml",
-    "wiki/power-platform-dataverse/outlook-email-intercept-to-engagement-history.png",
     "wiki/power-platform-dataverse/outlook-email-intercept-to-engagement-history.puml",
     "wiki/power-platform-dataverse/outlook-email-interception-engagement-history.md",
     "wiki/power-platform-dataverse/power-apps-rationale.md",
@@ -250,15 +259,6 @@
     "wiki/power-platform-dataverse/architecture-key-components.md",
     "wiki/power-platform-dataverse/architecture-technology.md",
     "wiki/power-platform-dataverse/architecture-data.md",
-    "wiki/power-platform-dataverse/architecture-application.md",
-    "wiki/csharp-postgresql",
-    "wiki/power-platform-sql",
-    "wiki/outlook-email-intercept-to-engagement-history.png",
-    "wiki/dynamics-export-to-golden-source.png",
-    "wiki/dynamics-ecs-messagebus-to-golden-source.png",
-    "wiki/csharp-stack-ecs-to-golden-source.png",
-    "devops/outlook-email-intercept-to-engagement-history.png",
-    "devops/dynamics-export-to-golden-source.png",
     "Untitled.canvas"
   ]
 }
